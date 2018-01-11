@@ -88,6 +88,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.add_robot) {
 
        ///  setContentView(R.layout.addrobot); Hola
+            //Cambio alocado
 
         } else if (id == R.id.nav_gallery) {
 

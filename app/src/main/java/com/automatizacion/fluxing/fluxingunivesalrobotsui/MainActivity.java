@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.add_robot) {
 
-       ///  setContentView(R.layout.addrobot);
+       ///  setContentView(R.layout.addrobot); Hola Revolution
 
         } else if (id == R.id.nav_gallery) {
 

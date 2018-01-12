@@ -19,8 +19,9 @@ import android.view.MenuItem;
 import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,AddRobotFragment.OnFragmentInteractionListener{
-
+        implements NavigationView.OnNavigationItemSelectedListener,
+        AddRobotFragment.OnFragmentInteractionListener,
+        ConnectRobotFragment.OnFragmentInteractionListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,7 +96,10 @@ public class MainActivity extends AppCompatActivity
             FragmentSelect = true;
             fragment = new AddRobotFragment();
 
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.Connect_Robot) {
+
+            FragmentSelect = true;
+            fragment = new ConnectRobotFragment();
 
         } else if (id == R.id.nav_slideshow) {
 

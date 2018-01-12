@@ -9,7 +9,7 @@
             android:icon="@drawable/addrobot"
             android:title="Registrar Robot" />
         <item
-            android:id="@+id/nav_gallery"
+            android:id="@+id/Connect_Robot"
             android:icon="@drawable/conectar"
             android:title="Conectar a Robot" />
         <item

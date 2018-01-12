@@ -5,7 +5,7 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/add_robot"
+            android:id="@+id/Add_Robot"
             android:icon="@drawable/addrobot"
             android:title="Registrar Robot" />
         <item

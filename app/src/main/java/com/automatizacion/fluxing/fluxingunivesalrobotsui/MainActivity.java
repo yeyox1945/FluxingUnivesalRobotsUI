@@ -1,9 +1,12 @@
 package com.automatizacion.fluxing.fluxingunivesalrobotsui;
 
+
 import android.content.pm.ActivityInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -13,9 +16,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,AddRobotFragment.OnFragmentInteractionListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,12 +70,9 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+        //Menu de la derecha de 3 puntos
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
@@ -82,13 +83,17 @@ public class MainActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
+        // Menu hamburguesa
+
         int id = item.getItemId();
 
-        if (id == R.id.add_robot) {
+        Fragment fragment = null;
+        Boolean FragmentSelect = false;
 
-          ///  setContentView(R.layout.addrobot);
+        if (id == R.id.Add_Robot) {
 
+            FragmentSelect = true;
+            fragment = new AddRobotFragment();
 
         } else if (id == R.id.nav_gallery) {
 
@@ -98,8 +103,26 @@ public class MainActivity extends AppCompatActivity
 
         }
 
+        if(FragmentSelect){
+            getSupportFragmentManager().beginTransaction().replace(R.id.Contenedor, fragment).commit();
+        }
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
+
+    public void RobotRegistration(View v){
+
+        System.out.println("boton Oprimido");
+
+
+
+    }
+
 }

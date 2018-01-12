@@ -5,11 +5,11 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/add_robot"
+            android:id="@+id/Add_Robot"
             android:icon="@drawable/addrobot"
             android:title="Registrar Robot" />
         <item
-            android:id="@+id/nav_gallery"
+            android:id="@+id/Connect_Robot"
             android:icon="@drawable/conectar"
             android:title="Conectar a Robot" />
         <item

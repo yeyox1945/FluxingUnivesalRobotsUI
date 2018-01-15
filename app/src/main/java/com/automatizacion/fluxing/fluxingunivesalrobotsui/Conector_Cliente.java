@@ -1,11 +1,16 @@
-package Cliente;
+package com.automatizacion.fluxing.fluxingunivesalrobotsui;
+
+import android.content.pm.ActivityInfo;
+import android.support.v4.content.pm.ActivityInfoCompat;
+import android.widget.Toast;
+
+import com.automatizacion.fluxing.fluxingunivesalrobotsui.MainActivity;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
-import javax.swing.JOptionPane;
 
 /*
  * @author Jorge Manzano
@@ -28,14 +33,14 @@ public class Conector_Cliente extends Thread {
             try {
                 texto = entrada.readLine();
                 if (texto != null) {
-                    Vista_Cliente.TxtLog.setText(Vista_Cliente.TxtLog.getText() + "\n" + Destinatario + " : " + texto);//Imprime la conversacion
+               ///     Vista_Cliente.TxtLog.setText(Vista_Cliente.TxtLog.getText() + "\n" + Destinatario + " : " + texto);//Imprime la conversacion
                 } else {
-                    Vista_Cliente.TxtLog.setText(Vista_Cliente.TxtLog.getText() + "\nServidor Cerrado..");//En caso de que se cierre el server
+               //     Vista_Cliente.TxtLog.setText(Vista_Cliente.TxtLog.getText() + "\nServidor Cerrado..");//En caso de que se cierre el server
                     break;
                 }
 
             } catch (IOException e) {
-                JOptionPane.showMessageDialog(null, "Error :" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+              ///  JOptionPane.showMessageDialog(null, "Error :" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
@@ -51,10 +56,10 @@ public class Conector_Cliente extends Thread {
 
             this.salida = new DataOutputStream(s.getOutputStream());
             this.salida.writeBytes("Cliente Conectado \n");
-            Vista_Cliente.TxtLog.setText(Vista_Cliente.TxtLog.getText() + "\nCliente conectado.");
+         //   Vista_Cliente.TxtLog.setText(Vista_Cliente.TxtLog.getText() + "\nCliente conectado.");
 
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "Error :" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+          //  JOptionPane.showMessageDialog(null, "Error :" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
 
     }
@@ -66,7 +71,7 @@ public class Conector_Cliente extends Thread {
             this.salida.writeBytes(msg + "\n");
 
         } catch (IOException e) {
-            Vista_Cliente.TxtLog.setText(Vista_Cliente.TxtLog.getText() + "\nError al enviar mensaje, conección cerrada.");
+           // Vista_Cliente.TxtLog.setText(Vista_Cliente.TxtLog.getText() + "\nError al enviar mensaje, conección cerrada.");
 
         }
     }
@@ -83,7 +88,8 @@ public class Conector_Cliente extends Thread {
         try {
             s.close();
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "Error :" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            Toast.makeText(null, "Error : " + e.getMessage(), Toast.LENGTH_SHORT).show();
+
         }
 
     }

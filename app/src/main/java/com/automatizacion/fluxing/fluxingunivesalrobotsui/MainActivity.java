@@ -15,14 +15,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
-
-
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         AddRobotFragment.OnFragmentInteractionListener,
         ConnectRobotFragment.OnFragmentInteractionListener {
 
+
+    public static Conector_Cliente Connect_Client;
 
 
     @Override
@@ -38,7 +39,6 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
 
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -48,6 +48,9 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+
+        //Inicializaciones
+        TextView TxtLog = findViewById(R.id.TxtLog);
 
 
     }
@@ -108,7 +111,7 @@ public class MainActivity extends AppCompatActivity
 
         }
 
-        if(FragmentSelect){
+        if (FragmentSelect) {
             getSupportFragmentManager().beginTransaction().replace(R.id.Contenedor, fragment).commit();
         }
 
@@ -123,24 +126,27 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-
-
-
     //Metodo se ejecuta cuando se oprime el boton registrar
-    public void ButtonRegistrationRobot(View v){
+    public void ButtonRegistrationRobot(View v) {
+
 
         EditText IP = findViewById(R.id.TxtIPnueva);
         String IPnueva = IP.getText().toString();
 
         AddRobotFragment FragmentAgregar = new AddRobotFragment();
 
-             FragmentAgregar.RegistroIPRobot(IPnueva);
-
-
-
-
+        FragmentAgregar.RegistroIPRobot(IPnueva);
     }
 
+    //Metodo se ejecuta al conectar un robot
+    public void OnClickConectarRobot(View v) {
+
+        String ip = "192.168.15.155";
+        System.out.println("Entra");
+        Connect_Client = new Conector_Cliente(ip);
+        Connect_Client.start();
+
+    }
 
 
 }

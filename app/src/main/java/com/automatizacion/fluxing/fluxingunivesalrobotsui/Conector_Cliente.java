@@ -1,10 +1,6 @@
 package com.automatizacion.fluxing.fluxingunivesalrobotsui;
 
-import android.content.pm.ActivityInfo;
-import android.support.v4.content.pm.ActivityInfoCompat;
-import android.widget.Toast;
-
-import com.automatizacion.fluxing.fluxingunivesalrobotsui.MainActivity;
+import android.widget.TextView;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -23,29 +19,34 @@ public class Conector_Cliente extends Thread {
     private BufferedReader entrada;
     final int puerto = 29999;
 
-    public String Destinatario = "Servidor";
+    TextView TxtLog = new MainActivity().findViewById(R.id.TxtLog);
+
+
 
     @Override
     public void run() {
+        TextView TxtLog = new MainActivity().findViewById(R.id.TxtLog);
         //Metodo en segundo plano
         String texto;
         while (true) {
             try {
                 texto = entrada.readLine();
                 if (texto != null) {
-               ///     Vista_Cliente.TxtLog.setText(Vista_Cliente.TxtLog.getText() + "\n" + Destinatario + " : " + texto);//Imprime la conversacion
+                    TxtLog.setText(TxtLog.getText() + "\nServidor : " + texto); //Imprime la conversacion
                 } else {
-               //     Vista_Cliente.TxtLog.setText(Vista_Cliente.TxtLog.getText() + "\nServidor Cerrado..");//En caso de que se cierre el server
+
+                    TxtLog.setText(TxtLog.getText() + "\nServidor :  Desconectado..");//Cuando se cierra el servidor
                     break;
                 }
-
             } catch (IOException e) {
-              ///  JOptionPane.showMessageDialog(null, "Error :" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                TxtLog.setText(TxtLog.getText() + "\nError :" + e.getMessage()); // cuando da error
             }
         }
+
     }
 
     public Conector_Cliente(String ip) {
+
 
         //Conexion de cliente
         try {
@@ -56,10 +57,9 @@ public class Conector_Cliente extends Thread {
 
             this.salida = new DataOutputStream(s.getOutputStream());
             this.salida.writeBytes("Cliente Conectado \n");
-         //   Vista_Cliente.TxtLog.setText(Vista_Cliente.TxtLog.getText() + "\nCliente conectado.");
-
+            TxtLog.setText(TxtLog.getText() + "\nServidor :  Cliente conectado.");//Cuando se Conecta al servidor
         } catch (IOException e) {
-          //  JOptionPane.showMessageDialog(null, "Error :" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            TxtLog.setText(TxtLog.getText() + "\nError :" + e.getMessage()); // cuando da error
         }
 
     }
@@ -69,9 +69,10 @@ public class Conector_Cliente extends Thread {
         try {
             this.salida = new DataOutputStream(s.getOutputStream());
             this.salida.writeBytes(msg + "\n");
+            TxtLog.setText(TxtLog.getText() + "\nCliente : " + msg + "\n");//Cuando le envio un mensaje
 
         } catch (IOException e) {
-           // Vista_Cliente.TxtLog.setText(Vista_Cliente.TxtLog.getText() + "\nError al enviar mensaje, conección cerrada.");
+            TxtLog.setText(TxtLog.getText() + "\nError :" + e.getMessage()); // cuando da error
 
         }
     }
@@ -88,7 +89,7 @@ public class Conector_Cliente extends Thread {
         try {
             s.close();
         } catch (IOException e) {
-            Toast.makeText(null, "Error : " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            TxtLog.setText(TxtLog.getText() + "\nError :" + e.getMessage()); // cuando da error
 
         }
 

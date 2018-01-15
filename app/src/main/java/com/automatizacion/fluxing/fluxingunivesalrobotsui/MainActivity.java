@@ -4,8 +4,6 @@ package com.automatizacion.fluxing.fluxingunivesalrobotsui;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -16,14 +14,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         AddRobotFragment.OnFragmentInteractionListener,
         ConnectRobotFragment.OnFragmentInteractionListener {
+
+
+    public static Conector_Cliente Connect_Client;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -32,14 +38,6 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Robot Registrado", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -49,6 +47,12 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
+        //Inicializaciones
+        TextView TxtLog = findViewById(R.id.TxtLog);
+
+
     }
 
     @Override
@@ -107,7 +111,7 @@ public class MainActivity extends AppCompatActivity
 
         }
 
-        if(FragmentSelect){
+        if (FragmentSelect) {
             getSupportFragmentManager().beginTransaction().replace(R.id.Contenedor, fragment).commit();
         }
 
@@ -121,12 +125,28 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    public void RobotRegistration(View v){
 
-        System.out.println("boton Oprimido");
+    //Metodo se ejecuta cuando se oprime el boton registrar
+    public void ButtonRegistrationRobot(View v) {
 
 
+        EditText IP = findViewById(R.id.TxtIPnueva);
+        String IPnueva = IP.getText().toString();
+
+        AddRobotFragment FragmentAgregar = new AddRobotFragment();
+
+        FragmentAgregar.RegistroIPRobot(IPnueva);
+    }
+
+    //Metodo se ejecuta al conectar un robot
+    public void OnClickConectarRobot(View v) {
+
+        String ip = "192.168.15.155";
+        System.out.println("Entra");
+        Connect_Client = new Conector_Cliente(ip);
+        Connect_Client.start();
 
     }
+
 
 }

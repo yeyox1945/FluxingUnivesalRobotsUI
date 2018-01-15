@@ -7,8 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
-
+import android.widget.EditText;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,20 +31,8 @@ public class AddRobotFragment extends Fragment {
 
     public AddRobotFragment() {
         // Required empty public constructor
-
- }
-
-
-
-
-
-
-
-
-
-
-
-    /**
+    }
+  /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
@@ -72,13 +59,12 @@ public class AddRobotFragment extends Fragment {
         }
     }
 
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_add_robot, container, false);
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -120,6 +106,14 @@ public class AddRobotFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
+    public void RegistroIPRobot(String IPNueva){
 
+        SQLConexion SQL = new SQLConexion();
+        SQL.ConnectionHelper();
+
+
+        System.out.println("La ip es  :" + IPNueva);
+
+        }
 
 }

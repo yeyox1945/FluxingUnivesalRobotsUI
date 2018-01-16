@@ -13,7 +13,7 @@
             android:icon="@drawable/conectar"
             android:title="Conectar a Robot" />
         <item
-            android:id="@+id/nav_slideshow"
+            android:id="@+id/Move_Robot"
             android:icon="@drawable/move"
             android:title="Mover Robot" />
         <item

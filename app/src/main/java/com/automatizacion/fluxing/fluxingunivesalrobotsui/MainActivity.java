@@ -1,12 +1,8 @@
 package com.automatizacion.fluxing.fluxingunivesalrobotsui;
 
-
-import android.content.Context;
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.os.StrictMode;
 import android.support.v4.app.Fragment;
 import android.view.View;
@@ -24,7 +20,7 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         AddRobotFragment.OnFragmentInteractionListener,
-        ConnectRobotFragment.OnFragmentInteractionListener {
+        ConnectRobotFragment.OnFragmentInteractionListener,MoveRobotFragment.OnFragmentInteractionListener {
 
 
     public static Conector_Cliente Connect_Client;
@@ -109,7 +105,10 @@ public class MainActivity extends AppCompatActivity
             FragmentSelect = true;
             fragment = new ConnectRobotFragment();
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.Move_Robot) {
+
+            FragmentSelect = true;
+            fragment = new MoveRobotFragment();
 
         } else if (id == R.id.nav_manage) {
 

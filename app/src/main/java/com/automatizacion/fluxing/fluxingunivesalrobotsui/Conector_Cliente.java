@@ -1,6 +1,7 @@
 package com.automatizacion.fluxing.fluxingunivesalrobotsui;
 
-import android.widget.TextView;
+import android.os.Handler;
+import android.os.Looper;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -19,34 +20,10 @@ public class Conector_Cliente extends Thread {
     private BufferedReader entrada;
     final int puerto = 29999;
 
-    TextView TxtLog = new MainActivity().findViewById(R.id.TxtLog);
-
-
-
-    @Override
-    public void run() {
-        TextView TxtLog = new MainActivity().findViewById(R.id.TxtLog);
-        //Metodo en segundo plano
-        String texto;
-        while (true) {
-            try {
-                texto = entrada.readLine();
-                if (texto != null) {
-                    TxtLog.setText(TxtLog.getText() + "\nServidor : " + texto); //Imprime la conversacion
-                } else {
-
-                    TxtLog.setText(TxtLog.getText() + "\nServidor :  Desconectado..");//Cuando se cierra el servidor
-                    break;
-                }
-            } catch (IOException e) {
-                TxtLog.setText(TxtLog.getText() + "\nError :" + e.getMessage()); // cuando da error
-            }
-        }
-
-    }
+    public String TxtLog;
+    public MainActivity Main = new MainActivity();
 
     public Conector_Cliente(String ip) {
-
 
         //Conexion de cliente
         try {
@@ -56,23 +33,73 @@ public class Conector_Cliente extends Thread {
             this.entrada = new BufferedReader(entradaSocket);
 
             this.salida = new DataOutputStream(s.getOutputStream());
+
+            System.out.println("Entra");
             this.salida.writeBytes("Cliente Conectado \n");
-            TxtLog.setText(TxtLog.getText() + "\nServidor :  Cliente conectado.");//Cuando se Conecta al servidor
+
+            TxtLog = "\nServidor :  Cliente conectado.";//Cuando se Conecta al servidor
+            Main.PrintToTextview(TxtLog);
+
+
         } catch (IOException e) {
-            TxtLog.setText(TxtLog.getText() + "\nError :" + e.getMessage()); // cuando da error
+
+            TxtLog = "\nError :" + e.getMessage(); // cuando da error
+            Main.PrintToTextview(TxtLog);
+
         }
 
     }
 
+
+    @Override
+    public void run() {
+        //Metodo en segundo plano
+        String texto;
+
+
+        while (true) {
+            try {
+                texto = entrada.readLine();
+                synchronized (this) {
+                    final String finalTexto = texto;
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (finalTexto != null) {
+
+                                TxtLog = "\nServidor : " + finalTexto; //Imprime la conversacion
+                                Main.PrintToTextview(TxtLog);
+
+                            } else {
+
+                                TxtLog = "\nServidor :  Desconectado.";//Cuando se cierra el servidor
+                                Main.PrintToTextview(TxtLog);
+
+                            }
+                        }
+                    });
+                }
+            } catch (IOException e) {
+                TxtLog = "\nError :" + e.getMessage(); // cuando da error
+                Main.PrintToTextview(TxtLog);
+            }
+
+        }
+
+    }
+
+
     public void enviarMSG(String msg) {
-        System.out.println("enviado");
         try {
             this.salida = new DataOutputStream(s.getOutputStream());
             this.salida.writeBytes(msg + "\n");
-            TxtLog.setText(TxtLog.getText() + "\nCliente : " + msg + "\n");//Cuando le envio un mensaje
+            TxtLog = "\nCliente : " + msg + "\n";//Cuando le envio un mensaje
+
+            Main.PrintToTextview(TxtLog);
 
         } catch (IOException e) {
-            TxtLog.setText(TxtLog.getText() + "\nError :" + e.getMessage()); // cuando da error
+            TxtLog = "\nError :" + e.getMessage(); // cuando da error
+            Main.PrintToTextview(TxtLog);
 
         }
     }
@@ -89,7 +116,8 @@ public class Conector_Cliente extends Thread {
         try {
             s.close();
         } catch (IOException e) {
-            TxtLog.setText(TxtLog.getText() + "\nError :" + e.getMessage()); // cuando da error
+            TxtLog = "\nError :" + e.getMessage(); // cuando da error
+            Main.PrintToTextview(TxtLog);
 
         }
 

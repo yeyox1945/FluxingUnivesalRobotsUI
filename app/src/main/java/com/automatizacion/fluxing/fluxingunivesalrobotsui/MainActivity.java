@@ -1,9 +1,13 @@
 package com.automatizacion.fluxing.fluxingunivesalrobotsui;
 
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.os.StrictMode;
 import android.support.v4.app.Fragment;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -24,6 +28,8 @@ public class MainActivity extends AppCompatActivity
 
 
     public static Conector_Cliente Connect_Client;
+    public static TextView TxtLog;
+    public static EditText TxtMSG;
 
 
     @Override
@@ -32,6 +38,9 @@ public class MainActivity extends AppCompatActivity
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        TxtLog = findViewById(R.id.TxtLog);
+        TxtMSG = findViewById(R.id.EditCommand);
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
 
@@ -47,11 +56,6 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-
-        //Inicializaciones
-        TextView TxtLog = findViewById(R.id.TxtLog);
-
 
     }
 
@@ -139,13 +143,34 @@ public class MainActivity extends AppCompatActivity
     }
 
     //Metodo se ejecuta al conectar un robot
-    public void OnClickConectarRobot(View v) {
+    public void OnClickConectarRobot(View view) {
+
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
 
         String ip = "192.168.15.155";
-        System.out.println("Entra");
+
+        TxtLog = findViewById(R.id.TxtLog);
+
         Connect_Client = new Conector_Cliente(ip);
         Connect_Client.start();
+    }
 
+
+    public void OnClicksendOrder(View view) {
+
+        TxtLog = findViewById(R.id.TxtLog);
+        TxtMSG = findViewById(R.id.EditCommand);
+
+        Connect_Client.enviarMSG(TxtMSG.getText().toString());
+        TxtLog.setText(TxtLog.getText() + "\nCliente : " + TxtMSG.getText());
+        TxtMSG.setText("");
+
+    }
+
+    public static void PrintToTextview(String s) {
+        TxtLog.setText(TxtLog.getText() + " " + s);
     }
 
 

@@ -20,7 +20,9 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         AddRobotFragment.OnFragmentInteractionListener,
-        ConnectRobotFragment.OnFragmentInteractionListener,MoveRobotFragment.OnFragmentInteractionListener {
+        ConnectRobotFragment.OnFragmentInteractionListener,
+        MoveRobotFragment.OnFragmentInteractionListener,
+        URPRobotFragment.OnFragmentInteractionListener {
 
 
     public static Conector_Cliente Connect_Client;
@@ -110,6 +112,11 @@ public class MainActivity extends AppCompatActivity
             FragmentSelect = true;
             fragment = new MoveRobotFragment();
 
+        } else if (id == R.id.URP_Robot) {
+
+            FragmentSelect = true;
+            fragment = new URPRobotFragment();
+
         } else if (id == R.id.nav_manage) {
 
         }
@@ -166,6 +173,12 @@ public class MainActivity extends AppCompatActivity
         TxtLog.setText(TxtLog.getText() + "\nCliente : " + TxtMSG.getText());
         TxtMSG.setText("");
 
+    }
+
+    public void onClick_b_URPConnect(View view)
+    {
+        EditText eT_Host = findViewById(R.id.eT_Host);
+        eT_Host.setText("No se puede conectar");
     }
 
     public static void PrintToTextview(String s) {

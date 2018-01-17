@@ -34,9 +34,6 @@ public class Conector_Cliente extends Thread {
 
             this.salida = new DataOutputStream(s.getOutputStream());
 
-            System.out.println("Entra");
-            this.salida.writeBytes("Cliente Conectado \n");
-
             TxtLog = "\nServidor :  Cliente conectado.";//Cuando se Conecta al servidor
             Main.PrintToTextview(TxtLog);
 
@@ -46,6 +43,9 @@ public class Conector_Cliente extends Thread {
             TxtLog = "\nError :" + e.getMessage(); // cuando da error
             Main.PrintToTextview(TxtLog);
 
+        } catch (NullPointerException e) {
+            TxtLog = "\nError : Robot no encontrado"; // cuando da error nulo
+            Main.PrintToTextview(TxtLog);
         }
 
     }

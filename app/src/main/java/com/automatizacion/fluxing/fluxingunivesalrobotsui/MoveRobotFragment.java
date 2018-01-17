@@ -7,16 +7,13 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.SeekBar;
+
+import static com.automatizacion.fluxing.fluxingunivesalrobotsui.MainActivity.Connect_Client;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link MoveRobotFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link MoveRobotFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class MoveRobotFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -27,21 +24,31 @@ public class MoveRobotFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+
+    public SeekBar seekBar_Base;
+    public SeekBar seekBar_Shoulder;
+    public SeekBar seekBar_Elbow;
+    public SeekBar seekBar_Wrist1;
+    public SeekBar seekBar_Wrist2;
+    public SeekBar seekBar_Wrist3;
+
+    public EditText editText_Base;
+    public EditText editText_Shoulder;
+    public EditText editText_Elbow;
+    public EditText editText_Wrist1;
+    public EditText editText_Wrist2;
+    public EditText editText_Wrist3;
+
+    public boolean activeFreeDrive = false;
+
+
     private OnFragmentInteractionListener mListener;
 
     public MoveRobotFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment MoveRobotFragment.
-     */
-    // TODO: Rename and change types and number of parameters
+
     public static MoveRobotFragment newInstance(String param1, String param2) {
         MoveRobotFragment fragment = new MoveRobotFragment();
         Bundle args = new Bundle();
@@ -64,8 +71,174 @@ public class MoveRobotFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_move_robot, container, false);
+        //return inflater.inflate(R.layout.fragment_move_robot, container, false);
+
+        View view = inflater.inflate(R.layout.fragment_move_robot, container, false);
+
+        seekBar_Base = view.findViewById(R.id.seekBar_Base);
+        seekBar_Shoulder = view.findViewById(R.id.seekBar_Base);
+        seekBar_Elbow = view.findViewById(R.id.seekBar_Shoulder);
+        seekBar_Wrist1 = view.findViewById(R.id.seekBar_Wrist1);
+        seekBar_Wrist2 = view.findViewById(R.id.seekBar_Wrist2);
+        seekBar_Wrist3 = view.findViewById(R.id.seekBar_Wrist3);
+
+        editText_Base = view.findViewById(R.id.editText_Base);
+        editText_Shoulder = view.findViewById(R.id.editText_Shoulder);
+        editText_Elbow = view.findViewById(R.id.editText_Elbow);
+        editText_Wrist1 = view.findViewById(R.id.editText_Wrist1);
+        editText_Wrist2 = view.findViewById(R.id.editText_Wrist2);
+        editText_Wrist3 = view.findViewById(R.id.editText_Wrist3);
+
+        Button Button_FreeDrive = view.findViewById(R.id.button_FreeDrive);
+        Button_FreeDrive.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (!activeFreeDrive) {
+                    activeFreeDrive = true;
+                    String Comando = "movej(p[0.4,0,0.5,0,-3.1416,0])";
+
+                    Connect_Client.enviarMSG(Comando);
+                } else {
+                    activeFreeDrive = false;
+
+                    Connect_Client.enviarMSG("end teach mode()");
+                }
+
+            }
+        });
+
+        ListenersSeekBars();
+
+
+        return view;
+
     }
+
+
+    public void ListenersSeekBars() {
+
+        //Base
+        seekBar_Base.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean fromUser) {
+
+                editText_Base.setText(String.valueOf(i - 360));
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        //Shoulder
+        seekBar_Shoulder.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean fromUser) {
+                editText_Shoulder.setText(String.valueOf(i - 360));
+
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        //Elbow
+        seekBar_Elbow.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean fromUser) {
+                editText_Elbow.setText(String.valueOf(i - 360));
+
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        //seekBar_Wrist1
+        seekBar_Wrist1.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean fromUser) {
+                editText_Wrist1.setText(String.valueOf(i - 360));
+
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        //seekBar_Wrist2
+        seekBar_Wrist2.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean fromUser) {
+                editText_Wrist2.setText(String.valueOf(i - 360));
+
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        //seekBar_Wrist3
+        seekBar_Wrist3.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean fromUser) {
+                editText_Wrist3.setText(String.valueOf(i - 360));
+
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+    }
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -91,16 +264,6 @@ public class MoveRobotFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);

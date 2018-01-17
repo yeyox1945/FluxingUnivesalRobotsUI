@@ -15,17 +15,19 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         AddRobotFragment.OnFragmentInteractionListener,
-        ConnectRobotFragment.OnFragmentInteractionListener,MoveRobotFragment.OnFragmentInteractionListener {
+        ConnectRobotFragment.OnFragmentInteractionListener,
+        MoveRobotFragment.OnFragmentInteractionListener {
 
 
     public static Conector_Cliente Connect_Client;
     public static TextView TxtLog;
-    public static EditText TxtMSG;
+    public EditText TxtMSG;
 
 
     @Override
@@ -35,23 +37,24 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        TxtLog = findViewById(R.id.TxtLog);
-        TxtMSG = findViewById(R.id.EditCommand);
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        TxtLog = findViewById(R.id.TxtLog);
+        TxtMSG = findViewById(R.id.EditCommand);
 
     }
 
@@ -102,13 +105,18 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.Connect_Robot) {
 
+
             FragmentSelect = true;
             fragment = new ConnectRobotFragment();
 
         } else if (id == R.id.Move_Robot) {
 
+
             FragmentSelect = true;
             fragment = new MoveRobotFragment();
+
+            Connect_Client = new Conector_Cliente("192.168.15.155", 30001);
+            Connect_Client.Conectar();
 
         } else if (id == R.id.nav_manage) {
 
@@ -148,11 +156,11 @@ public class MainActivity extends AppCompatActivity
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        String ip = "192.168.15.155";
 
         TxtLog = findViewById(R.id.TxtLog);
 
-        Connect_Client = new Conector_Cliente(ip);
+        Connect_Client = new Conector_Cliente("192.168.15.155", 29999);
+        Connect_Client.Conectar();
         Connect_Client.start();
     }
 
@@ -163,7 +171,7 @@ public class MainActivity extends AppCompatActivity
         TxtMSG = findViewById(R.id.EditCommand);
 
         Connect_Client.enviarMSG(TxtMSG.getText().toString());
-        TxtLog.setText(TxtLog.getText() + "\nCliente : " + TxtMSG.getText());
+        TxtLog.setText(TxtLog.getText() + "\nServidor : " + TxtMSG.getText());
         TxtMSG.setText("");
 
     }

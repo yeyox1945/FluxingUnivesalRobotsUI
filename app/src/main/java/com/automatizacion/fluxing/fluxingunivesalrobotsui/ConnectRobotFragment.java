@@ -65,6 +65,8 @@ public class ConnectRobotFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_connect_robot, container, false);
+
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event

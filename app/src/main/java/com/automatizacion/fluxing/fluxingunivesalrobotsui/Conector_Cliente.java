@@ -18,35 +18,18 @@ public class Conector_Cliente extends Thread {
     private InputStreamReader entradaSocket;
     private DataOutputStream salida;
     private BufferedReader entrada;
-    final int puerto = 29999;
+    private int port = 29999;
+    private String ip = "0.0.0.0";
+
+    static boolean Stop = true;
 
     public String TxtLog;
     public MainActivity Main = new MainActivity();
 
-    public Conector_Cliente(String ip) {
+    public Conector_Cliente(String ip, int port) {
 
-        //Conexion de cliente
-        try {
-            this.s = new Socket(ip, this.puerto);
-
-            this.entradaSocket = new InputStreamReader(s.getInputStream());
-            this.entrada = new BufferedReader(entradaSocket);
-
-            this.salida = new DataOutputStream(s.getOutputStream());
-
-            System.out.println("Entra");
-            this.salida.writeBytes("Cliente Conectado \n");
-
-            TxtLog = "\nServidor :  Cliente conectado.";//Cuando se Conecta al servidor
-            Main.PrintToTextview(TxtLog);
-
-
-        } catch (IOException e) {
-
-            TxtLog = "\nError :" + e.getMessage(); // cuando da error
-            Main.PrintToTextview(TxtLog);
-
-        }
+        this.port = port;
+        this.ip = ip;
 
     }
 
@@ -67,13 +50,13 @@ public class Conector_Cliente extends Thread {
                         public void run() {
                             if (finalTexto != null) {
 
-                                TxtLog = "\nServidor : " + finalTexto; //Imprime la conversacion
-                                Main.PrintToTextview(TxtLog);
+                                //   TxtLog = "\nServidor : " + finalTexto; //Imprime la conversacion
+                                //   Main.PrintToTextview(TxtLog);
 
                             } else {
 
-                                TxtLog = "\nServidor :  Desconectado.";//Cuando se cierra el servidor
-                                Main.PrintToTextview(TxtLog);
+                                //   TxtLog = "\nServidor :  Desconectado.";//Cuando se cierra el servidor
+                                //   Main.PrintToTextview(TxtLog);
 
                             }
                         }
@@ -82,8 +65,9 @@ public class Conector_Cliente extends Thread {
             } catch (IOException e) {
                 TxtLog = "\nError :" + e.getMessage(); // cuando da error
                 Main.PrintToTextview(TxtLog);
-            }
+            } catch (NullPointerException e) {
 
+            }
         }
 
     }
@@ -94,7 +78,6 @@ public class Conector_Cliente extends Thread {
             this.salida = new DataOutputStream(s.getOutputStream());
             this.salida.writeBytes(msg + "\n");
             TxtLog = "\nCliente : " + msg + "\n";//Cuando le envio un mensaje
-
             Main.PrintToTextview(TxtLog);
 
         } catch (IOException e) {
@@ -112,8 +95,32 @@ public class Conector_Cliente extends Thread {
         return null;
     }
 
-    public void desconectar() {
+    public void Conectar() {
+
+        //Conexion de cliente
         try {
+
+            s = new Socket(ip, port);
+            entradaSocket = new InputStreamReader(s.getInputStream());
+            entrada = new BufferedReader(entradaSocket);
+            salida = new DataOutputStream(s.getOutputStream());
+            TxtLog = "\nServidor Conectado."; // cuando da error
+            Main.PrintToTextview(TxtLog);
+
+        } catch (IOException e) {
+
+            TxtLog = "\nError :" + e.getMessage(); // cuando da error
+            Main.PrintToTextview(TxtLog);
+
+        }
+
+    }
+
+    public void desconectar() {
+
+
+        try {
+
             s.close();
         } catch (IOException e) {
             TxtLog = "\nError :" + e.getMessage(); // cuando da error

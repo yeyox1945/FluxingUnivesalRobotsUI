@@ -25,11 +25,7 @@ public class MainActivity extends AppCompatActivity
         ConnectRobotFragment.OnFragmentInteractionListener,
         MoveRobotFragment.OnFragmentInteractionListener {
 
-
     public static Conector_Cliente Connect_Client;
-    public static TextView TxtLog;
-    public EditText TxtMSG;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,9 +49,6 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-        TxtLog = findViewById(R.id.TxtLog);
-        TxtMSG = findViewById(R.id.EditCommand);
 
     }
 
@@ -128,7 +121,7 @@ public class MainActivity extends AppCompatActivity
             getSupportFragmentManager().beginTransaction().replace(R.id.Contenedor, fragment).commit();
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -142,7 +135,6 @@ public class MainActivity extends AppCompatActivity
     //Metodo se ejecuta cuando se oprime el boton registrar
     public void ButtonRegistrationRobot(View v) {
 
-
         EditText IP = findViewById(R.id.TxtIPnueva);
         String IPnueva = IP.getText().toString();
 
@@ -151,33 +143,9 @@ public class MainActivity extends AppCompatActivity
         FragmentAgregar.RegistroIPRobot(IPnueva);
     }
 
-    //Metodo se ejecuta al conectar un robot
-    public void OnClickConectarRobot(View view) {
-
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-
-        TxtLog = findViewById(R.id.TxtLog);
-
-        Connect_Client = new Conector_Cliente("192.168.15.155", 29999);
-        Connect_Client.conectar();
-        Connect_Client.start();
-    }
-
-
-    public void OnClicksendOrder(View view) {
-
-        TxtLog = findViewById(R.id.TxtLog);
-        TxtMSG = findViewById(R.id.EditCommand);
-
-        Connect_Client.enviarMSG(TxtMSG.getText().toString());
-        TxtLog.setText(TxtLog.getText() + "\nServidor : " + TxtMSG.getText());
-        TxtMSG.setText("");
-
-    }
 
     public static void PrintToTextview(String s) {
-        TxtLog.setText(TxtLog.getText() + " " + s);
+        ConnectRobotFragment.TxtLog.setText(ConnectRobotFragment.TxtLog.getText() + " " + s);
     }
 
 

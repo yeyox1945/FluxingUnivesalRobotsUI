@@ -92,17 +92,10 @@ public class MoveRobotFragment extends Fragment {
 
 
 
-        // Setear seekbars con posicion actual del robot
+        //  Get and Setear seekbars con posicion actual del robot
+             //  GetPositions();
 
-        Connect_Client.enviarMSG("var:=get_actual_joint_positions()");
 
-        Log.i("Respuesta", Connect_Client.serverResponse);
-        /*seekBar_Base.setProgress();
-        seekBar_Shoulder.setProgress();
-        seekBar_Elbow.setProgress();
-        seekBar_Wrist1.setProgress();
-        seekBar_Wrist2.setProgress();
-        seekBar_Wrist3.setProgress();*/
 
         Button Button_FreeDrive = view.findViewById(R.id.button_FreeDrive);
         Button_FreeDrive.setOnClickListener(new View.OnClickListener() {
@@ -282,6 +275,37 @@ public class MoveRobotFragment extends Fragment {
                 Connect_Client.enviarMSG(Comando);
             }
         });
+    }
+
+    public void GetPositions (){
+
+        Connect_Client.enviarMSG("var:=get_actual_joint_positions()");
+
+        Log.i("Respuesta", Connect_Client.serverResponse);
+
+        String cadena = Connect_Client.serverResponse;
+
+        String Base, Shoulder, Elbow, Wrist1, Wrist2, Wrist3;
+
+        cadena = cadena.replace("(", "");
+        cadena = cadena.replace(")", "");
+
+        String parte[] = cadena.split(",");
+
+        Base = parte[0];
+        Shoulder = parte[1];
+        Elbow = parte[2];
+        Wrist1 = parte[3];
+        Wrist2 = parte[4];
+        Wrist3 = parte[5];
+
+        seekBar_Base.setProgress(Integer.valueOf(Base));
+        seekBar_Shoulder.setProgress(Integer.valueOf(Shoulder));
+        seekBar_Elbow.setProgress(Integer.valueOf(Elbow));
+        seekBar_Wrist1.setProgress(Integer.valueOf(Wrist1));
+        seekBar_Wrist2.setProgress(Integer.valueOf(Wrist2));
+        seekBar_Wrist3.setProgress(Integer.valueOf(Wrist3));
+
     }
 
 

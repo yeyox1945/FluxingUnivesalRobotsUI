@@ -116,8 +116,9 @@ public class MainActivity extends AppCompatActivity
             FragmentSelect = true;
             fragment = new MoveRobotFragment();
 
-            Connect_Client = new Conector_Cliente("192.168.15.155", 30001);
-            Connect_Client.Conectar();
+            Connect_Client = new Conector_Cliente("192.168.15.155", 30004);
+            Connect_Client.conectar();
+            Connect_Client.start();
 
         } else if (id == R.id.nav_manage) {
 
@@ -153,15 +154,13 @@ public class MainActivity extends AppCompatActivity
     //Metodo se ejecuta al conectar un robot
     public void OnClickConectarRobot(View view) {
 
-
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
-
 
         TxtLog = findViewById(R.id.TxtLog);
 
         Connect_Client = new Conector_Cliente("192.168.15.155", 29999);
-        Connect_Client.Conectar();
+        Connect_Client.conectar();
         Connect_Client.start();
     }
 

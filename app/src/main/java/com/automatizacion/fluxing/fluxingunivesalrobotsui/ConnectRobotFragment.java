@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v4.app.Fragment;
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +29,6 @@ public class ConnectRobotFragment extends Fragment {
         // Required empty public constructor
     }
 
-
     // TODO: Rename and change types and number of parameters
     public static ConnectRobotFragment newInstance(String param1, String param2) {
         ConnectRobotFragment fragment = new ConnectRobotFragment();
@@ -48,8 +48,6 @@ public class ConnectRobotFragment extends Fragment {
         }
     }
 
-
-
     public Conector_Cliente Connect_Client;
     public static TextView TxtLog;
     public EditText TxtMSG;
@@ -58,13 +56,13 @@ public class ConnectRobotFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-       //  return inflater.inflate(R.layout.fragment_connect_robot, container, false);
 
-        final View view =inflater.inflate(R.layout.fragment_connect_robot, container, false);
-
+       final View view =inflater.inflate(R.layout.fragment_connect_robot, container, false);
 
         TxtLog = view.findViewById(R.id.TxtLog);
+        TxtLog.setMovementMethod (new ScrollingMovementMethod());
+
+
         TxtMSG = view.findViewById(R.id.EditCommand);
 
         Button button_Connect = view.findViewById(R.id.button_Connect);
@@ -76,10 +74,10 @@ public class ConnectRobotFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
+                TxtLog = view.findViewById(R.id.TxtLog);
+
                 StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
                 StrictMode.setThreadPolicy(policy);
-
-                TxtLog = view.findViewById(R.id.TxtLog);
                 Connect_Client = new Conector_Cliente("192.168.15.155", 29999);
                 Connect_Client.conectar();
                 Connect_Client.start();
@@ -101,14 +99,8 @@ public class ConnectRobotFragment extends Fragment {
             }
         });
 
-
-
-
         return view;
-
-
-
-    }
+  }
 
 
 

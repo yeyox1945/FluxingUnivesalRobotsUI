@@ -24,6 +24,7 @@ public class Conector_Cliente extends Thread {
     static boolean Stop = true;
 
     public String TxtLog;
+    public String serverResponse = "sin respuesta";
     public MainActivity Main = new MainActivity();
 
     public Conector_Cliente(String ip, int port) {
@@ -46,7 +47,7 @@ public class Conector_Cliente extends Thread {
                         @Override
                         public void run() {
                             if (finalTexto != null) {
-
+                                serverResponse = finalTexto;
                                 TxtLog = "\nServidor : " + finalTexto; //Imprime la conversacion
                                 Main.PrintToTextview(TxtLog);
 

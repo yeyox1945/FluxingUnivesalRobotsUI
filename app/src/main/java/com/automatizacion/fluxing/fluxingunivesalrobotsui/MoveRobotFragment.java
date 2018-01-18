@@ -96,7 +96,7 @@ public class MoveRobotFragment extends Fragment {
 
         Connect_Client.enviarMSG("var:=get_actual_joint_positions()");
 
-        //Log.i("Respuesta", Connect_Client.serverResponse);
+        Log.i("Respuesta", Connect_Client.serverResponse);
         /*seekBar_Base.setProgress();
         seekBar_Shoulder.setProgress();
         seekBar_Elbow.setProgress();

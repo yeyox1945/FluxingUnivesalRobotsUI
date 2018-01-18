@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -89,6 +90,20 @@ public class MoveRobotFragment extends Fragment {
         editText_Wrist2 = view.findViewById(R.id.editText_Wrist2);
         editText_Wrist3 = view.findViewById(R.id.editText_Wrist3);
 
+
+
+        // Setear seekbars con posicion actual del robot
+
+        Connect_Client.enviarMSG("var:=get_actual_joint_positions()");
+
+        Log.i("Respuesta", Connect_Client.serverResponse);
+        /*seekBar_Base.setProgress();
+        seekBar_Shoulder.setProgress();
+        seekBar_Elbow.setProgress();
+        seekBar_Wrist1.setProgress();
+        seekBar_Wrist2.setProgress();
+        seekBar_Wrist3.setProgress();*/
+
         Button Button_FreeDrive = view.findViewById(R.id.button_FreeDrive);
         Button_FreeDrive.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,14 +111,13 @@ public class MoveRobotFragment extends Fragment {
 
                 if (!activeFreeDrive) {
                     activeFreeDrive = true;
-                    String Comando = "movej(p[0.4,0,0.5,0,-3.1416,0])";
+                    String Comando = "teach_mode()";
                     Connect_Client.enviarMSG(Comando);
                 } else {
                     activeFreeDrive = false;
 
-                    Connect_Client.enviarMSG("end teach mode()");
+                    Connect_Client.enviarMSG("end_teach_mode()");
                 }
-
             }
         });
 
@@ -119,10 +133,7 @@ public class MoveRobotFragment extends Fragment {
 
         ListenersSeekBars();
 
-//movej
-
         return view;
-
     }
 
 
@@ -147,7 +158,7 @@ public class MoveRobotFragment extends Fragment {
                 double res = Integer.parseInt(editText_Base.getText().toString()) * 3.1416 / 180;
                 String Base = String.valueOf(res);
 
-                String Comando = "movej([" + Base + ",-1.58, 1.16, -1.15, -1.55, 1.18], a=1.0, v=0.2)";
+                String Comando = "movej([" + Base + ", -1.58, 1.16, -1.15, -1.55, 1.18], a=1.0, v=0.2)";
                 Connect_Client.enviarMSG(Comando);
 
             }

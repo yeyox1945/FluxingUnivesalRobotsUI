@@ -24,13 +24,12 @@ public class Conector_Cliente extends Thread {
     static boolean Stop = true;
 
     public String TxtLog;
+    public String serverResponse = "sin respuesta";
     public MainActivity Main = new MainActivity();
 
     public Conector_Cliente(String ip, int port) {
-
         this.port = port;
         this.ip = ip;
-
     }
 
 
@@ -38,7 +37,6 @@ public class Conector_Cliente extends Thread {
     public void run() {
         //Metodo en segundo plano
         String texto;
-
 
         while (true) {
             try {
@@ -49,15 +47,13 @@ public class Conector_Cliente extends Thread {
                         @Override
                         public void run() {
                             if (finalTexto != null) {
-
-                                //   TxtLog = "\nServidor : " + finalTexto; //Imprime la conversacion
-                                //   Main.PrintToTextview(TxtLog);
+                                serverResponse = finalTexto;
+                                TxtLog = "\nServidor : " + finalTexto; //Imprime la conversacion
+                                Main.PrintToTextview(TxtLog);
 
                             } else {
-
-                                //   TxtLog = "\nServidor :  Desconectado.";//Cuando se cierra el servidor
-                                //   Main.PrintToTextview(TxtLog);
-
+                                TxtLog = "\nServidor :  Desconectado.";//Cuando se cierra el servidor
+                                Main.PrintToTextview(TxtLog);
                             }
                         }
                     });
@@ -65,8 +61,6 @@ public class Conector_Cliente extends Thread {
             } catch (IOException e) {
                 TxtLog = "\nError :" + e.getMessage(); // cuando da error
                 Main.PrintToTextview(TxtLog);
-            } catch (NullPointerException e) {
-
             }
         }
 
@@ -81,9 +75,8 @@ public class Conector_Cliente extends Thread {
             Main.PrintToTextview(TxtLog);
 
         } catch (IOException e) {
-            TxtLog = "\nError :" + e.getMessage(); // cuando da error
+            TxtLog = "\nError : " + e.getMessage(); // cuando da error
             Main.PrintToTextview(TxtLog);
-
         }
     }
 
@@ -95,11 +88,10 @@ public class Conector_Cliente extends Thread {
         return null;
     }
 
-    public void Conectar() {
+    public void conectar() {
 
         //Conexion de cliente
         try {
-
             s = new Socket(ip, port);
             entradaSocket = new InputStreamReader(s.getInputStream());
             entrada = new BufferedReader(entradaSocket);
@@ -109,25 +101,18 @@ public class Conector_Cliente extends Thread {
 
         } catch (IOException e) {
 
-            TxtLog = "\nError :" + e.getMessage(); // cuando da error
+            TxtLog = "\nError : " + e.getMessage(); // cuando da error
             Main.PrintToTextview(TxtLog);
-
         }
-
     }
 
     public void desconectar() {
-
-
         try {
-
             s.close();
         } catch (IOException e) {
-            TxtLog = "\nError :" + e.getMessage(); // cuando da error
+            TxtLog = "\nError : " + e.getMessage(); // cuando da error
             Main.PrintToTextview(TxtLog);
 
         }
-
     }
-
 }

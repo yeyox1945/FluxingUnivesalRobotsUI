@@ -112,13 +112,11 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.Move_Robot) {
 
-
             FragmentSelect = true;
             fragment = new MoveRobotFragment();
 
-            Connect_Client = new Conector_Cliente("192.168.15.155", 30004);
+            Connect_Client = new Conector_Cliente("192.168.15.155", 30001);
             Connect_Client.conectar();
-            Connect_Client.start();
 
         } else if (id == R.id.nav_manage) {
 

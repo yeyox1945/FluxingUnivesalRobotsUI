@@ -1,5 +1,6 @@
 package com.automatizacion.fluxing.fluxingunivesalrobotsui;
 
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
 
@@ -7,6 +8,7 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.ServerSocket;
 import java.net.Socket;
 
 /*
@@ -15,6 +17,7 @@ import java.net.Socket;
 public class Conector_Cliente extends Thread {
 
     private Socket s;
+    private ServerSocket ss;
     private InputStreamReader entradaSocket;
     private DataOutputStream salida;
     private BufferedReader entrada;
@@ -28,6 +31,7 @@ public class Conector_Cliente extends Thread {
     public MainActivity Main = new MainActivity();
 
     public Conector_Cliente(String ip, int port) {
+
         this.port = port;
         this.ip = ip;
     }
@@ -48,12 +52,13 @@ public class Conector_Cliente extends Thread {
                         public void run() {
                             if (finalTexto != null) {
                                 serverResponse = finalTexto;
-                                TxtLog = "\nServidor : " + finalTexto; //Imprime la conversacion
-                                Main.PrintToTextview(TxtLog);
+                                //TxtLog = "\nServidor : " + finalTexto; //Imprime la conversacion
+                                //Main.PrintToTextview(TxtLog);
+                                System.out.println(finalTexto);
 
                             } else {
-                                TxtLog = "\nServidor :  Desconectado.";//Cuando se cierra el servidor
-                                Main.PrintToTextview(TxtLog);
+                                //TxtLog = "\nServidor :  Desconectado.";//Cuando se cierra el servidor
+                                //Main.PrintToTextview(TxtLog);
                             }
                         }
                     });
@@ -63,7 +68,6 @@ public class Conector_Cliente extends Thread {
                 Main.PrintToTextview(TxtLog);
             }
         }
-
     }
 
 
@@ -72,11 +76,11 @@ public class Conector_Cliente extends Thread {
             this.salida = new DataOutputStream(s.getOutputStream());
             this.salida.writeBytes(msg + "\n");
             TxtLog = "\nCliente : " + msg + "\n";//Cuando le envio un mensaje
-            Main.PrintToTextview(TxtLog);
+            //Main.PrintToTextview(TxtLog);
 
         } catch (IOException e) {
             TxtLog = "\nError : " + e.getMessage(); // cuando da error
-            Main.PrintToTextview(TxtLog);
+            //Main.PrintToTextview(TxtLog);
         }
     }
 
@@ -96,7 +100,7 @@ public class Conector_Cliente extends Thread {
             entradaSocket = new InputStreamReader(s.getInputStream());
             entrada = new BufferedReader(entradaSocket);
             salida = new DataOutputStream(s.getOutputStream());
-            TxtLog = "\nServidor Conectado."; // cuando da error
+            TxtLog = "\nServidor Conectado.";
             Main.PrintToTextview(TxtLog);
 
         } catch (IOException e) {
@@ -114,5 +118,29 @@ public class Conector_Cliente extends Thread {
             Main.PrintToTextview(TxtLog);
 
         }
+    }
+
+    public void conectarServidor() {
+
+        new AsyncTask<Integer, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Integer... integers) {
+
+                try {
+                    ss = new ServerSocket(port);
+                    s = ss.accept();
+                    entradaSocket = new InputStreamReader(s.getInputStream());
+                    entrada = new BufferedReader(entradaSocket);
+                    salida = new DataOutputStream(s.getOutputStream());
+                    TxtLog = "\nServidor Conectado."; // cuando da error
+                    start();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                return null;
+            }
+        }.execute(1);
     }
 }

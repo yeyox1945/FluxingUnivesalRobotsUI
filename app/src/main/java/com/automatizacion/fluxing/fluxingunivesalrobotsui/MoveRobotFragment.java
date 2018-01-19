@@ -12,6 +12,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SeekBar;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 import static com.automatizacion.fluxing.fluxingunivesalrobotsui.MainActivity.Connect_Client;
 
 
@@ -41,7 +44,16 @@ public class MoveRobotFragment extends Fragment {
     public EditText editText_Wrist3;
 
     public boolean activeFreeDrive = false;
+    Conector_Cliente connection;
 
+    // setting a home position before manually moving the robot
+
+    double base;
+    double shoulder;
+    double elbow;
+    double wrist1;
+    double wrist2;
+    double wrist3;
 
     private OnFragmentInteractionListener mListener;
 
@@ -91,18 +103,52 @@ public class MoveRobotFragment extends Fragment {
         editText_Wrist3 = view.findViewById(R.id.editText_Wrist3);
 
 
-
         // Setear seekbars con posicion actual del robot
 
-        Connect_Client.enviarMSG("var:=get_actual_joint_positions()");
 
-        Log.i("Respuesta", Connect_Client.serverResponse);
-        /*seekBar_Base.setProgress();
-        seekBar_Shoulder.setProgress();
-        seekBar_Elbow.setProgress();
-        seekBar_Wrist1.setProgress();
-        seekBar_Wrist2.setProgress();
-        seekBar_Wrist3.setProgress();*/
+        /*Conector_Cliente socket = new Conector_Cliente("192.168.15.21", 1025);
+        socket.conectarServidor();*/
+
+        /*Connect_Client.enviarMSG("Socket_Closed=True\n" +
+                "  while (True):\n" +
+                "    if (Socket_Closed ==  True  ):\n" +
+                "      socket_open(“192.168.15.21″, 1025)\n" +
+                "      global Socket_Closed =   False \n" +
+                "      varmsg(“Socket_Closed”,Socket_Closed)\n" +
+                "    end\n" +
+                "    socket_send_string(“Asking_Waypoint_1″)\n" +
+                "    sleep(3.0)\n" +
+                "  end");*/
+
+
+        base = 1.57;
+        shoulder = -2.12;
+        elbow = 1.39;
+        wrist1 = -0.84;
+        wrist2 = -1.57;
+        wrist3 = 1.57;
+
+        seekBar_Base.setProgress(roundDouble(base * 180 / 3.1416, 0) + 360);
+        seekBar_Shoulder.setProgress(roundDouble(shoulder * 180 / 3.1416, 0) + 360);
+        seekBar_Elbow.setProgress(roundDouble(elbow * 180 / 3.1416, 0) + 360);
+        seekBar_Wrist1.setProgress(roundDouble(wrist1 * 180 / 3.1416, 0) + 360);
+        seekBar_Wrist2.setProgress(roundDouble(wrist2 * 180 / 3.1416, 0) + 360);
+        seekBar_Wrist3.setProgress(roundDouble(wrist3 * 180 / 3.1416, 0) + 360);
+
+        editText_Base.setText(Integer.toString(seekBar_Base.getProgress()-360));
+        editText_Shoulder.setText(Integer.toString(seekBar_Shoulder.getProgress()-360));
+        editText_Elbow.setText(Integer.toString(seekBar_Elbow.getProgress()-360));
+        editText_Wrist1.setText(Integer.toString(seekBar_Wrist1.getProgress()-360));
+        editText_Wrist2.setText(Integer.toString(seekBar_Wrist2.getProgress()-360));
+        editText_Wrist3.setText(Integer.toString(seekBar_Wrist3.getProgress()-360));
+
+        Connect_Client.enviarMSG("movej(["+Double.toString(base)+
+                ", "+Double.toString(shoulder)+
+                ", "+Double.toString(elbow)+
+                ", "+Double.toString(wrist1)+
+                ", "+Double.toString(wrist2)+
+                ", "+Double.toString(wrist3)+
+                "], a=1.0, v=0.2)");
 
         Button Button_FreeDrive = view.findViewById(R.id.button_FreeDrive);
         Button_FreeDrive.setOnClickListener(new View.OnClickListener() {
@@ -126,8 +172,34 @@ public class MoveRobotFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                String Comando = "movej(p[0.4,0,0.5,0,-3.1416,0])";
-                Connect_Client.enviarMSG(Comando);
+                base = 1.57;
+                shoulder = -2.12;
+                elbow = 1.39;
+                wrist1 = -0.84;
+                wrist2 = -1.57;
+                wrist3 = 1.57;
+
+                seekBar_Base.setProgress(roundDouble(base * 180 / 3.1416, 0) + 360);
+                seekBar_Shoulder.setProgress(roundDouble(shoulder * 180 / 3.1416, 0) + 360);
+                seekBar_Elbow.setProgress(roundDouble(elbow * 180 / 3.1416, 0) + 360);
+                seekBar_Wrist1.setProgress(roundDouble(wrist1 * 180 / 3.1416, 0) + 360);
+                seekBar_Wrist2.setProgress(roundDouble(wrist2 * 180 / 3.1416, 0) + 360);
+                seekBar_Wrist3.setProgress(roundDouble(wrist3 * 180 / 3.1416, 0) + 360);
+
+                editText_Base.setText(Integer.toString(seekBar_Base.getProgress()-360));
+                editText_Shoulder.setText(Integer.toString(seekBar_Shoulder.getProgress()-360));
+                editText_Elbow.setText(Integer.toString(seekBar_Elbow.getProgress()-360));
+                editText_Wrist1.setText(Integer.toString(seekBar_Wrist1.getProgress()-360));
+                editText_Wrist2.setText(Integer.toString(seekBar_Wrist2.getProgress()-360));
+                editText_Wrist3.setText(Integer.toString(seekBar_Wrist3.getProgress()-360));
+
+                Connect_Client.enviarMSG("movej(["+Double.toString(base)+
+                        ", "+Double.toString(shoulder)+
+                        ", "+Double.toString(elbow)+
+                        ", "+Double.toString(wrist1)+
+                        ", "+Double.toString(wrist2)+
+                        ", "+Double.toString(wrist3)+
+                        "], a=1.0, v=0.2)");
             }
         });
 
@@ -156,11 +228,15 @@ public class MoveRobotFragment extends Fragment {
             public void onStopTrackingTouch(SeekBar seekBar) {
 
                 double res = Integer.parseInt(editText_Base.getText().toString()) * 3.1416 / 180;
-                String Base = String.valueOf(res);
-
-                String Comando = "movej([" + Base + ", -1.58, 1.16, -1.15, -1.55, 1.18], a=1.0, v=0.2)";
+                base = res;
+                String Comando = "movej(["+Double.toString(base)+
+                        ", "+Double.toString(shoulder)+
+                        ", "+Double.toString(elbow)+
+                        ", "+Double.toString(wrist1)+
+                        ", "+Double.toString(wrist2)+
+                        ", "+Double.toString(wrist3)+
+                        "], a=1.0, v=0.2)";
                 Connect_Client.enviarMSG(Comando);
-
             }
         });
 
@@ -181,9 +257,14 @@ public class MoveRobotFragment extends Fragment {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 double res = Integer.parseInt(editText_Shoulder.getText().toString()) * 3.1416 / 180;
-                String Shoulder = String.valueOf(res);
-
-                String Comando = "movej([-1.95," + Shoulder + ", 1.16, -1.15, -1.55, 1.18], a=1.0, v=0.2)";
+                shoulder = res;
+                String Comando = "movej(["+Double.toString(base)+
+                        ", "+Double.toString(shoulder)+
+                        ", "+Double.toString(elbow)+
+                        ", "+Double.toString(wrist1)+
+                        ", "+Double.toString(wrist2)+
+                        ", "+Double.toString(wrist3)+
+                        "], a=1.0, v=0.2)";
                 Connect_Client.enviarMSG(Comando);
             }
         });
@@ -205,9 +286,14 @@ public class MoveRobotFragment extends Fragment {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 double res = Integer.parseInt(editText_Elbow.getText().toString()) * 3.1416 / 180;
-                String Elbow = String.valueOf(res);
-
-                String Comando = "movej([-1.95,-1.58, " + Elbow + ", -1.15, -1.55, 1.18], a=1.0, v=0.2)";
+                elbow = res;
+                String Comando = "movej(["+Double.toString(base)+
+                        ", "+Double.toString(shoulder)+
+                        ", "+Double.toString(elbow)+
+                        ", "+Double.toString(wrist1)+
+                        ", "+Double.toString(wrist2)+
+                        ", "+Double.toString(wrist3)+
+                        "], a=1.0, v=0.2)";
                 Connect_Client.enviarMSG(Comando);
             }
         });
@@ -228,9 +314,14 @@ public class MoveRobotFragment extends Fragment {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 double res = Integer.parseInt(editText_Wrist1.getText().toString()) * 3.1416 / 180;
-                String Wrist1 = String.valueOf(res);
-
-                String Comando = "movej([-1.95, -1.58, 1.16, " + Wrist1 + ", -1.55, 1.18], a=1.0, v=0.2)";
+                wrist1 = res;
+                String Comando = "movej(["+Double.toString(base)+
+                        ", "+Double.toString(shoulder)+
+                        ", "+Double.toString(elbow)+
+                        ", "+Double.toString(wrist1)+
+                        ", "+Double.toString(wrist2)+
+                        ", "+Double.toString(wrist3)+
+                        "], a=1.0, v=0.2)";
                 Connect_Client.enviarMSG(Comando);
             }
         });
@@ -252,9 +343,14 @@ public class MoveRobotFragment extends Fragment {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 double res = Integer.parseInt(editText_Wrist2.getText().toString()) * 3.1416 / 180;
-                String Wrist2 = String.valueOf(res);
-
-                String Comando = "movej([-1.95, -1.58, 1.16, -1.15, " + Wrist2 + ", 1.18], a=1.0, v=0.2)";
+                wrist2 = res;
+                String Comando = "movej(["+Double.toString(base)+
+                        ", "+Double.toString(shoulder)+
+                        ", "+Double.toString(elbow)+
+                        ", "+Double.toString(wrist1)+
+                        ", "+Double.toString(wrist2)+
+                        ", "+Double.toString(wrist3)+
+                        "], a=1.0, v=0.2)";
                 Connect_Client.enviarMSG(Comando);
             }
         });
@@ -276,9 +372,14 @@ public class MoveRobotFragment extends Fragment {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 double res = Integer.parseInt(editText_Wrist3.getText().toString()) * 3.1416 / 180;
-                String Wrist3 = String.valueOf(res);
-
-                String Comando = "movej([-1.95, -1.58, 1.16, -1.15, -1.55, " + Wrist3 + "], a=1.0, v=0.2)";
+                wrist3 = res;
+                String Comando = "movej(["+Double.toString(base)+
+                        ", "+Double.toString(shoulder)+
+                        ", "+Double.toString(elbow)+
+                        ", "+Double.toString(wrist1)+
+                        ", "+Double.toString(wrist2)+
+                        ", "+Double.toString(wrist3)+
+                        "], a=1.0, v=0.2)";
                 Connect_Client.enviarMSG(Comando);
             }
         });
@@ -312,5 +413,15 @@ public class MoveRobotFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    public static int roundDouble(double value, int decimals) {
+        if (decimals < 0)
+            throw new IllegalArgumentException();
+
+        BigDecimal bigDecimal = new BigDecimal(value);
+        bigDecimal = bigDecimal.setScale(decimals, RoundingMode.HALF_UP);
+
+        return bigDecimal.intValue();
     }
 }

@@ -14,26 +14,60 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="8dp"
-        android:layout_marginRight="108dp"
+        android:layout_marginRight="36dp"
         android:layout_marginTop="8dp"
         android:text="TRegistrar robot UR"
-        app:layout_constraintBottom_toTopOf="@+id/TxtIPnueva"
-        app:layout_constraintEnd_toEndOf="@+id/TxtIPnueva"
+        android:textSize="21sp"
+        app:layout_constraintBottom_toTopOf="@+id/Edit_Registro_Nombre"
+        app:layout_constraintEnd_toEndOf="@+id/Edit_Registro_Nombre"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.304" />
+        app:layout_constraintVertical_bias="0.216" />
 
 
     <EditText
-        android:id="@+id/TxtIPnueva"
+        android:id="@+id/Edit_Registro_IP"
         android:layout_width="234dp"
-        android:layout_height="38dp"
+        android:layout_height="45dp"
         android:layout_below="@+id/textView4"
-        android:layout_marginBottom="96dp"
-        android:layout_marginLeft="36dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="176dp"
         android:hint="Indroduce la IP del robot"
-        app:layout_constraintBottom_toTopOf="@+id/buttonRegistrar"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.257"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
+
+    <EditText
+        android:id="@+id/Edit_Registro_Nombre"
+        android:layout_width="233dp"
+        android:layout_height="46dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="68dp"
+        android:ems="10"
+        android:hint="Nombre"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.256"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/Edit_Registro_Modelo"
+        android:layout_width="233dp"
+        android:layout_height="46dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="120dp"
+        android:ems="10"
+        android:hint="Modelo"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.256"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/buttonRegistrar"
@@ -41,12 +75,14 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView4"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="48dp"
-        android:layout_marginRight="8dp"
-        android:onClick="ButtonRegistrationRobot"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="224dp"
         android:text="Registrar"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/TxtIPnueva" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.901"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </android.support.constraint.ConstraintLayout>

@@ -48,7 +48,7 @@ public class Conector_Cliente extends Thread {
                         public void run() {
                             if (finalTexto != null) {
                                 serverResponse = finalTexto;
-                                TxtLog = "\nServidor : " + finalTexto; //Imprime la conversacion
+                                TxtLog = "\nServidor : " + serverResponse; //Imprime la conversacion
                                 Main.PrintToTextview(TxtLog);
 
                             } else {
@@ -72,7 +72,7 @@ public class Conector_Cliente extends Thread {
             this.salida = new DataOutputStream(s.getOutputStream());
             this.salida.writeBytes(msg + "\n");
             TxtLog = "\nCliente : " + msg + "\n";//Cuando le envio un mensaje
-            Main.PrintToTextview(TxtLog);
+           Main.PrintToTextview(TxtLog);
 
         } catch (IOException e) {
             TxtLog = "\nError : " + e.getMessage(); // cuando da error
@@ -96,7 +96,7 @@ public class Conector_Cliente extends Thread {
             entradaSocket = new InputStreamReader(s.getInputStream());
             entrada = new BufferedReader(entradaSocket);
             salida = new DataOutputStream(s.getOutputStream());
-            TxtLog = "\nServidor Conectado."; // cuando da error
+            TxtLog = "\nServidor Conectado.";
             Main.PrintToTextview(TxtLog);
 
         } catch (IOException e) {

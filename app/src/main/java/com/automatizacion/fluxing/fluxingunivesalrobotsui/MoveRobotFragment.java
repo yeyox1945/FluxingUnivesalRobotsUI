@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SeekBar;
 
-import static com.automatizacion.fluxing.fluxingunivesalrobotsui.MainActivity.Connect_Client;
+
 
 
 public class MoveRobotFragment extends Fragment {
@@ -41,7 +41,7 @@ public class MoveRobotFragment extends Fragment {
     public EditText editText_Wrist3;
 
     public boolean activeFreeDrive = false;
-
+    public static Conector_Cliente Connect_Client;
 
     private OnFragmentInteractionListener mListener;
 
@@ -72,8 +72,6 @@ public class MoveRobotFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        //return inflater.inflate(R.layout.fragment_move_robot, container, false);
-
         View view = inflater.inflate(R.layout.fragment_move_robot, container, false);
 
         seekBar_Base = view.findViewById(R.id.seekBar_Base);
@@ -91,18 +89,16 @@ public class MoveRobotFragment extends Fragment {
         editText_Wrist3 = view.findViewById(R.id.editText_Wrist3);
 
 
+        //Hace cambio de puerto
+        Connect_Client = new Conector_Cliente("192.168.15.155", 30001);
+        Connect_Client.conectar();
 
-        // Setear seekbars con posicion actual del robot
 
-        Connect_Client.enviarMSG("var:=get_actual_joint_positions()");
 
-        Log.i("Respuesta", Connect_Client.serverResponse);
-        /*seekBar_Base.setProgress();
-        seekBar_Shoulder.setProgress();
-        seekBar_Elbow.setProgress();
-        seekBar_Wrist1.setProgress();
-        seekBar_Wrist2.setProgress();
-        seekBar_Wrist3.setProgress();*/
+        //  Get and Setear seekbars con posicion actual del robot
+
+             //  GetPositions();
+
 
         Button Button_FreeDrive = view.findViewById(R.id.button_FreeDrive);
         Button_FreeDrive.setOnClickListener(new View.OnClickListener() {
@@ -282,6 +278,37 @@ public class MoveRobotFragment extends Fragment {
                 Connect_Client.enviarMSG(Comando);
             }
         });
+    }
+
+    public void GetPositions (){
+
+        Connect_Client.enviarMSG("var:=get_actual_joint_positions()");
+
+        Log.i("Respuesta", Connect_Client.serverResponse);
+
+        String cadena = Connect_Client.serverResponse;
+
+        String Base, Shoulder, Elbow, Wrist1, Wrist2, Wrist3;
+
+        cadena = cadena.replace("(", "");
+        cadena = cadena.replace(")", "");
+
+        String parte[] = cadena.split(",");
+
+        Base = parte[0];
+        Shoulder = parte[1];
+        Elbow = parte[2];
+        Wrist1 = parte[3];
+        Wrist2 = parte[4];
+        Wrist3 = parte[5];
+
+        seekBar_Base.setProgress(Integer.valueOf(Base));
+        seekBar_Shoulder.setProgress(Integer.valueOf(Shoulder));
+        seekBar_Elbow.setProgress(Integer.valueOf(Elbow));
+        seekBar_Wrist1.setProgress(Integer.valueOf(Wrist1));
+        seekBar_Wrist2.setProgress(Integer.valueOf(Wrist2));
+        seekBar_Wrist3.setProgress(Integer.valueOf(Wrist3));
+
     }
 
 

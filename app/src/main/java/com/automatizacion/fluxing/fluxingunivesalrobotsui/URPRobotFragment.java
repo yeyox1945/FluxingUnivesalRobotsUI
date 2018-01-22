@@ -1,12 +1,8 @@
 package com.automatizacion.fluxing.fluxingunivesalrobotsui;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,11 +11,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.text.method.ScrollingMovementMethod;
-import android.widget.Toast;
 
 import java.io.File;
-
-import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by Chava on 1/17/2018.
@@ -37,6 +30,7 @@ public class URPRobotFragment extends Fragment {
 
     public static FlxSFTP sftp = new FlxSFTP();
     private EditText eT_URP_FilePath;
+    private String FileName = "";
 
     public URPRobotFragment() {
     }
@@ -103,7 +97,7 @@ public class URPRobotFragment extends Fragment {
                 sftp.host = eT_FTP_Host.getText().toString();
                 sftp.username = eT_FTP_Username.getText().toString();
                 sftp.password = eT_FTP_Password.getText().toString();
-                sftp.ExecuteAsyncMethod(FlxSFTP.FlxMethod.Connect, "", "");
+                sftp.Connect();
             }
         });
 
@@ -111,7 +105,7 @@ public class URPRobotFragment extends Fragment {
         b_FTP_CD.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sftp.ExecuteAsyncMethod(FlxSFTP.FlxMethod.ChangeDirectory, eT_Directory.getText().toString(), "");
+                sftp.ChangeDirectoryAsync(eT_Directory.getText().toString());
             }
         });
 
@@ -119,8 +113,7 @@ public class URPRobotFragment extends Fragment {
         b_FTP_LS.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sftp.ExecuteAsyncMethod(FlxSFTP.FlxMethod.ReadDirectoryContent, "", "");
-                tV_FTP_Output.append(sftp.Result);
+                tV_FTP_Output.append(sftp.ReadDirectoryContentAsync());
             }
         });
 
@@ -128,15 +121,10 @@ public class URPRobotFragment extends Fragment {
         b_URP_SearchFile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*Intent intent = new Intent();
-                intent.setType("/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                intent.putExtra("return-data", true);
-                startActivityForResult(Intent.createChooser(intent, "Complete action using"),
-                                        Intent.CONTENTS_FILE_DESCRIPTOR);*/
                 new FileChooser(getActivity()).setFileListener(new FileChooser.FileSelectedListener() {
                     @Override public void fileSelected(final File file) {
-                        // do something with the file
+                        eT_URP_FilePath.setText(file.getPath());
+                        FileName = file.getName();
                     }}).showDialog();
             }
         });
@@ -145,27 +133,11 @@ public class URPRobotFragment extends Fragment {
         b_URP_Send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sftp.SendFile( eT_URP_FilePath.getText().toString(), "File.hao");
+                sftp.SendFileAsync( eT_URP_FilePath.getText().toString(), FileName);
             }
         });
 
         return view;
-    }
-
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        if (requestCode == Intent.CONTENTS_FILE_DESCRIPTOR && resultCode == RESULT_OK) {
-            Uri selectedFile = data.getData();
-            /*String[] filePathColumn = { MediaStore.Images.Media.DATA };
-            Cursor cursor = getContentResolver().query(selectedFile,filePathColumn, null, null, null);
-            cursor.moveToFirst();
-            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            String attachmentFile = cursor.getString(columnIndex);
-            //Log.e("Attachment Path:", attachmentFile);
-            //URI = Uri.parse("file://" + attachmentFile);
-            cursor.close();*/
-            eT_URP_FilePath.setText(selectedFile.getPath());
-        }
     }
 
     @Override

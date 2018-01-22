@@ -1,10 +1,10 @@
 package com.automatizacion.fluxing.fluxingunivesalrobotsui;
 
+import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -13,15 +13,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.EditText;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         AddRobotFragment.OnFragmentInteractionListener,
         ConnectRobotFragment.OnFragmentInteractionListener,
         MoveRobotFragment.OnFragmentInteractionListener {
-
-    public static Conector_Cliente Connect_Client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +29,11 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+
+        //Carga fragment de conexión com  opcion predeterminada
+        Fragment fragment = new ConnectRobotFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.Contenedor, fragment).commit();
+
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -48,7 +51,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -91,6 +94,7 @@ public class MainActivity extends AppCompatActivity
             FragmentSelect = true;
             fragment = new AddRobotFragment();
 
+
         } else if (id == R.id.Connect_Robot) {
 
             FragmentSelect = true;
@@ -98,17 +102,13 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.Move_Robot) {
 
-
             FragmentSelect = true;
             fragment = new MoveRobotFragment();
-
-            Connect_Client = new Conector_Cliente("192.168.15.155", 30004);
-            Connect_Client.conectar();
-            Connect_Client.start();
 
         } else if (id == R.id.nav_manage) {
 
         }
+
 
         if (FragmentSelect) {
             getSupportFragmentManager().beginTransaction().replace(R.id.Contenedor, fragment).commit();
@@ -125,21 +125,10 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    //Metodo se ejecuta cuando se oprime el boton registrar
-    public void ButtonRegistrationRobot(View v) {
-
-        EditText IP = findViewById(R.id.TxtIPnueva);
-        String IPnueva = IP.getText().toString();
-
-        AddRobotFragment FragmentAgregar = new AddRobotFragment();
-
-        FragmentAgregar.RegistroIPRobot(IPnueva);
-    }
-
 
     public static void PrintToTextview(String s) {
         ConnectRobotFragment.TxtLog.setText(ConnectRobotFragment.TxtLog.getText() + " " + s);
-    }
 
+    }
 
 }

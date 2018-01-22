@@ -9,6 +9,4 @@
     tools:context="com.automatizacion.fluxing.fluxingunivesalrobotsui.MainActivity"
     tools:showIn="@layout/app_bar_main">
 
-
-
 </android.support.constraint.ConstraintLayout>

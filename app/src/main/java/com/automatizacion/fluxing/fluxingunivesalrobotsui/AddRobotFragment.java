@@ -3,11 +3,17 @@ package com.automatizacion.fluxing.fluxingunivesalrobotsui;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 
 public class AddRobotFragment extends Fragment {
@@ -19,6 +25,7 @@ public class AddRobotFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
 
     private OnFragmentInteractionListener mListener;
 
@@ -49,7 +56,42 @@ public class AddRobotFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_add_robot, container, false);
+
+
+        View view = inflater.inflate(R.layout.fragment_add_robot, container, false);
+
+        final EditText Edit_Registro_Nombre = view.findViewById(R.id.Edit_Registro_Nombre);
+        final EditText Edit_Registro_Modelo = view.findViewById(R.id.Edit_Registro_Modelo);
+        final EditText Edit_Registro_IP = view.findViewById(R.id.Edit_Registro_IP);
+
+
+        Button BtnRegister = view.findViewById(R.id.buttonRegistrar);
+
+        BtnRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                SQLConexion SQL = new SQLConexion();
+
+                Boolean Validate = SQL.RegisterRobot(Edit_Registro_Nombre.getText().toString(), Edit_Registro_Modelo.getText().toString(), Edit_Registro_IP.getText().toString());
+
+                Edit_Registro_Nombre.setText("");
+                Edit_Registro_Modelo.setText("");
+                Edit_Registro_IP.setText("");
+
+                if(Validate){
+                    Toast.makeText(getContext(), "Registro Exitoso",
+                            Toast.LENGTH_LONG).show();
+                }else{
+                    Toast.makeText(getContext(), "Registro Erroneo",
+                            Toast.LENGTH_LONG).show();
+                }
+
+            }
+        });
+
+        return view;
 
     }
 
@@ -82,14 +124,5 @@ public class AddRobotFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    public void RegistroIPRobot(String IPNueva){
-
-        SQLConexion SQL = new SQLConexion();
-        SQL.ConnectionHelper();
-
-
-        System.out.println("La ip es  :" + IPNueva);
-
-        }
 
 }

@@ -121,34 +121,7 @@ public class MoveRobotFragment extends Fragment {
                 "  end");*/
 
 
-        base = 1.57;
-        shoulder = -2.12;
-        elbow = 1.39;
-        wrist1 = -0.84;
-        wrist2 = -1.57;
-        wrist3 = 1.57;
-
-        seekBar_Base.setProgress(roundDouble(base * 180 / 3.1416, 0) + 360);
-        seekBar_Shoulder.setProgress(roundDouble(shoulder * 180 / 3.1416, 0) + 360);
-        seekBar_Elbow.setProgress(roundDouble(elbow * 180 / 3.1416, 0) + 360);
-        seekBar_Wrist1.setProgress(roundDouble(wrist1 * 180 / 3.1416, 0) + 360);
-        seekBar_Wrist2.setProgress(roundDouble(wrist2 * 180 / 3.1416, 0) + 360);
-        seekBar_Wrist3.setProgress(roundDouble(wrist3 * 180 / 3.1416, 0) + 360);
-
-        editText_Base.setText(Integer.toString(seekBar_Base.getProgress()-360));
-        editText_Shoulder.setText(Integer.toString(seekBar_Shoulder.getProgress()-360));
-        editText_Elbow.setText(Integer.toString(seekBar_Elbow.getProgress()-360));
-        editText_Wrist1.setText(Integer.toString(seekBar_Wrist1.getProgress()-360));
-        editText_Wrist2.setText(Integer.toString(seekBar_Wrist2.getProgress()-360));
-        editText_Wrist3.setText(Integer.toString(seekBar_Wrist3.getProgress()-360));
-
-        Connect_Client.enviarMSG("movej(["+Double.toString(base)+
-                ", "+Double.toString(shoulder)+
-                ", "+Double.toString(elbow)+
-                ", "+Double.toString(wrist1)+
-                ", "+Double.toString(wrist2)+
-                ", "+Double.toString(wrist3)+
-                "], a=1.0, v=0.2)");
+       InitRobot();
 
         Button Button_FreeDrive = view.findViewById(R.id.button_FreeDrive);
         Button_FreeDrive.setOnClickListener(new View.OnClickListener() {
@@ -172,34 +145,7 @@ public class MoveRobotFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                base = 1.57;
-                shoulder = -2.12;
-                elbow = 1.39;
-                wrist1 = -0.84;
-                wrist2 = -1.57;
-                wrist3 = 1.57;
-
-                seekBar_Base.setProgress(roundDouble(base * 180 / 3.1416, 0) + 360);
-                seekBar_Shoulder.setProgress(roundDouble(shoulder * 180 / 3.1416, 0) + 360);
-                seekBar_Elbow.setProgress(roundDouble(elbow * 180 / 3.1416, 0) + 360);
-                seekBar_Wrist1.setProgress(roundDouble(wrist1 * 180 / 3.1416, 0) + 360);
-                seekBar_Wrist2.setProgress(roundDouble(wrist2 * 180 / 3.1416, 0) + 360);
-                seekBar_Wrist3.setProgress(roundDouble(wrist3 * 180 / 3.1416, 0) + 360);
-
-                editText_Base.setText(Integer.toString(seekBar_Base.getProgress()-360));
-                editText_Shoulder.setText(Integer.toString(seekBar_Shoulder.getProgress()-360));
-                editText_Elbow.setText(Integer.toString(seekBar_Elbow.getProgress()-360));
-                editText_Wrist1.setText(Integer.toString(seekBar_Wrist1.getProgress()-360));
-                editText_Wrist2.setText(Integer.toString(seekBar_Wrist2.getProgress()-360));
-                editText_Wrist3.setText(Integer.toString(seekBar_Wrist3.getProgress()-360));
-
-                Connect_Client.enviarMSG("movej(["+Double.toString(base)+
-                        ", "+Double.toString(shoulder)+
-                        ", "+Double.toString(elbow)+
-                        ", "+Double.toString(wrist1)+
-                        ", "+Double.toString(wrist2)+
-                        ", "+Double.toString(wrist3)+
-                        "], a=1.0, v=0.2)");
+                InitRobot();
             }
         });
 
@@ -423,5 +369,36 @@ public class MoveRobotFragment extends Fragment {
         bigDecimal = bigDecimal.setScale(decimals, RoundingMode.HALF_UP);
 
         return bigDecimal.intValue();
+    }
+
+    public void InitRobot() {
+        base = 1.57;
+        shoulder = -2.12;
+        elbow = 1.39;
+        wrist1 = -0.84;
+        wrist2 = -1.57;
+        wrist3 = 1.57;
+
+        seekBar_Base.setProgress(roundDouble(base * 180 / 3.1416, 0) + 360);
+        seekBar_Shoulder.setProgress(roundDouble(shoulder * 180 / 3.1416, 0) + 360);
+        seekBar_Elbow.setProgress(roundDouble(elbow * 180 / 3.1416, 0) + 360);
+        seekBar_Wrist1.setProgress(roundDouble(wrist1 * 180 / 3.1416, 0) + 360);
+        seekBar_Wrist2.setProgress(roundDouble(wrist2 * 180 / 3.1416, 0) + 360);
+        seekBar_Wrist3.setProgress(roundDouble(wrist3 * 180 / 3.1416, 0) + 360);
+
+        editText_Base.setText(Integer.toString(seekBar_Base.getProgress()-360));
+        editText_Shoulder.setText(Integer.toString(seekBar_Shoulder.getProgress()-360));
+        editText_Elbow.setText(Integer.toString(seekBar_Elbow.getProgress()-360));
+        editText_Wrist1.setText(Integer.toString(seekBar_Wrist1.getProgress()-360));
+        editText_Wrist2.setText(Integer.toString(seekBar_Wrist2.getProgress()-360));
+        editText_Wrist3.setText(Integer.toString(seekBar_Wrist3.getProgress()-360));
+
+        Connect_Client.enviarMSG("movej(["+Double.toString(base)+
+                ", "+Double.toString(shoulder)+
+                ", "+Double.toString(elbow)+
+                ", "+Double.toString(wrist1)+
+                ", "+Double.toString(wrist2)+
+                ", "+Double.toString(wrist3)+
+                "], a=1.0, v=0.2)");
     }
 }

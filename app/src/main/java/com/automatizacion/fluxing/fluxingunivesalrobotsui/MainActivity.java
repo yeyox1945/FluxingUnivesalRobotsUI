@@ -3,9 +3,7 @@ package com.automatizacion.fluxing.fluxingunivesalrobotsui;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.support.v4.app.Fragment;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -14,8 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.EditText;
-import android.widget.TextView;
+
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -24,12 +21,6 @@ public class MainActivity extends AppCompatActivity
         MoveRobotFragment.OnFragmentInteractionListener,
         URPRobotFragment.OnFragmentInteractionListener {
 
-
-    public static Conector_Cliente Connect_Client;
-    public static TextView TxtLog;
-    public static EditText TxtMSG;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -37,29 +28,31 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        TxtLog = findViewById(R.id.TxtLog);
-        TxtMSG = findViewById(R.id.EditCommand);
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //Carga fragment de conexión com  opcion predeterminada
+        Fragment fragment = new ConnectRobotFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.Contenedor, fragment).commit();
+
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -126,7 +119,7 @@ public class MainActivity extends AppCompatActivity
             getSupportFragmentManager().beginTransaction().replace(R.id.Contenedor, fragment).commit();
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -137,48 +130,8 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    //Metodo se ejecuta cuando se oprime el boton registrar
-    public void ButtonRegistrationRobot(View v) {
-
-
-        EditText IP = findViewById(R.id.TxtIPnueva);
-        String IPnueva = IP.getText().toString();
-
-        AddRobotFragment FragmentAgregar = new AddRobotFragment();
-
-        FragmentAgregar.RegistroIPRobot(IPnueva);
-    }
-
-    //Metodo se ejecuta al conectar un robot
-    public void OnClickConectarRobot(View view) {
-
-
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-
-        String ip = "192.168.15.155";
-
-        TxtLog = findViewById(R.id.TxtLog);
-
-        Connect_Client = new Conector_Cliente(ip);
-        Connect_Client.start();
-    }
-
-
-    public void OnClicksendOrder(View view) {
-
-        TxtLog = findViewById(R.id.TxtLog);
-        TxtMSG = findViewById(R.id.EditCommand);
-
-        Connect_Client.enviarMSG(TxtMSG.getText().toString());
-        TxtLog.setText(TxtLog.getText() + "\nCliente : " + TxtMSG.getText());
-        TxtMSG.setText("");
-
-    }
 
     public static void PrintToTextview(String s) {
-        TxtLog.setText(TxtLog.getText() + " " + s);
+        ConnectRobotFragment.TxtLog.setText(ConnectRobotFragment.TxtLog.getText() + " " + s);
     }
-
-
 }

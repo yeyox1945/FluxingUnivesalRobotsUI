@@ -3,20 +3,19 @@ package com.automatizacion.fluxing.fluxingunivesalrobotsui;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link AddRobotFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link AddRobotFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+
 public class AddRobotFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -27,19 +26,13 @@ public class AddRobotFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+
     private OnFragmentInteractionListener mListener;
 
     public AddRobotFragment() {
         // Required empty public constructor
     }
-  /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment AddRobotFragment.
-     */
+
     // TODO: Rename and change types and number of parameters
     public static AddRobotFragment newInstance(String param1, String param2) {
         AddRobotFragment fragment = new AddRobotFragment();
@@ -63,7 +56,38 @@ public class AddRobotFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_add_robot, container, false);
+        View view = inflater.inflate(R.layout.fragment_add_robot, container, false);
+
+        final EditText Edit_Registro_Nombre = view.findViewById(R.id.Edit_Registro_Nombre);
+        final EditText Edit_Registro_Modelo = view.findViewById(R.id.Edit_Registro_Modelo);
+        final EditText Edit_Registro_IP = view.findViewById(R.id.Edit_Registro_IP);
+
+
+        Button BtnRegister = view.findViewById(R.id.buttonRegistrar);
+
+        BtnRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                SQLConexion SQL = new SQLConexion();
+
+                Boolean Validate = SQL.RegisterRobot(Edit_Registro_Nombre.getText().toString(), Edit_Registro_Modelo.getText().toString(), Edit_Registro_IP.getText().toString());
+
+                Edit_Registro_Nombre.setText("");
+                Edit_Registro_Modelo.setText("");
+                Edit_Registro_IP.setText("");
+
+                if(Validate){
+                    Toast.makeText(getContext(), "Registro Exitoso",
+                            Toast.LENGTH_LONG).show();
+                }else{
+                    Toast.makeText(getContext(), "Registro Erroneo",
+                            Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+        return view;
 
     }
 
@@ -91,29 +115,8 @@ public class AddRobotFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
-
-    public void RegistroIPRobot(String IPNueva){
-
-        SQLConexion SQL = new SQLConexion();
-        SQL.ConnectionHelper();
-
-
-        System.out.println("La ip es  :" + IPNueva);
-
-        }
-
 }

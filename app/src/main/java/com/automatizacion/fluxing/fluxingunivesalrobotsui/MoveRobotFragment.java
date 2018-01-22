@@ -104,25 +104,7 @@ public class MoveRobotFragment extends Fragment {
         Connect_Client = new Conector_Cliente("192.168.15.155", 30001);
         Connect_Client.conectar();
 
-
-        Connect_Client.enviarMSG("var:=get_actual_joint_positions()");
-
-        /*Conector_Cliente socket = new Conector_Cliente("192.168.15.21", 1025);
-        socket.conectarServidor();*/
-
-        /*Connect_Client.enviarMSG("Socket_Closed=True\n" +
-                "  while (True):\n" +
-                "    if (Socket_Closed ==  True  ):\n" +
-                "      socket_open(“192.168.15.21″, 1025)\n" +
-                "      global Socket_Closed =   False \n" +
-                "      varmsg(“Socket_Closed”,Socket_Closed)\n" +
-                "    end\n" +
-                "    socket_send_string(“Asking_Waypoint_1″)\n" +
-                "    sleep(3.0)\n" +
-                "  end");*/
-
-
-       InitRobot();
+        InitRobot();
 
         Button Button_FreeDrive = view.findViewById(R.id.button_FreeDrive);
         Button_FreeDrive.setOnClickListener(new View.OnClickListener() {
@@ -145,7 +127,6 @@ public class MoveRobotFragment extends Fragment {
         Button_HomePosition.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 InitRobot();
             }
         });
@@ -333,36 +314,7 @@ public class MoveRobotFragment extends Fragment {
         });
     }
 
-    public void GetPositions (){
 
-        Connect_Client.enviarMSG("var:=get_actual_joint_positions()");
-
-        Log.i("Respuesta", Connect_Client.serverResponse);
-
-        String cadena = Connect_Client.serverResponse;
-
-        String Base, Shoulder, Elbow, Wrist1, Wrist2, Wrist3;
-
-        cadena = cadena.replace("(", "");
-        cadena = cadena.replace(")", "");
-
-        String parte[] = cadena.split(",");
-
-        Base = parte[0];
-        Shoulder = parte[1];
-        Elbow = parte[2];
-        Wrist1 = parte[3];
-        Wrist2 = parte[4];
-        Wrist3 = parte[5];
-
-        seekBar_Base.setProgress(Integer.valueOf(Base));
-        seekBar_Shoulder.setProgress(Integer.valueOf(Shoulder));
-        seekBar_Elbow.setProgress(Integer.valueOf(Elbow));
-        seekBar_Wrist1.setProgress(Integer.valueOf(Wrist1));
-        seekBar_Wrist2.setProgress(Integer.valueOf(Wrist2));
-        seekBar_Wrist3.setProgress(Integer.valueOf(Wrist3));
-
-    }
 
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -402,6 +354,48 @@ public class MoveRobotFragment extends Fragment {
         bigDecimal = bigDecimal.setScale(decimals, RoundingMode.HALF_UP);
 
         return bigDecimal.intValue();
+    }
+
+    public void GetPositions (){
+
+        /*Conector_Cliente socket = new Conector_Cliente("192.168.15.21", 1025);
+        socket.conectarServidor();*/
+
+        /*Connect_Client.enviarMSG("Socket_Closed=True\n" +
+                "  while (True):\n" +
+                "    if (Socket_Closed ==  True  ):\n" +
+                "      socket_open(“192.168.15.21″, 1025)\n" +
+                "      global Socket_Closed =   False \n" +
+                "      varmsg(“Socket_Closed”,Socket_Closed)\n" +
+                "    end\n" +
+                "    socket_send_string(“Asking_Waypoint_1″)\n" +
+                "    sleep(3.0)\n" +
+                "  end");*/
+
+        Log.i("Respuesta", Connect_Client.serverResponse);
+
+        String cadena = Connect_Client.serverResponse;
+
+        String Base, Shoulder, Elbow, Wrist1, Wrist2, Wrist3;
+
+        cadena = cadena.replace("(", "");
+        cadena = cadena.replace(")", "");
+
+        String parte[] = cadena.split(",");
+
+        Base = parte[0];
+        Shoulder = parte[1];
+        Elbow = parte[2];
+        Wrist1 = parte[3];
+        Wrist2 = parte[4];
+        Wrist3 = parte[5];
+
+        seekBar_Base.setProgress(Integer.valueOf(Base));
+        seekBar_Shoulder.setProgress(Integer.valueOf(Shoulder));
+        seekBar_Elbow.setProgress(Integer.valueOf(Elbow));
+        seekBar_Wrist1.setProgress(Integer.valueOf(Wrist1));
+        seekBar_Wrist2.setProgress(Integer.valueOf(Wrist2));
+        seekBar_Wrist3.setProgress(Integer.valueOf(Wrist3));
     }
 
     public void InitRobot() {

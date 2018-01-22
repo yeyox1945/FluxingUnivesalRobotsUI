@@ -1,12 +1,8 @@
 package com.automatizacion.fluxing.fluxingunivesalrobotsui;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,11 +11,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.text.method.ScrollingMovementMethod;
-import android.widget.Toast;
 
 import java.io.File;
-
-import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by Chava on 1/17/2018.
@@ -128,15 +121,9 @@ public class URPRobotFragment extends Fragment {
         b_URP_SearchFile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*Intent intent = new Intent();
-                intent.setType("/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                intent.putExtra("return-data", true);
-                startActivityForResult(Intent.createChooser(intent, "Complete action using"),
-                                        Intent.CONTENTS_FILE_DESCRIPTOR);*/
                 new FileChooser(getActivity()).setFileListener(new FileChooser.FileSelectedListener() {
                     @Override public void fileSelected(final File file) {
-                        // do something with the file
+                        eT_URP_FilePath.setText(file.getPath());
                     }}).showDialog();
             }
         });
@@ -150,22 +137,6 @@ public class URPRobotFragment extends Fragment {
         });
 
         return view;
-    }
-
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        if (requestCode == Intent.CONTENTS_FILE_DESCRIPTOR && resultCode == RESULT_OK) {
-            Uri selectedFile = data.getData();
-            /*String[] filePathColumn = { MediaStore.Images.Media.DATA };
-            Cursor cursor = getContentResolver().query(selectedFile,filePathColumn, null, null, null);
-            cursor.moveToFirst();
-            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            String attachmentFile = cursor.getString(columnIndex);
-            //Log.e("Attachment Path:", attachmentFile);
-            //URI = Uri.parse("file://" + attachmentFile);
-            cursor.close();*/
-            eT_URP_FilePath.setText(selectedFile.getPath());
-        }
     }
 
     @Override

@@ -127,7 +127,6 @@ public class MoveRobotFragment extends Fragment {
         Button_HomePosition.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 InitRobot();
             }
         });

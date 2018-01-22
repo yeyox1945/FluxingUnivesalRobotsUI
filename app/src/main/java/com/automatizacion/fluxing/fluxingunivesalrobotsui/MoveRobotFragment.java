@@ -11,11 +11,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SeekBar;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-
-import static com.automatizacion.fluxing.fluxingunivesalrobotsui.MainActivity.Connect_Client;
 
 
 public class MoveRobotFragment extends Fragment {
@@ -44,8 +41,7 @@ public class MoveRobotFragment extends Fragment {
     public EditText editText_Wrist3;
 
     public boolean activeFreeDrive = false;
-    Conector_Cliente connection;
-
+    public static Conector_Cliente Connect_Client;
     // setting a home position before manually moving the robot
 
     double base;
@@ -54,6 +50,7 @@ public class MoveRobotFragment extends Fragment {
     double wrist1;
     double wrist2;
     double wrist3;
+
 
     private OnFragmentInteractionListener mListener;
 
@@ -103,8 +100,12 @@ public class MoveRobotFragment extends Fragment {
         editText_Wrist3 = view.findViewById(R.id.editText_Wrist3);
 
 
-        // Setear seekbars con posicion actual del robot
+        //Hace cambio de puerto
+        Connect_Client = new Conector_Cliente("192.168.15.155", 30001);
+        Connect_Client.conectar();
 
+
+        Connect_Client.enviarMSG("var:=get_actual_joint_positions()");
 
         /*Conector_Cliente socket = new Conector_Cliente("192.168.15.21", 1025);
         socket.conectarServidor();*/
@@ -183,6 +184,7 @@ public class MoveRobotFragment extends Fragment {
                         ", "+Double.toString(wrist3)+
                         "], a=1.0, v=0.2)";
                 Connect_Client.enviarMSG(Comando);
+
             }
         });
 
@@ -329,6 +331,37 @@ public class MoveRobotFragment extends Fragment {
                 Connect_Client.enviarMSG(Comando);
             }
         });
+    }
+
+    public void GetPositions (){
+
+        Connect_Client.enviarMSG("var:=get_actual_joint_positions()");
+
+        Log.i("Respuesta", Connect_Client.serverResponse);
+
+        String cadena = Connect_Client.serverResponse;
+
+        String Base, Shoulder, Elbow, Wrist1, Wrist2, Wrist3;
+
+        cadena = cadena.replace("(", "");
+        cadena = cadena.replace(")", "");
+
+        String parte[] = cadena.split(",");
+
+        Base = parte[0];
+        Shoulder = parte[1];
+        Elbow = parte[2];
+        Wrist1 = parte[3];
+        Wrist2 = parte[4];
+        Wrist3 = parte[5];
+
+        seekBar_Base.setProgress(Integer.valueOf(Base));
+        seekBar_Shoulder.setProgress(Integer.valueOf(Shoulder));
+        seekBar_Elbow.setProgress(Integer.valueOf(Elbow));
+        seekBar_Wrist1.setProgress(Integer.valueOf(Wrist1));
+        seekBar_Wrist2.setProgress(Integer.valueOf(Wrist2));
+        seekBar_Wrist3.setProgress(Integer.valueOf(Wrist3));
+
     }
 
 

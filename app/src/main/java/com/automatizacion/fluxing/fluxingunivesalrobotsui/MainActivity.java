@@ -41,6 +41,11 @@ public class MainActivity extends AppCompatActivity
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
 
+        //Carga fragment de conexión com  opcion predeterminada
+        Fragment fragment = new ConnectRobotFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.Contenedor, fragment).commit();
+
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -61,7 +66,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -112,11 +117,9 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.Move_Robot) {
 
+
             FragmentSelect = true;
             fragment = new MoveRobotFragment();
-
-            Connect_Client = new Conector_Cliente("192.168.15.155", 30001);
-            Connect_Client.conectar();
 
         } else if (id == R.id.nav_manage) {
 
@@ -126,7 +129,7 @@ public class MainActivity extends AppCompatActivity
             getSupportFragmentManager().beginTransaction().replace(R.id.Contenedor, fragment).commit();
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -137,46 +140,9 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    //Metodo se ejecuta cuando se oprime el boton registrar
-    public void ButtonRegistrationRobot(View v) {
-
-
-        EditText IP = findViewById(R.id.TxtIPnueva);
-        String IPnueva = IP.getText().toString();
-
-        AddRobotFragment FragmentAgregar = new AddRobotFragment();
-
-        FragmentAgregar.RegistroIPRobot(IPnueva);
-    }
-
-    //Metodo se ejecuta al conectar un robot
-    public void OnClickConectarRobot(View view) {
-
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-
-        TxtLog = findViewById(R.id.TxtLog);
-
-        Connect_Client = new Conector_Cliente("192.168.15.155", 29999);
-        Connect_Client.conectar();
-        Connect_Client.start();
-    }
-
-
-    public void OnClicksendOrder(View view) {
-
-        TxtLog = findViewById(R.id.TxtLog);
-        TxtMSG = findViewById(R.id.EditCommand);
-
-        Connect_Client.enviarMSG(TxtMSG.getText().toString());
-        TxtLog.setText(TxtLog.getText() + "\nServidor : " + TxtMSG.getText());
-        TxtMSG.setText("");
-
-    }
 
     public static void PrintToTextview(String s) {
-        TxtLog.setText(TxtLog.getText() + " " + s);
-    }
+        ConnectRobotFragment.TxtLog.setText(ConnectRobotFragment.TxtLog.getText() + " " + s);
 
 
 }

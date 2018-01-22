@@ -31,7 +31,6 @@ public class Conector_Cliente extends Thread {
     public MainActivity Main = new MainActivity();
 
     public Conector_Cliente(String ip, int port) {
-
         this.port = port;
         this.ip = ip;
     }
@@ -52,13 +51,12 @@ public class Conector_Cliente extends Thread {
                         public void run() {
                             if (finalTexto != null) {
                                 serverResponse = finalTexto;
-                                //TxtLog = "\nServidor : " + finalTexto; //Imprime la conversacion
-                                //Main.PrintToTextview(TxtLog);
-                                System.out.println(finalTexto);
+                                TxtLog = "\nServidor : " + serverResponse; //Imprime la conversacion
+                                Main.PrintToTextview(TxtLog);
 
                             } else {
-                                //TxtLog = "\nServidor :  Desconectado.";//Cuando se cierra el servidor
-                                //Main.PrintToTextview(TxtLog);
+                                TxtLog = "\nServidor :  Desconectado.";//Cuando se cierra el servidor
+                                Main.PrintToTextview(TxtLog);
                             }
                         }
                     });
@@ -68,6 +66,7 @@ public class Conector_Cliente extends Thread {
                 Main.PrintToTextview(TxtLog);
             }
         }
+
     }
 
 
@@ -76,11 +75,11 @@ public class Conector_Cliente extends Thread {
             this.salida = new DataOutputStream(s.getOutputStream());
             this.salida.writeBytes(msg + "\n");
             TxtLog = "\nCliente : " + msg + "\n";//Cuando le envio un mensaje
-            //Main.PrintToTextview(TxtLog);
+           Main.PrintToTextview(TxtLog);
 
         } catch (IOException e) {
             TxtLog = "\nError : " + e.getMessage(); // cuando da error
-            //Main.PrintToTextview(TxtLog);
+            Main.PrintToTextview(TxtLog);
         }
     }
 

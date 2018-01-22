@@ -116,6 +116,7 @@ public class MainActivity extends AppCompatActivity
 
             FragmentSelect = true;
             fragment = new URPRobotFragment();
+            URPRobotFragment.sftp.Disconnect();
 
         } else if (id == R.id.nav_manage) {
 
@@ -173,12 +174,6 @@ public class MainActivity extends AppCompatActivity
         TxtLog.setText(TxtLog.getText() + "\nCliente : " + TxtMSG.getText());
         TxtMSG.setText("");
 
-    }
-
-    public void onClick_b_URPConnect(View view)
-    {
-        EditText eT_Host = findViewById(R.id.eT_Host);
-        eT_Host.setText("No se puede conectar");
     }
 
     public static void PrintToTextview(String s) {

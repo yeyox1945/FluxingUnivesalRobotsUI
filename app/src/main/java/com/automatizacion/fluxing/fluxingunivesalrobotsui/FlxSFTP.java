@@ -15,14 +15,10 @@ import java.util.Vector;
  * @author Chava
  */
 public class FlxSFTP {
-    public enum FlxMethod { Connect, Disconnect, GetCurrentLocalPath, GetCurrentRemotePath,
-                        ReadDirectoryContent, ChangeDirectory, SendFile, ReceiveFile }
     private final JSch jsch = new JSch();
     private Session session;
     private ChannelSftp sftp;
-    public boolean Connected = false;
     public boolean Busy = false;
-    public String Result = "";
     String log = "";
     String username = "";
     String password = "";
@@ -32,81 +28,121 @@ public class FlxSFTP {
     {
     }
 
-    public boolean Connect()
-    {
-        LogWriteLn("");
-        try
-        {
-            // connecting to the host
-            session = jsch.getSession(username, host, 22);
-            session.setConfig("StrictHostKeyChecking", "no");
-            //session.setPassword(new String(PF_Password.getPassword()));
-            session.setPassword(password);
-            LogWriteLn("Connecting...");
-            session.connect();
-            sftp = (ChannelSftp)session.openChannel("sftp");
-            sftp.connect();
-            LogWriteLn("Connected");
-            return true;
-        }
-        catch (JSchException | NumberFormatException e)
-        {
-            LogWriteLn("Error: " + e.getMessage());
-            Disconnect();
-            return false;
-        }
+    public void Connect() {
+        if (Busy) return;
+        Busy = true;
+        new AsyncTask<Object, Void, Void>() {
+            @Override
+            protected Void doInBackground(Object... params) {
+                LogWriteLn("");
+                try {
+                    session = jsch.getSession(username, host, 22);
+                    session.setConfig("StrictHostKeyChecking", "no");
+                    session.setPassword(password);
+                    LogWriteLn("Connecting...");
+                    session.connect();
+                    sftp = (ChannelSftp) session.openChannel("sftp");
+                    sftp.connect();
+                    LogWriteLn("Connected");
+                } catch (JSchException | NumberFormatException e) {
+                    LogWriteLn("Error: " + e.getMessage());
+                    Disconnect();
+                }
+                Busy = false;
+                return null;
+            }
+        }.execute(1);
+        WaitTask();
     }
     
-    public boolean Disconnect()
-    {
-        LogWriteLn("");
-        try
-         {
-            if(session == null || sftp == null) return true;
-            sftp.exit();
-            sftp.disconnect();
-            session.disconnect();
-            return true;
-         }
-         catch (Exception e)
-         {
-                LogWriteLn("Error: Could not disconnect from the host");
-                return false;
-         }
+    public void Disconnect() {
+        if (Busy) return;
+        Busy = true;
+        new AsyncTask<Object, Void, Void>() {
+            @Override
+            protected Void doInBackground(Object... params) {
+                LogWriteLn("");
+                try {
+                    if (session == null || sftp == null) {
+                        Busy = false;
+                        return null;
+                    }
+                    sftp.exit();
+                    sftp.disconnect();
+                    session.disconnect();
+                } catch (Exception e) {
+                    LogWriteLn("Error: Could not disconnect from the host");
+                }
+                Busy = false;
+                return null;
+            }
+        }.execute(1);
+        WaitTask();
     }
-    
-    public String GetCurrentLocalPath()
-    {
-         try
-        {
+
+    public String GetCurrentLocalPath() {
+        try {
             return sftp.lpwd();
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             LogWriteLn("Error: " + e.getMessage());
         }
-         return "";
+        return "";
     }
     
-    public String GetCurrentRemotePath()
-    {
-         try
-        {
+    public String GetCurrentLocalPathAsync() {
+        if (Busy) return "";
+        Busy = true;
+        final String[] ret = {""};
+        new AsyncTask<Object, Void, Void>() {
+            @Override
+            protected Void doInBackground(Object... params) {
+                try {
+                    ret[0] = sftp.lpwd();
+                } catch (Exception e) {
+                    LogWriteLn("Error: " + e.getMessage());
+                }
+                Busy = false;
+                return null;
+            }
+        }.execute(1);
+        WaitTask();
+        return ret[0];
+    }
+
+    public String GetCurrentRemotePath() {
+        try {
             return sftp.pwd();
-        }
-        catch(SftpException e)
-        {
+        } catch (Exception e) {
             LogWriteLn("Error: " + e.getMessage());
         }
-         return "";
+        return "";
     }
     
+    public String GetCurrentRemotePathAsync() {
+        if (Busy) return "";
+        Busy = true;
+        final String[] ret = {""};
+        new AsyncTask<Object, Void, Void>() {
+            @Override
+            protected Void doInBackground(Object... params) {
+                try {
+                    ret[0] = sftp.pwd();
+                } catch (SftpException e) {
+                    LogWriteLn("Error: " + e.getMessage());
+                }
+                Busy = false;
+                return null;
+            }
+        }.execute(1);
+        WaitTask();
+        return ret[0];
+    }
+
     public String ReadDirectoryContent()
     {
         String ret = "";
         try
         {
-            LogWriteLn(sftp.pwd());
             Vector files = sftp.ls(GetCurrentRemotePath());
             int Count = 0;
             for(int i=0; i<files.size();i++)
@@ -124,15 +160,47 @@ public class FlxSFTP {
         catch(SftpException e)
         {
             LogWriteLn("Error: " + e.getMessage());
-            return "";
         }
-        return ret + "\n";
+        ret += "\n";
+        return ret;
     }
     
+    public String ReadDirectoryContentAsync() {
+        if (Busy) return "";
+        Busy = true;
+        final String[] ret = {""};
+        new AsyncTask<Object, Void, Void>() {
+            @Override
+            protected Void doInBackground(Object... params) {
+                try {
+                    LogWriteLn(sftp.pwd());
+                    Vector files = sftp.ls(GetCurrentRemotePath());
+                    int Count = 0;
+                    for (int i = 0; i < files.size(); i++) {
+                        ChannelSftp.LsEntry entry = (ChannelSftp.LsEntry) files.get(i);
+                        ret[0] += entry.getFilename() + "\t\t";
+                        Count++;
+                        if (Count > 5) {
+                            ret[0] += "\n";
+                            Count = 0;
+                        }
+                    }
+                } catch (SftpException e) {
+                    LogWriteLn("Error: " + e.getMessage());
+                }
+                ret[0] += "\n";
+                Busy = false;
+                return null;
+            }
+        }.execute(1);
+        WaitTask();
+        return ret[0];
+    }
+
     public boolean ChangeDirectory(String Path)
     {
         LogWriteLn("");
-         try
+        try
         {
             sftp.cd(Path);
             LogWriteLn(GetCurrentRemotePath());
@@ -142,9 +210,29 @@ public class FlxSFTP {
             LogWriteLn("Error: " + e.getMessage());
             return false;
         }
-         return true;
+        return true;
     }
     
+    public void ChangeDirectoryAsync(final String Path) {
+        if (Busy) return;
+        Busy = true;
+        new AsyncTask<Object, Void, Void>() {
+            @Override
+            protected Void doInBackground(Object... params) {
+                LogWriteLn("");
+                try {
+                    sftp.cd(Path);
+                    LogWriteLn(GetCurrentRemotePath());
+                } catch (SftpException e) {
+                    LogWriteLn("Error: " + e.getMessage());
+                }
+                Busy = false;
+                return null;
+            }
+        }.execute(1);
+        WaitTask();
+    }
+
     public boolean SendFile(String LocalPath, String RemoteName)
     {
         LogWriteLn("");
@@ -155,17 +243,40 @@ public class FlxSFTP {
         }
         catch(SftpException e)
         {
-            LogWriteLn("Error: " + e.toString());
+            LogWriteLn("Error: " + e.getMessage());
             return false;
         }
         return true;
     }
     
+    public void SendFileAsync(final String LocalPath, final String RemoteName)
+    {
+        if (Busy) return;
+        Busy = true;
+        new AsyncTask<Object, Void, Void>() {
+            @Override
+            protected Void doInBackground(Object... params) {
+                LogWriteLn("");
+                try {
+                    LogWriteLn("Sending...");
+                    sftp.put(LocalPath, RemoteName);
+                    LogWriteLn("File sended!");
+                } catch (SftpException e) {
+                    LogWriteLn("Error: " + e.toString());
+                }
+                Busy = false;
+                return null;
+            }
+        }.execute(1);
+        WaitTask();
+    }
+
     public boolean ReceiveFile(String RemoteName, String LocalPath)
     {
         LogWriteLn("");
         try
         {
+            LogWriteLn("Receiving file...");
             sftp.get(RemoteName, LocalPath);
             LogWriteLn("File received!");
         }
@@ -176,49 +287,24 @@ public class FlxSFTP {
         }
         return true;
     }
-
-    public void ExecuteAsyncMethod(FlxMethod Meth, String Param1, String Param2) {
+    
+    public void ReceiveFileAsync(final String RemoteName, final String LocalPath) {
         if (Busy) return;
         Busy = true;
-        Result = "";
-
         new AsyncTask<Object, Void, Void>() {
             @Override
             protected Void doInBackground(Object... params) {
+                LogWriteLn("");
                 try {
-                    switch ((FlxMethod) params[0]) {
-                        case Connect:
-                            Connected = Connect();
-                            break;
-                        case Disconnect:
-                            Connected = !Disconnect();
-                            break;
-                        case GetCurrentLocalPath:
-                            Result = GetCurrentLocalPath();
-                            break;
-                        case GetCurrentRemotePath:
-                            Result = GetCurrentRemotePath();
-                            break;
-                        case ReadDirectoryContent:
-                            Result = ReadDirectoryContent();
-                            break;
-                        case ChangeDirectory:
-                            ChangeDirectory((String) params[1]);
-                            break;
-                        case SendFile:
-                            SendFile((String) params[1], (String) params[2]);
-                            break;
-                        case ReceiveFile:
-                            ReceiveFile((String) params[1], (String) params[2]);
-                            break;
-                    }
-                    Busy = false;
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    sftp.get(RemoteName, LocalPath);
+                    LogWriteLn("File received!");
+                } catch (SftpException e) {
+                    LogWriteLn("Error: " + e.getMessage());
                 }
+                Busy = false;
                 return null;
             }
-        }.execute(Meth, Param1, Param2);
+        }.execute(1);
         WaitTask();
     }
 

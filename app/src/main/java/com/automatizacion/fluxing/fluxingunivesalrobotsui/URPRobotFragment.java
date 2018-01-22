@@ -30,6 +30,7 @@ public class URPRobotFragment extends Fragment {
 
     public static FlxSFTP sftp = new FlxSFTP();
     private EditText eT_URP_FilePath;
+    private String FileName = "";
 
     public URPRobotFragment() {
     }
@@ -96,7 +97,7 @@ public class URPRobotFragment extends Fragment {
                 sftp.host = eT_FTP_Host.getText().toString();
                 sftp.username = eT_FTP_Username.getText().toString();
                 sftp.password = eT_FTP_Password.getText().toString();
-                sftp.ExecuteAsyncMethod(FlxSFTP.FlxMethod.Connect, "", "");
+                sftp.Connect();
             }
         });
 
@@ -104,7 +105,7 @@ public class URPRobotFragment extends Fragment {
         b_FTP_CD.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sftp.ExecuteAsyncMethod(FlxSFTP.FlxMethod.ChangeDirectory, eT_Directory.getText().toString(), "");
+                sftp.ChangeDirectoryAsync(eT_Directory.getText().toString());
             }
         });
 
@@ -112,8 +113,7 @@ public class URPRobotFragment extends Fragment {
         b_FTP_LS.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sftp.ExecuteAsyncMethod(FlxSFTP.FlxMethod.ReadDirectoryContent, "", "");
-                tV_FTP_Output.append(sftp.Result);
+                tV_FTP_Output.append(sftp.ReadDirectoryContentAsync());
             }
         });
 
@@ -124,6 +124,7 @@ public class URPRobotFragment extends Fragment {
                 new FileChooser(getActivity()).setFileListener(new FileChooser.FileSelectedListener() {
                     @Override public void fileSelected(final File file) {
                         eT_URP_FilePath.setText(file.getPath());
+                        FileName = file.getName();
                     }}).showDialog();
             }
         });
@@ -132,7 +133,7 @@ public class URPRobotFragment extends Fragment {
         b_URP_Send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sftp.SendFile( eT_URP_FilePath.getText().toString(), "File.hao");
+                sftp.SendFileAsync( eT_URP_FilePath.getText().toString(), FileName);
             }
         });
 

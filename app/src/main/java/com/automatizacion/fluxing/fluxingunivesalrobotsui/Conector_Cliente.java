@@ -1,5 +1,6 @@
 package com.automatizacion.fluxing.fluxingunivesalrobotsui;
 
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
 
@@ -7,6 +8,7 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.ServerSocket;
 import java.net.Socket;
 
 /*
@@ -15,6 +17,7 @@ import java.net.Socket;
 public class Conector_Cliente extends Thread {
 
     private Socket s;
+    private ServerSocket ss;
     private InputStreamReader entradaSocket;
     private DataOutputStream salida;
     private BufferedReader entrada;
@@ -114,5 +117,29 @@ public class Conector_Cliente extends Thread {
             Main.PrintToTextview(TxtLog);
 
         }
+    }
+
+    public void conectarServidor() {
+
+        new AsyncTask<Integer, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Integer... integers) {
+
+                try {
+                    ss = new ServerSocket(port);
+                    s = ss.accept();
+                    entradaSocket = new InputStreamReader(s.getInputStream());
+                    entrada = new BufferedReader(entradaSocket);
+                    salida = new DataOutputStream(s.getOutputStream());
+                    TxtLog = "\nServidor Conectado."; // cuando da error
+                    start();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                return null;
+            }
+        }.execute(1);
     }
 }

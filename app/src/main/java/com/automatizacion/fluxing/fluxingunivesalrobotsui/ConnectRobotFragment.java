@@ -81,7 +81,8 @@ public class ConnectRobotFragment extends Fragment {
                 Connect_Client = new Conector_Cliente("192.168.15.155", 29999);
                 Connect_Client.conectar();
                 Connect_Client.start();
-
+                Connect_Client.enviarMSG(getResources().getString(R.string.Power_on));
+                Connect_Client.enviarMSG(getResources().getString(R.string.Brake_release));
             }
         });
 
@@ -95,7 +96,6 @@ public class ConnectRobotFragment extends Fragment {
                 Connect_Client.enviarMSG(TxtMSG.getText().toString());
                 TxtLog.setText(TxtLog.getText() + "\nServidor : " + TxtMSG.getText());
                 TxtMSG.setText("");
-
             }
         });
 

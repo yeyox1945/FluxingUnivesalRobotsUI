@@ -1,6 +1,5 @@
 package com.automatizacion.fluxing.fluxingunivesalrobotsui;
 
-import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,7 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
+
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -21,12 +20,14 @@ public class MainActivity extends AppCompatActivity
         ConnectRobotFragment.OnFragmentInteractionListener,
         MoveRobotFragment.OnFragmentInteractionListener {
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
 
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -46,7 +48,6 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
     }
 
     @Override
@@ -94,7 +95,6 @@ public class MainActivity extends AppCompatActivity
             FragmentSelect = true;
             fragment = new AddRobotFragment();
 
-
         } else if (id == R.id.Connect_Robot) {
 
             FragmentSelect = true;
@@ -108,7 +108,6 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_manage) {
 
         }
-
 
         if (FragmentSelect) {
             getSupportFragmentManager().beginTransaction().replace(R.id.Contenedor, fragment).commit();
@@ -128,7 +127,5 @@ public class MainActivity extends AppCompatActivity
 
     public static void PrintToTextview(String s) {
         ConnectRobotFragment.TxtLog.setText(ConnectRobotFragment.TxtLog.getText() + " " + s);
-
     }
-
 }

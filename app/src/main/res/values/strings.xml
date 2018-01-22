@@ -4,5 +4,8 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
+    <!-- URScript commands -->
+    <string name="Power_on">Power on</string>
+    <string name="Brake_release">Brake release</string>
 
 </resources>

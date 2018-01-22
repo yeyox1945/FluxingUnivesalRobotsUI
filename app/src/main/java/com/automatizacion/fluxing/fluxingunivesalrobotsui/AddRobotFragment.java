@@ -56,8 +56,6 @@ public class AddRobotFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
-
         View view = inflater.inflate(R.layout.fragment_add_robot, container, false);
 
         final EditText Edit_Registro_Nombre = view.findViewById(R.id.Edit_Registro_Nombre);
@@ -70,7 +68,6 @@ public class AddRobotFragment extends Fragment {
         BtnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
 
                 SQLConexion SQL = new SQLConexion();
 
@@ -87,7 +84,6 @@ public class AddRobotFragment extends Fragment {
                     Toast.makeText(getContext(), "Registro Erroneo",
                             Toast.LENGTH_LONG).show();
                 }
-
             }
         });
 
@@ -123,6 +119,4 @@ public class AddRobotFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
-
-
 }

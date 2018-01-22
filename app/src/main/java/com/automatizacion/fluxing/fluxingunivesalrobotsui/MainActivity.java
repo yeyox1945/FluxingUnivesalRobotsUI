@@ -1,12 +1,9 @@
 package com.automatizacion.fluxing.fluxingunivesalrobotsui;
 
-import android.content.ClipData;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.support.v4.app.Fragment;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -15,20 +12,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.EditText;
 
-import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         AddRobotFragment.OnFragmentInteractionListener,
         ConnectRobotFragment.OnFragmentInteractionListener,
         MoveRobotFragment.OnFragmentInteractionListener {
-
-
-    public static Conector_Cliente Connect_Client;
-    public static TextView TxtLog;
-    public EditText TxtMSG;
 
 
     @Override
@@ -58,10 +48,6 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-        TxtLog = findViewById(R.id.TxtLog);
-        TxtMSG = findViewById(R.id.EditCommand);
-
     }
 
     @Override
@@ -111,12 +97,10 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.Connect_Robot) {
 
-
             FragmentSelect = true;
             fragment = new ConnectRobotFragment();
 
         } else if (id == R.id.Move_Robot) {
-
 
             FragmentSelect = true;
             fragment = new MoveRobotFragment();
@@ -143,6 +127,5 @@ public class MainActivity extends AppCompatActivity
 
     public static void PrintToTextview(String s) {
         ConnectRobotFragment.TxtLog.setText(ConnectRobotFragment.TxtLog.getText() + " " + s);
-
-
+    }
 }

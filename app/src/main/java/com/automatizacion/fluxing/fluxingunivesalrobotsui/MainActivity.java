@@ -18,8 +18,8 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         AddRobotFragment.OnFragmentInteractionListener,
         ConnectRobotFragment.OnFragmentInteractionListener,
-        MoveRobotFragment.OnFragmentInteractionListener {
-
+        MoveRobotFragment.OnFragmentInteractionListener,
+        URPRobotFragment.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +104,12 @@ public class MainActivity extends AppCompatActivity
 
             FragmentSelect = true;
             fragment = new MoveRobotFragment();
+
+        } else if (id == R.id.URP_Robot) {
+
+            FragmentSelect = true;
+            fragment = new URPRobotFragment();
+            URPRobotFragment.sftp.Disconnect();
 
         } else if (id == R.id.nav_manage) {
 

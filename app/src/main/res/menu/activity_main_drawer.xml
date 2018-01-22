@@ -17,6 +17,10 @@
             android:icon="@drawable/move"
             android:title="Mover Robot" />
         <item
+            android:id="@+id/URP_Robot"
+            android:icon="@drawable/addrobot"
+            android:title="URP Robot" />
+        <item
             android:id="@+id/nav_manage"
             android:icon="@drawable/ic_menu_manage"
             android:title="Opciones" />

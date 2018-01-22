@@ -5,4 +5,5 @@
     <color name="colorAccent">#f15235</color>
     <color name="colorfondoLetrasMenu">#121010</color>
     <color name="colorfondoMenu">#dedbdb</color>
+    <color name="colorNegrote">#000000</color>
 </resources>

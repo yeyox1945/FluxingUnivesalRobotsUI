@@ -9,9 +9,22 @@ import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class ConnectRobotFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
@@ -27,6 +40,8 @@ public class ConnectRobotFragment extends Fragment {
 
     public ConnectRobotFragment() {
         // Required empty public constructor
+
+
     }
 
     // TODO: Rename and change types and number of parameters
@@ -48,19 +63,23 @@ public class ConnectRobotFragment extends Fragment {
         }
     }
 
-    public Conector_Cliente Connect_Client;
+    //  public com.automatizacion.fluxing.fluxingunivesalrobotsui.Connect_Client Connect_Client;
+    public Connect_Client Connect_Client;
     public static TextView TxtLog;
     public EditText TxtMSG;
+    public Spinner SpinnerRobot;
+    public static ArrayList<String> RobotsList = new ArrayList<>();
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-       final View view =inflater.inflate(R.layout.fragment_connect_robot, container, false);
+        final View view = inflater.inflate(R.layout.fragment_connect_robot, container, false);
 
         TxtLog = view.findViewById(R.id.TxtLog);
-        TxtLog.setMovementMethod (new ScrollingMovementMethod());
+        TxtLog.setMovementMethod(new ScrollingMovementMethod());
+        SpinnerRobot = view.findViewById(R.id.spinner_Robots);
 
 
         TxtMSG = view.findViewById(R.id.EditCommand);
@@ -68,6 +87,8 @@ public class ConnectRobotFragment extends Fragment {
         Button button_Connect = view.findViewById(R.id.button_Connect);
         Button button_send = view.findViewById(R.id.button_send);
 
+
+        Fill_Spinner_Robots();//llena el sipiner con las ip registradas
 
         //Metodo se ejecuta al conectar un robot
         button_Connect.setOnClickListener(new View.OnClickListener() {
@@ -78,7 +99,7 @@ public class ConnectRobotFragment extends Fragment {
 
                 StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
                 StrictMode.setThreadPolicy(policy);
-                Connect_Client = new Conector_Cliente("192.168.15.155", 29999);
+                Connect_Client = new Connect_Client("192.168.15.155", 29999);
                 Connect_Client.conectar();
                 Connect_Client.start();
                 Connect_Client.enviarMSG(getResources().getString(R.string.Power_on));
@@ -100,7 +121,33 @@ public class ConnectRobotFragment extends Fragment {
         });
 
         return view;
-  }
+    }
+
+    public void Fill_Spinner_Robots() {
+        //SpinnerRobot
+
+        RobotsList.add("Seleccióna..");
+
+        //LLenar Con datos de SQL
+
+        ConnectSQL SQL = new ConnectSQL();
+        SQL.Fill_Combo_IP_RobotsSQL();
+
+        assert SpinnerRobot != null;
+        SpinnerRobot.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, RobotsList));
+        SpinnerRobot.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
+
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+    }
 
 
     public void onButtonPressed(Uri uri) {

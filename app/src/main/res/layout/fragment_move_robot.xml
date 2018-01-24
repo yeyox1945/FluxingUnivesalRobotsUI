@@ -10,140 +10,152 @@
         android:id="@+id/seekBar_Base"
         android:layout_width="207dp"
         android:layout_height="22dp"
-        android:layout_marginLeft="92dp"
+        android:layout_marginStart="29dp"
         android:layout_marginTop="16dp"
         android:max="720"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toEndOf="@+id/btnBaseRight"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
 
     <SeekBar
         android:id="@+id/seekBar_Shoulder"
         android:layout_width="207dp"
         android:layout_height="22dp"
-        android:layout_marginLeft="92dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginStart="29dp"
+        android:layout_marginTop="28dp"
         android:max="720"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/seekBar_Base" />
+        app:layout_constraintStart_toEndOf="@+id/btnShoulderRight"
+        app:layout_constraintTop_toBottomOf="@+id/seekBar_Base"
+        tools:ignore="MissingConstraints" />
 
     <SeekBar
         android:id="@+id/seekBar_Elbow"
         android:layout_width="207dp"
         android:layout_height="22dp"
-        android:layout_marginLeft="92dp"
+        android:layout_marginStart="29dp"
         android:layout_marginTop="28dp"
         android:max="720"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/seekBar_Shoulder" />
+        app:layout_constraintStart_toEndOf="@+id/btnElbowRight"
+        app:layout_constraintTop_toBottomOf="@+id/seekBar_Shoulder"
+        tools:ignore="MissingConstraints" />
 
     <SeekBar
         android:id="@+id/seekBar_Wrist1"
         android:layout_width="207dp"
         android:layout_height="22dp"
-        android:layout_marginLeft="92dp"
+        android:layout_marginStart="29dp"
         android:layout_marginTop="28dp"
         android:max="720"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/seekBar_Elbow" />
+        app:layout_constraintStart_toEndOf="@+id/btnWrist1Right"
+        app:layout_constraintTop_toBottomOf="@+id/seekBar_Elbow"
+        tools:ignore="MissingConstraints" />
 
     <SeekBar
         android:id="@+id/seekBar_Wrist2"
         android:layout_width="207dp"
         android:layout_height="22dp"
-        android:layout_marginLeft="92dp"
+        android:layout_marginStart="29dp"
         android:layout_marginTop="28dp"
         android:max="720"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/seekBar_Wrist1" />
+        app:layout_constraintStart_toEndOf="@+id/btnWrist2Right"
+        app:layout_constraintTop_toBottomOf="@+id/seekBar_Wrist1"
+        tools:ignore="MissingConstraints" />
 
     <SeekBar
         android:id="@+id/seekBar_Wrist3"
         android:layout_width="207dp"
         android:layout_height="22dp"
-        android:layout_marginLeft="92dp"
+        android:layout_marginStart="29dp"
         android:layout_marginTop="28dp"
         android:max="720"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/seekBar_Wrist2" />
+        app:layout_constraintStart_toEndOf="@+id/btnWrist3Right"
+        app:layout_constraintTop_toBottomOf="@+id/seekBar_Wrist2"
+        tools:ignore="MissingConstraints" />
 
     <EditText
         android:id="@+id/editText_Base"
         android:layout_width="58dp"
         android:layout_height="34dp"
-        android:layout_marginStart="60dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginStart="136dp"
+        android:layout_marginTop="16dp"
         android:ems="10"
         android:inputType="textPersonName"
         android:textSize="10sp"
-        app:layout_constraintStart_toEndOf="@+id/seekBar_Base"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
 
     <EditText
         android:id="@+id/editText_Shoulder"
         android:layout_width="58dp"
         android:layout_height="34dp"
-        android:layout_marginStart="60dp"
+        android:layout_marginStart="136dp"
         android:layout_marginTop="16dp"
         android:ems="10"
         android:inputType="textPersonName"
         android:textSize="10sp"
-        app:layout_constraintStart_toEndOf="@+id/seekBar_Shoulder"
-        app:layout_constraintTop_toBottomOf="@+id/editText_Base" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editText_Base"
+        tools:ignore="MissingConstraints" />
 
     <EditText
         android:id="@+id/editText_Elbow"
         android:layout_width="58dp"
         android:layout_height="34dp"
-        android:layout_marginStart="60dp"
+        android:layout_marginStart="136dp"
         android:layout_marginTop="16dp"
         android:ems="10"
         android:inputType="textPersonName"
         android:textSize="10sp"
-        app:layout_constraintStart_toEndOf="@+id/seekBar_Elbow"
-        app:layout_constraintTop_toBottomOf="@+id/editText_Shoulder" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editText_Shoulder"
+        tools:ignore="MissingConstraints" />
 
     <EditText
         android:id="@+id/editText_Wrist1"
         android:layout_width="58dp"
         android:layout_height="34dp"
-        android:layout_marginStart="60dp"
+        android:layout_marginStart="136dp"
         android:layout_marginTop="16dp"
         android:ems="10"
         android:inputType="textPersonName"
         android:textSize="10sp"
-        app:layout_constraintStart_toEndOf="@+id/seekBar_Wrist1"
-        app:layout_constraintTop_toBottomOf="@+id/editText_Elbow" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editText_Elbow"
+        tools:ignore="MissingConstraints" />
 
     <EditText
         android:id="@+id/editText_Wrist2"
         android:layout_width="58dp"
         android:layout_height="34dp"
-        android:layout_marginLeft="60dp"
+        android:layout_marginStart="136dp"
         android:layout_marginTop="16dp"
         android:ems="10"
         android:inputType="textPersonName"
         android:textSize="10sp"
-        app:layout_constraintStart_toEndOf="@+id/seekBar_Wrist2"
-        app:layout_constraintTop_toBottomOf="@+id/editText_Wrist1" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editText_Wrist1"
+        tools:ignore="MissingConstraints" />
 
     <EditText
         android:id="@+id/editText_Wrist3"
         android:layout_width="58dp"
         android:layout_height="34dp"
-        android:layout_marginLeft="60dp"
+        android:layout_marginStart="136dp"
         android:layout_marginTop="16dp"
         android:ems="10"
         android:inputType="textPersonName"
         android:textSize="10sp"
-        app:layout_constraintStart_toEndOf="@+id/seekBar_Wrist3"
-        app:layout_constraintTop_toBottomOf="@+id/editText_Wrist2" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editText_Wrist2"
+        tools:ignore="MissingConstraints" />
 
     <Button
         android:id="@+id/button_FreeDrive"
         android:layout_width="106dp"
         android:layout_height="92dp"
-        android:layout_marginRight="72dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginTop="16dp"
         android:text="Freedrive"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -152,11 +164,11 @@
         android:id="@+id/button_HomePosition"
         android:layout_width="106dp"
         android:layout_height="92dp"
-        android:layout_marginRight="72dp"
-        android:layout_marginTop="136dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginTop="5dp"
         android:text="Home"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/button_FreeDrive" />
 
     <TextView
         android:id="@+id/textView_Base"
@@ -172,8 +184,8 @@
         android:id="@+id/textView_Shoulder"
         android:layout_width="wrap_content"
         android:layout_height="20dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="33dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="30dp"
         android:text="Shoulder"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView_Base" />
@@ -183,7 +195,7 @@
         android:layout_width="wrap_content"
         android:layout_height="20dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="31dp"
+        android:layout_marginTop="30dp"
         android:text="Elbow"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView_Shoulder" />
@@ -203,7 +215,7 @@
         android:layout_width="wrap_content"
         android:layout_height="20dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="31dp"
+        android:layout_marginTop="30dp"
         android:text="Wrist2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView_Wrist1" />
@@ -217,5 +229,149 @@
         android:text="Wrist3"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView_Wrist2" />
+
+    <Button
+        android:id="@+id/btnBaseRight"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="16dp"
+        android:onClick="click_MoveRight"
+        android:text="+"
+        app:layout_constraintStart_toEndOf="@+id/editText_Base"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btnBaseLeft"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="16dp"
+        android:onClick="click_MoveLeft"
+        android:text="-"
+        app:layout_constraintEnd_toStartOf="@+id/editText_Base"
+        app:layout_constraintStart_toEndOf="@+id/textView_Base"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btnShoulderRight"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="16dp"
+        android:onClick="click_MoveRight"
+        android:text="+"
+        app:layout_constraintStart_toEndOf="@+id/editText_Shoulder"
+        app:layout_constraintTop_toBottomOf="@+id/editText_Base" />
+
+    <Button
+        android:id="@+id/btnShoulderLeft"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="21dp"
+        android:layout_marginTop="16dp"
+        android:onClick="click_MoveLeft"
+        android:text="-"
+        app:layout_constraintEnd_toStartOf="@+id/editText_Shoulder"
+        app:layout_constraintStart_toEndOf="@+id/textView_Shoulder"
+        app:layout_constraintTop_toBottomOf="@+id/editText_Base" />
+
+    <Button
+        android:id="@+id/btnElbowRight"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="16dp"
+        android:onClick="click_MoveRight"
+        android:text="+"
+        app:layout_constraintStart_toEndOf="@+id/editText_Elbow"
+        app:layout_constraintTop_toBottomOf="@+id/editText_Shoulder" />
+
+    <Button
+        android:id="@+id/btnElbowLeft"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="33dp"
+        android:layout_marginTop="16dp"
+        android:onClick="click_MoveLeft"
+        android:text="-"
+        app:layout_constraintEnd_toStartOf="@+id/editText_Elbow"
+        app:layout_constraintStart_toEndOf="@+id/textView_Elbow"
+        app:layout_constraintTop_toBottomOf="@+id/editText_Shoulder" />
+
+    <Button
+        android:id="@+id/btnWrist1Right"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="16dp"
+        android:onClick="click_MoveRight"
+        android:text="+"
+        app:layout_constraintStart_toEndOf="@+id/editText_Wrist1"
+        app:layout_constraintTop_toBottomOf="@+id/editText_Elbow" />
+
+    <Button
+        android:id="@+id/btnWrist1Left"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="16dp"
+        android:onClick="click_MoveLeft"
+        android:text="-"
+        app:layout_constraintEnd_toStartOf="@+id/editText_Wrist1"
+        app:layout_constraintStart_toEndOf="@+id/textView_Wrist1"
+        app:layout_constraintTop_toBottomOf="@+id/editText_Elbow" />
+
+    <Button
+        android:id="@+id/btnWrist2Right"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="16dp"
+        android:onClick="click_MoveRight"
+        android:text="+"
+        app:layout_constraintStart_toEndOf="@+id/editText_Wrist2"
+        app:layout_constraintTop_toBottomOf="@+id/editText_Wrist1" />
+
+    <Button
+        android:id="@+id/btnWrist2Left"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="16dp"
+        android:onClick="click_MoveLeft"
+        android:text="-"
+        app:layout_constraintEnd_toStartOf="@+id/editText_Wrist2"
+        app:layout_constraintStart_toEndOf="@+id/textView_Wrist2"
+        app:layout_constraintTop_toBottomOf="@+id/editText_Wrist1" />
+
+    <Button
+        android:id="@+id/btnWrist3Right"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="16dp"
+        android:onClick="click_MoveRight"
+        android:text="+"
+        app:layout_constraintStart_toEndOf="@+id/editText_Wrist3"
+        app:layout_constraintTop_toBottomOf="@+id/editText_Wrist2" />
+
+    <Button
+        android:id="@+id/btnWrist3Left"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="16dp"
+        android:onClick="click_MoveLeft"
+        android:text="-"
+        app:layout_constraintEnd_toStartOf="@+id/editText_Wrist3"
+        app:layout_constraintStart_toEndOf="@+id/textView_Wrist3"
+        app:layout_constraintTop_toBottomOf="@+id/editText_Wrist2" />
 
 </android.support.constraint.ConstraintLayout>

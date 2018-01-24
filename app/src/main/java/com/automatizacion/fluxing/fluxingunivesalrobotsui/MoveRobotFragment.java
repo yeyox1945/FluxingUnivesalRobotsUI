@@ -25,7 +25,6 @@ public class MoveRobotFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-
     public SeekBar seekBar_Base;
     public SeekBar seekBar_Shoulder;
     public SeekBar seekBar_Elbow;
@@ -83,12 +82,12 @@ public class MoveRobotFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_move_robot, container, false);
 
-        seekBar_Base = view.findViewById(R.id.seekBar_Base);
-        seekBar_Shoulder = view.findViewById(R.id.seekBar_Shoulder);
-        seekBar_Elbow = view.findViewById(R.id.seekBar_Elbow);
-        seekBar_Wrist1 = view.findViewById(R.id.seekBar_Wrist1);
-        seekBar_Wrist2 = view.findViewById(R.id.seekBar_Wrist2);
-        seekBar_Wrist3 = view.findViewById(R.id.seekBar_Wrist3);
+        seekBar_Base = view.findViewById(R.id.seekBar_Base); //seekBar_Base.setEnabled(false);
+        seekBar_Shoulder = view.findViewById(R.id.seekBar_Shoulder); //seekBar_Shoulder.setEnabled(false);
+        seekBar_Elbow = view.findViewById(R.id.seekBar_Elbow); //seekBar_Elbow.setEnabled(false);
+        seekBar_Wrist1 = view.findViewById(R.id.seekBar_Wrist1); //seekBar_Wrist1.setEnabled(false);
+        seekBar_Wrist2 = view.findViewById(R.id.seekBar_Wrist2); //seekBar_Wrist2.setEnabled(false);
+        seekBar_Wrist3 = view.findViewById(R.id.seekBar_Wrist3); //seekBar_Wrist3.setEnabled(false);
 
         editText_Base = view.findViewById(R.id.editText_Base);
         editText_Shoulder = view.findViewById(R.id.editText_Shoulder);
@@ -358,10 +357,10 @@ public class MoveRobotFragment extends Fragment {
 
     public void GetPositions (){
 
-        /*Conector_Cliente socket = new Conector_Cliente("192.168.15.21", 1025);
-        socket.conectarServidor();*/
+        Connect_Client socket = new Connect_Client("192.168.15.21", 1025);
+        socket.conectarServidor();
 
-        /*Connect_Client.enviarMSG("Socket_Closed=True\n" +
+        Connect_Client.enviarMSG("Socket_Closed=True\n" +
                 "  while (True):\n" +
                 "    if (Socket_Closed ==  True  ):\n" +
                 "      socket_open(“192.168.15.21″, 1025)\n" +
@@ -370,7 +369,7 @@ public class MoveRobotFragment extends Fragment {
                 "    end\n" +
                 "    socket_send_string(“Asking_Waypoint_1″)\n" +
                 "    sleep(3.0)\n" +
-                "  end");*/
+                "  end");
 
         Log.i("Respuesta", Connect_Client.serverResponse);
 

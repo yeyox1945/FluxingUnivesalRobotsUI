@@ -357,7 +357,7 @@ public class MoveRobotFragment extends Fragment {
 
     public void GetPositions (){
 
-        Conector_Cliente socket = new Conector_Cliente("192.168.15.21", 1025);
+        Connect_Client socket = new Connect_Client("192.168.15.21", 1025);
         socket.conectarServidor();
 
         Connect_Client.enviarMSG("Socket_Closed=True\n" +

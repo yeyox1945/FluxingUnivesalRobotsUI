@@ -7,15 +7,18 @@ package com.automatizacion.fluxing.fluxingunivesalrobotsui;
 import android.annotation.SuppressLint;
 import android.os.StrictMode;
 import android.util.Log;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 //Fluxing.ddns.net:1433:1433  -- Remota
 //192.168.15.131:1433   -- local
 
-public class SQLConexion {
+public class ConnectSQL {
 
     private String IP, DB, User, Password;
 
@@ -89,6 +92,39 @@ public class SQLConexion {
         }
 
         return Validate;
+    }
+
+    public String Fill_Combo_IP_RobotsSQL() {
+
+        PreparedStatement stmt;
+        ResultSet rs;
+        String Robot = "";
+        ConnectRobotFragment ConnectRobot = new ConnectRobotFragment();
+
+        try {
+            String Query = "SELECT id,Nombre,IP FROM dbo.FluxingUniversalRobots ORDER BY id;";
+
+            stmt = ConnectSQL().prepareStatement(Query);
+
+            rs = stmt.executeQuery();
+
+
+            while (rs.next()) {
+
+                String id = rs.getString(1);
+                String Nombre = rs.getString(2);
+                String IP = rs.getString(3);
+
+                Robot = id + " - " + Nombre + " - " + IP;
+                ConnectRobot.RobotsList.add(Robot);
+
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al llenar Spinner :" + e.getMessage());
+        }
+
+
+        return Robot;
     }
 
 }

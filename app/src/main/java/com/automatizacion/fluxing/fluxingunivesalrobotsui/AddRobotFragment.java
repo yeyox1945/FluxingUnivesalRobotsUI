@@ -56,6 +56,8 @@ public class AddRobotFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
+
         View view = inflater.inflate(R.layout.fragment_add_robot, container, false);
 
         final EditText Edit_Registro_Nombre = view.findViewById(R.id.Edit_Registro_Nombre);
@@ -69,8 +71,7 @@ public class AddRobotFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                SQLConexion SQL = new SQLConexion();
-
+                ConnectSQL SQL = new ConnectSQL();
                 Boolean Validate = SQL.RegisterRobot(Edit_Registro_Nombre.getText().toString(), Edit_Registro_Modelo.getText().toString(), Edit_Registro_IP.getText().toString());
 
                 Edit_Registro_Nombre.setText("");
@@ -119,4 +120,6 @@ public class AddRobotFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+
 }

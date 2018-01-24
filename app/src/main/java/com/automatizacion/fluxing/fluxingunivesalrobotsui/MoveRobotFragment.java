@@ -41,7 +41,6 @@ public class MoveRobotFragment extends Fragment {
     public EditText editText_Wrist3;
 
     public boolean activeFreeDrive = false;
-    public static Conector_Cliente Connect_Client;
     // setting a home position before manually moving the robot
 
     double base;
@@ -51,6 +50,7 @@ public class MoveRobotFragment extends Fragment {
     double wrist2;
     double wrist3;
 
+    public static Connect_Client Connect_Client;
 
     private OnFragmentInteractionListener mListener;
 
@@ -81,8 +81,6 @@ public class MoveRobotFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        //return inflater.inflate(R.layout.fragment_move_robot, container, false);
-
         View view = inflater.inflate(R.layout.fragment_move_robot, container, false);
 
         seekBar_Base = view.findViewById(R.id.seekBar_Base);
@@ -101,8 +99,10 @@ public class MoveRobotFragment extends Fragment {
 
 
         //Hace cambio de puerto
-        Connect_Client = new Conector_Cliente("192.168.15.155", 30001);
+        Connect_Client = new Connect_Client("192.168.15.155", 30001);
         Connect_Client.conectar();
+
+
 
         InitRobot();
 

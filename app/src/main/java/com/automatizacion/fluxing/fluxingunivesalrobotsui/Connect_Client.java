@@ -121,7 +121,7 @@ public class Connect_Client extends Thread {
 
     public void conectarServidor() {
 
-        new AsyncTask<Integer, Void, Void>() {
+         new AsyncTask<Integer, Void, Void>() {
 
             @Override
             protected Void doInBackground(Integer... integers) {

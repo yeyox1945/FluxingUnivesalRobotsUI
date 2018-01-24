@@ -131,7 +131,7 @@ public class ConnectRobotFragment extends Fragment {
         //LLenar Con datos de SQL
 
         ConnectSQL SQL = new ConnectSQL();
-        SQL.Fill_Combo_IP_RobotsSQL();
+            SQL.Fill_Combo_IP_RobotsSQL();
 
         assert SpinnerRobot != null;
         SpinnerRobot.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, RobotsList));

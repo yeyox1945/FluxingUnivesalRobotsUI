@@ -103,7 +103,7 @@ public class ConnectSQL {
 
 
         try {
-            String Query = "SELECT id,Nombre,IP FROM RegistroRobots ORDER BY id;";
+            String Query = "SELECT * FROM [FluxingUniversalRobot].[dbo].[RegistroRobot] ORDER BY id;";
 
             stmt = ConnectSQL().prepareStatement(Query);
 
@@ -112,9 +112,11 @@ public class ConnectSQL {
             System.out.println("Entra a SQL");
             while (rs.next()) {
 
-                String id = rs.getString(1);
-                String Nombre = rs.getString(2);
-                String IP = rs.getString(3);
+                String id = rs.getString(1).trim();
+                String Nombre = rs.getString(2).trim();
+                String IP = rs.getString(3).trim();
+
+
 
                 Robot = id + "-" + Nombre + "-" + IP;
                 ConnectRobot.RobotsList.add(Robot);

@@ -21,6 +21,7 @@ public class FlxSFTP {
     private Session session;
     private ChannelSftp sftp;
     public boolean Busy = false;
+    private boolean ret = false;
     String log = "";
     String username = "";
     String password = "";
@@ -232,9 +233,10 @@ public class FlxSFTP {
         return true;
     }
     
-    public void ChangeDirectoryAsync(final String Path) {
-        if (Busy) return;
+    public boolean ChangeDirectoryAsync(final String Path) {
+        if (Busy) return false;
         Busy = true;
+        ret = false;
         new AsyncTask<Object, Void, Void>() {
             @Override
             protected Void doInBackground(Object... params) {
@@ -242,14 +244,17 @@ public class FlxSFTP {
                 try {
                     sftp.cd(Path);
                     LogWriteLn(GetCurrentRemotePath());
+                    ret = true;
                 } catch (SftpException e) {
                     LogWriteLn("Error: " + e.getMessage());
+                    ret = false;
                 }
                 Busy = false;
                 return null;
             }
         }.execute(1);
         WaitTask();
+        return ret;
     }
 
     public boolean SendFile(String LocalPath, String RemoteName)
@@ -327,8 +332,10 @@ public class FlxSFTP {
         WaitTask();
     }
 
-    public String[] GetFilesByExtension(String Extension) {
-        /*String[] FileNames = new String[1];
+    public Vector GetFilesByExtension(final String Extension) {
+        if (Busy) return new Vector();
+        Busy = true;
+        final Vector FileNames = new Vector();
         new AsyncTask<Object, Void, Void>() {
             @Override
             protected Void doInBackground(Object... params) {
@@ -338,12 +345,8 @@ public class FlxSFTP {
                     int Count = 0;
                     for (int i = 0; i < files.size(); i++) {
                         ChannelSftp.LsEntry entry = (ChannelSftp.LsEntry) files.get(i);
-                        ret[0] += entry.getFilename() + "\t\t";
-                        Count++;
-                        if (Count > 5) {
-                            ret[0] += "\n";
-                            Count = 0;
-                        }
+                        if(entry.getFilename().endsWith(Extension))
+                            FileNames.add(entry.getFilename());
                     }
                 } catch (SftpException e) {
                     LogWriteLn("Error: " + e.getMessage());
@@ -353,8 +356,7 @@ public class FlxSFTP {
             }
         }.execute(1);
         WaitTask();
-        return FileNames;*/
-        return new String[1];
+        return FileNames;
     }
 
     private void WaitTask()

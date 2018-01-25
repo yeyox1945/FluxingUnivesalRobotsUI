@@ -10,12 +10,15 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.text.method.ScrollingMovementMethod;
 
 import java.io.File;
+import java.util.Vector;
 
 /**
  * Created by Chava on 1/17/2018.
@@ -70,6 +73,8 @@ public class URPRobotFragment extends Fragment {
                 eT_Directory = view.findViewById(R.id.eT_Directory);
         eT_URP_FilePath = view.findViewById(R.id.eT_URP_FilePath);
 
+        final Spinner s_RemotePrograms = view.findViewById(R.id.s_RemotePrograms);
+
         final TextView tV_FTP_Output = view.findViewById(R.id.tV_Output);
         tV_FTP_Output.setMovementMethod(new ScrollingMovementMethod());
 
@@ -104,7 +109,26 @@ public class URPRobotFragment extends Fragment {
             }
         });
 
-        Button b_FTP_CD = view.findViewById(R.id.b_FTP_CD);
+        Button b_URP_GetList = view.findViewById(R.id.b_URP_GetList);
+        b_URP_GetList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(sftp.ChangeDirectoryAsync(eT_Directory.getText().toString()))
+                {
+                    ArrayAdapter<Object> filenames;
+
+                    Vector FileNames = sftp.GetFilesByExtension(".urp");
+                    filenames = new ArrayAdapter<>(getContext(),
+                            R.layout.support_simple_spinner_dropdown_item, FileNames.toArray());
+                    filenames.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+                    s_RemotePrograms.setAdapter(filenames);
+                }
+                else
+                    tV_FTP_Output.append("No se pudo acceder al directorio de programas\n");
+            }
+        });
+
+        /*Button b_FTP_CD = view.findViewById(R.id.b_FTP_CD);
         b_FTP_CD.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -119,8 +143,11 @@ public class URPRobotFragment extends Fragment {
             public void onClick(View v) {
                 if(sftp.IsConnected())
                     tV_FTP_Output.append(sftp.ReadDirectoryContentAsync());
+                Vector FileNames = sftp.GetFilesByExtension(".jpg");
+                for(Object FileName : FileNames)
+                    tV_FTP_Output.append(FileName.toString() + "\n");
             }
-        });
+        });*/
 
         Button b_URP_SearchFile = view.findViewById(R.id.b_URP_SearchFile);
         b_URP_SearchFile.setOnClickListener(new View.OnClickListener() {

@@ -165,7 +165,7 @@
         android:layout_width="106dp"
         android:layout_height="92dp"
         android:layout_marginEnd="50dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="4dp"
         android:text="Home"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_FreeDrive" />
@@ -237,6 +237,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="16dp"
         android:onClick="click_MoveRight"
+        android:tag="0:+"
         android:text="+"
         app:layout_constraintStart_toEndOf="@+id/editText_Base"
         app:layout_constraintTop_toTopOf="parent" />
@@ -250,6 +251,7 @@
         android:layout_marginTop="16dp"
         android:onClick="click_MoveLeft"
         android:text="-"
+        android:tag="0:-"
         app:layout_constraintEnd_toStartOf="@+id/editText_Base"
         app:layout_constraintStart_toEndOf="@+id/textView_Base"
         app:layout_constraintTop_toTopOf="parent" />
@@ -262,6 +264,7 @@
         android:layout_marginTop="16dp"
         android:onClick="click_MoveRight"
         android:text="+"
+        android:tag="1:+"
         app:layout_constraintStart_toEndOf="@+id/editText_Shoulder"
         app:layout_constraintTop_toBottomOf="@+id/editText_Base" />
 
@@ -274,6 +277,7 @@
         android:layout_marginTop="16dp"
         android:onClick="click_MoveLeft"
         android:text="-"
+        android:tag="1:-"
         app:layout_constraintEnd_toStartOf="@+id/editText_Shoulder"
         app:layout_constraintStart_toEndOf="@+id/textView_Shoulder"
         app:layout_constraintTop_toBottomOf="@+id/editText_Base" />
@@ -286,6 +290,7 @@
         android:layout_marginTop="16dp"
         android:onClick="click_MoveRight"
         android:text="+"
+        android:tag="2:+"
         app:layout_constraintStart_toEndOf="@+id/editText_Elbow"
         app:layout_constraintTop_toBottomOf="@+id/editText_Shoulder" />
 
@@ -298,6 +303,7 @@
         android:layout_marginTop="16dp"
         android:onClick="click_MoveLeft"
         android:text="-"
+        android:tag="2:-"
         app:layout_constraintEnd_toStartOf="@+id/editText_Elbow"
         app:layout_constraintStart_toEndOf="@+id/textView_Elbow"
         app:layout_constraintTop_toBottomOf="@+id/editText_Shoulder" />
@@ -310,6 +316,7 @@
         android:layout_marginTop="16dp"
         android:onClick="click_MoveRight"
         android:text="+"
+        android:tag="3:+"
         app:layout_constraintStart_toEndOf="@+id/editText_Wrist1"
         app:layout_constraintTop_toBottomOf="@+id/editText_Elbow" />
 
@@ -322,6 +329,7 @@
         android:layout_marginTop="16dp"
         android:onClick="click_MoveLeft"
         android:text="-"
+        android:tag="3:-"
         app:layout_constraintEnd_toStartOf="@+id/editText_Wrist1"
         app:layout_constraintStart_toEndOf="@+id/textView_Wrist1"
         app:layout_constraintTop_toBottomOf="@+id/editText_Elbow" />
@@ -334,6 +342,7 @@
         android:layout_marginTop="16dp"
         android:onClick="click_MoveRight"
         android:text="+"
+        android:tag="4:+"
         app:layout_constraintStart_toEndOf="@+id/editText_Wrist2"
         app:layout_constraintTop_toBottomOf="@+id/editText_Wrist1" />
 
@@ -346,6 +355,7 @@
         android:layout_marginTop="16dp"
         android:onClick="click_MoveLeft"
         android:text="-"
+        android:tag="4:-"
         app:layout_constraintEnd_toStartOf="@+id/editText_Wrist2"
         app:layout_constraintStart_toEndOf="@+id/textView_Wrist2"
         app:layout_constraintTop_toBottomOf="@+id/editText_Wrist1" />
@@ -358,6 +368,7 @@
         android:layout_marginTop="16dp"
         android:onClick="click_MoveRight"
         android:text="+"
+        android:tag="5:+"
         app:layout_constraintStart_toEndOf="@+id/editText_Wrist3"
         app:layout_constraintTop_toBottomOf="@+id/editText_Wrist2" />
 
@@ -370,6 +381,7 @@
         android:layout_marginTop="16dp"
         android:onClick="click_MoveLeft"
         android:text="-"
+        android:tag="5:-"
         app:layout_constraintEnd_toStartOf="@+id/editText_Wrist3"
         app:layout_constraintStart_toEndOf="@+id/textView_Wrist3"
         app:layout_constraintTop_toBottomOf="@+id/editText_Wrist2" />

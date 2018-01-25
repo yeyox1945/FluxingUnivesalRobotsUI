@@ -88,9 +88,9 @@ public class ConnectRobotFragment extends Fragment {
         Button button_send = view.findViewById(R.id.button_send);
 
 
-        Fill_Spinner_Robots();//llena el sipiner con las ip registradas
+        // Fill_Spinner_Robots();//llena el sipiner con las ip registradas
 
-        //Metodo se ejecuta al conectar un robot
+        // Metodo se ejecuta al conectar un robot
         button_Connect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

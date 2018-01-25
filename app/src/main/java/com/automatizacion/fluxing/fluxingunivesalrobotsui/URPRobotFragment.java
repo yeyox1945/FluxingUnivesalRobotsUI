@@ -1,8 +1,11 @@
 package com.automatizacion.fluxing.fluxingunivesalrobotsui;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +34,7 @@ public class URPRobotFragment extends Fragment {
     public static FlxSFTP sftp = new FlxSFTP();
     private EditText eT_URP_FilePath;
     private String FileName = "";
+    private boolean bListenLog = true;
 
     public URPRobotFragment() {
     }
@@ -69,18 +73,17 @@ public class URPRobotFragment extends Fragment {
         final TextView tV_FTP_Output = view.findViewById(R.id.tV_Output);
         tV_FTP_Output.setMovementMethod(new ScrollingMovementMethod());
 
-        final MainActivity parent = new MainActivity();
         Thread th = new Thread(new Runnable() {
             public void run() {
-                while (true) {
-                    parent.runOnUiThread(new Runnable() {
+                while (bListenLog) {
+                    getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             tV_FTP_Output.append(sftp.ReadLog());
                         }
                     });
                     try {
-                        Thread.sleep(400);
+                        Thread.sleep(300);
                     }
                     catch (InterruptedException e) {
                         e.printStackTrace();
@@ -105,7 +108,8 @@ public class URPRobotFragment extends Fragment {
         b_FTP_CD.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sftp.ChangeDirectoryAsync(eT_Directory.getText().toString());
+                if(sftp.IsConnected())
+                    sftp.ChangeDirectoryAsync(eT_Directory.getText().toString());
             }
         });
 
@@ -113,7 +117,8 @@ public class URPRobotFragment extends Fragment {
         b_FTP_LS.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                tV_FTP_Output.append(sftp.ReadDirectoryContentAsync());
+                if(sftp.IsConnected())
+                    tV_FTP_Output.append(sftp.ReadDirectoryContentAsync());
             }
         });
 
@@ -121,11 +126,19 @@ public class URPRobotFragment extends Fragment {
         b_URP_SearchFile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new FileChooser(getActivity()).setFileListener(new FileChooser.FileSelectedListener() {
-                    @Override public void fileSelected(final File file) {
-                        eT_URP_FilePath.setText(file.getPath());
-                        FileName = file.getName();
-                    }}).showDialog();
+                int PermReadExt = ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE);
+                if (PermReadExt != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+                    requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                } else {
+                    new FileChooser(getActivity()).setFileListener(new FileChooser.FileSelectedListener() {
+                        @Override
+                        public void fileSelected(final File file) {
+                            eT_URP_FilePath.setText(file.getPath());
+                            FileName = file.getName();
+                        }
+                    }).showDialog();
+                }
             }
         });
 
@@ -133,7 +146,8 @@ public class URPRobotFragment extends Fragment {
         b_URP_Send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sftp.SendFileAsync( eT_URP_FilePath.getText().toString(), FileName);
+                if(sftp.IsConnected())
+                    sftp.SendFileAsync( eT_URP_FilePath.getText().toString(), FileName);
             }
         });
 
@@ -141,8 +155,27 @@ public class URPRobotFragment extends Fragment {
     }
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 1: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    new FileChooser(getActivity()).setFileListener(new FileChooser.FileSelectedListener() {
+                        @Override
+                        public void fileSelected(final File file) {
+                            eT_URP_FilePath.setText(file.getPath());
+                            FileName = file.getName();
+                        }
+                    }).showDialog();
+                }
+                return;
+            }
+        }
+    }
+
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        bListenLog = true;
         if (context instanceof URPRobotFragment.OnFragmentInteractionListener) {
             mListener = (URPRobotFragment.OnFragmentInteractionListener) context;
         } else {
@@ -155,6 +188,8 @@ public class URPRobotFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        bListenLog = false;
+        sftp.DisconnectAsync();
     }
 
     public interface OnFragmentInteractionListener {

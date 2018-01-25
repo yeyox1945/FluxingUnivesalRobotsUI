@@ -8,6 +8,8 @@ package com.automatizacion.fluxing.fluxingunivesalrobotsui;
 import android.os.AsyncTask;
 
 import com.jcraft.jsch.*;
+
+import java.io.File;
 import java.util.Vector;
 
 /**
@@ -52,10 +54,21 @@ public class FlxSFTP {
                 return null;
             }
         }.execute(1);
-        WaitTask();
+    }
+
+    public void Disconnect() {
+        LogWriteLn("");
+        try {
+            if (session == null || sftp == null) return;
+            sftp.exit();
+            sftp.disconnect();
+            session.disconnect();
+        } catch (Exception e) {
+            LogWriteLn("Error: Could not disconnect from the host");
+        }
     }
     
-    public void Disconnect() {
+    public void DisconnectAsync() {
         if (Busy) return;
         Busy = true;
         new AsyncTask<Object, Void, Void>() {
@@ -67,9 +80,11 @@ public class FlxSFTP {
                         Busy = false;
                         return null;
                     }
+                    LogWriteLn("Disconnecting...");
                     sftp.exit();
                     sftp.disconnect();
                     session.disconnect();
+                    LogWriteLn("Disconnected");
                 } catch (Exception e) {
                     LogWriteLn("Error: Could not disconnect from the host");
                 }
@@ -78,6 +93,10 @@ public class FlxSFTP {
             }
         }.execute(1);
         WaitTask();
+    }
+
+    public boolean IsConnected() {
+        return sftp.isConnected();
     }
 
     public String GetCurrentLocalPath() {
@@ -174,7 +193,7 @@ public class FlxSFTP {
             protected Void doInBackground(Object... params) {
                 try {
                     LogWriteLn(sftp.pwd());
-                    Vector files = sftp.ls(GetCurrentRemotePath());
+                    Vector files = sftp.ls(sftp.pwd());
                     int Count = 0;
                     for (int i = 0; i < files.size(); i++) {
                         ChannelSftp.LsEntry entry = (ChannelSftp.LsEntry) files.get(i);
@@ -306,6 +325,36 @@ public class FlxSFTP {
             }
         }.execute(1);
         WaitTask();
+    }
+
+    public String[] GetFilesByExtension(String Extension) {
+        /*String[] FileNames = new String[1];
+        new AsyncTask<Object, Void, Void>() {
+            @Override
+            protected Void doInBackground(Object... params) {
+                try {
+                    LogWriteLn(sftp.pwd());
+                    Vector files = sftp.ls(sftp.pwd());
+                    int Count = 0;
+                    for (int i = 0; i < files.size(); i++) {
+                        ChannelSftp.LsEntry entry = (ChannelSftp.LsEntry) files.get(i);
+                        ret[0] += entry.getFilename() + "\t\t";
+                        Count++;
+                        if (Count > 5) {
+                            ret[0] += "\n";
+                            Count = 0;
+                        }
+                    }
+                } catch (SftpException e) {
+                    LogWriteLn("Error: " + e.getMessage());
+                }
+                Busy = false;
+                return null;
+            }
+        }.execute(1);
+        WaitTask();
+        return FileNames;*/
+        return new String[1];
     }
 
     private void WaitTask()

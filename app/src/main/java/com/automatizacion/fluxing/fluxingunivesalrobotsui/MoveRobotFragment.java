@@ -2,15 +2,19 @@ package com.automatizacion.fluxing.fluxingunivesalrobotsui;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SeekBar;
+import android.widget.Toast;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
@@ -25,29 +29,17 @@ public class MoveRobotFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public SeekBar seekBar_Base;
-    public SeekBar seekBar_Shoulder;
-    public SeekBar seekBar_Elbow;
-    public SeekBar seekBar_Wrist1;
-    public SeekBar seekBar_Wrist2;
-    public SeekBar seekBar_Wrist3;
+    static Button[] btnArray = new Button[12];
+    static EditText[] etxtArray = new EditText[6];
+    static SeekBar[] seekBarsArray = new SeekBar[6];
+    static Integer[] countArray = new Integer[6];
+    static Integer[] initPositions = new Integer[6];
 
-    public EditText editText_Base;
-    public EditText editText_Shoulder;
-    public EditText editText_Elbow;
-    public EditText editText_Wrist1;
-    public EditText editText_Wrist2;
-    public EditText editText_Wrist3;
+    //Define variable para validar estado.
+    private boolean pressed = false;
 
     public boolean activeFreeDrive = false;
     // setting a home position before manually moving the robot
-
-    double base;
-    double shoulder;
-    double elbow;
-    double wrist1;
-    double wrist2;
-    double wrist3;
 
     public static Connect_Client Connect_Client;
 
@@ -82,28 +74,91 @@ public class MoveRobotFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_move_robot, container, false);
 
-        seekBar_Base = view.findViewById(R.id.seekBar_Base); //seekBar_Base.setEnabled(false);
-        seekBar_Shoulder = view.findViewById(R.id.seekBar_Shoulder); //seekBar_Shoulder.setEnabled(false);
-        seekBar_Elbow = view.findViewById(R.id.seekBar_Elbow); //seekBar_Elbow.setEnabled(false);
-        seekBar_Wrist1 = view.findViewById(R.id.seekBar_Wrist1); //seekBar_Wrist1.setEnabled(false);
-        seekBar_Wrist2 = view.findViewById(R.id.seekBar_Wrist2); //seekBar_Wrist2.setEnabled(false);
-        seekBar_Wrist3 = view.findViewById(R.id.seekBar_Wrist3); //seekBar_Wrist3.setEnabled(false);
+        // init Positions
+        initPositions[0] = 90;
+        initPositions[1] = -120;
+        initPositions[2] = 80;
+        initPositions[3] = -48;
+        initPositions[4] = -90;
+        initPositions[5] = 90;
 
-        editText_Base = view.findViewById(R.id.editText_Base);
-        editText_Shoulder = view.findViewById(R.id.editText_Shoulder);
-        editText_Elbow = view.findViewById(R.id.editText_Elbow);
-        editText_Wrist1 = view.findViewById(R.id.editText_Wrist1);
-        editText_Wrist2 = view.findViewById(R.id.editText_Wrist2);
-        editText_Wrist3 = view.findViewById(R.id.editText_Wrist3);
+        // Inicializacion de arreglos de botones, editext y seekbars.
+        // Base
+        btnArray[0] = view.findViewById(R.id.btnBaseLeft);
+        btnArray[1] = view.findViewById(R.id.btnBaseRight);
+        // Shoulder
+        btnArray[2] = view.findViewById(R.id.btnShoulderLeft);
+        btnArray[3] = view.findViewById(R.id.btnShoulderRight);
+        // Elbow
+        btnArray[4] = view.findViewById(R.id.btnElbowLeft);
+        btnArray[5] = view.findViewById(R.id.btnElbowRight);
 
+        // Wrist1
+        btnArray[6] = view.findViewById(R.id.btnWrist1Left);
+        btnArray[7] = view.findViewById(R.id.btnWrist1Right);
+
+        // Wrist2
+        btnArray[8] = view.findViewById(R.id.btnWrist2Left);
+        btnArray[9] = view.findViewById(R.id.btnWrist2Right);
+
+        // Wrist3
+        btnArray[10] = view.findViewById(R.id.btnWrist3Left);
+        btnArray[11] = view.findViewById(R.id.btnWrist3Right);
+
+        seekBarsArray[0] = view.findViewById(R.id.seekBar_Base); //seekBar_Base.setEnabled(false);
+        seekBarsArray[1] = view.findViewById(R.id.seekBar_Shoulder); //seekBar_Shoulder.setEnabled(false);
+        seekBarsArray[2] = view.findViewById(R.id.seekBar_Elbow); //seekBar_Elbow.setEnabled(false);
+        seekBarsArray[3] = view.findViewById(R.id.seekBar_Wrist1); //seekBar_Wrist1.setEnabled(false);
+        seekBarsArray[4] = view.findViewById(R.id.seekBar_Wrist2); //seekBar_Wrist2.setEnabled(false);
+        seekBarsArray[5] = view.findViewById(R.id.seekBar_Wrist3); //seekBar_Wrist3.setEnabled(false);
+
+        etxtArray[0] = view.findViewById(R.id.editText_Base);
+        etxtArray[1] = view.findViewById(R.id.editText_Shoulder);
+        etxtArray[2] = view.findViewById(R.id.editText_Elbow);
+        etxtArray[3] = view.findViewById(R.id.editText_Wrist1);
+        etxtArray[4] = view.findViewById(R.id.editText_Wrist2);
+        etxtArray[5] = view.findViewById(R.id.editText_Wrist3);
 
         //Hace cambio de puerto
         Connect_Client = new Connect_Client("192.168.15.155", 30001);
         Connect_Client.conectar();
 
+        for (int i = 0; i < initPositions.length; i++) {
+            etxtArray[i].setText(String.valueOf(initPositions[i]));
+            seekBarsArray[i].setProgress(Integer.parseInt(etxtArray[i].getText().toString()) + 360);
+            countArray[i] = initPositions[i];
+        }
 
+        View.OnTouchListener onTouchListener = new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
 
-        InitRobot();
+                Button btnPressed = (Button) v;
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        if (!pressed) {
+                            pressed = true;
+                            //AsyncTask que ejecuta Tarea.
+                            new AsyncTaskCounter().execute(btnPressed.getTag().toString());
+                            Log.d("CONTADOR", "Detiene contador");
+                        } else {
+                            Toast.makeText(getContext(), "Solo se puede hacer una operacion a la vez", Toast.LENGTH_SHORT).show();
+                        }
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        pressed = false;
+                        convertAndSendCommand();
+                        break;
+                }
+                return true;
+            }
+        };
+
+        for (Button btn : btnArray) {
+            btn.setOnTouchListener(onTouchListener);
+        }
+
+        sendToHomePosition();
 
         Button Button_FreeDrive = view.findViewById(R.id.button_FreeDrive);
         Button_FreeDrive.setOnClickListener(new View.OnClickListener() {
@@ -126,204 +181,16 @@ public class MoveRobotFragment extends Fragment {
         Button_HomePosition.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                InitRobot();
+                sendToHomePosition();
+                for(int i=0; i<etxtArray.length; i++) {
+                    etxtArray[i].setText(Integer.toString(initPositions[i]));
+                    seekBarsArray[i].setProgress(initPositions[i] + 360);
+                    countArray[i] = initPositions[i];
+                }
             }
         });
-
-        Button button_Power_Off = view.findViewById(R.id.button_Power_Off);
-        button_Power_Off.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Connect_Client.enviarMSG("Power Off");
-
-            }
-        });
-
-        ListenersSeekBars();
-
         return view;
     }
-
-
-    public void ListenersSeekBars() {
-
-        //Base
-        seekBar_Base.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean fromUser) {
-
-                editText_Base.setText(String.valueOf(i - 360));
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-                double res = Integer.parseInt(editText_Base.getText().toString()) * 3.1416 / 180;
-                base = res;
-                String Comando = "movej(["+Double.toString(base)+
-                        ", "+Double.toString(shoulder)+
-                        ", "+Double.toString(elbow)+
-                        ", "+Double.toString(wrist1)+
-                        ", "+Double.toString(wrist2)+
-                        ", "+Double.toString(wrist3)+
-                        "], a=1.0, v=0.2)";
-                Connect_Client.enviarMSG(Comando);
-
-            }
-        });
-
-        //Shoulder
-        seekBar_Shoulder.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean fromUser) {
-                editText_Shoulder.setText(String.valueOf(i - 360));
-
-
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                double res = Integer.parseInt(editText_Shoulder.getText().toString()) * 3.1416 / 180;
-                shoulder = res;
-                String Comando = "movej(["+Double.toString(base)+
-                        ", "+Double.toString(shoulder)+
-                        ", "+Double.toString(elbow)+
-                        ", "+Double.toString(wrist1)+
-                        ", "+Double.toString(wrist2)+
-                        ", "+Double.toString(wrist3)+
-                        "], a=1.0, v=0.2)";
-                Connect_Client.enviarMSG(Comando);
-            }
-        });
-
-        //Elbow
-        seekBar_Elbow.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean fromUser) {
-                editText_Elbow.setText(String.valueOf(i - 360));
-
-
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                double res = Integer.parseInt(editText_Elbow.getText().toString()) * 3.1416 / 180;
-                elbow = res;
-                String Comando = "movej(["+Double.toString(base)+
-                        ", "+Double.toString(shoulder)+
-                        ", "+Double.toString(elbow)+
-                        ", "+Double.toString(wrist1)+
-                        ", "+Double.toString(wrist2)+
-                        ", "+Double.toString(wrist3)+
-                        "], a=1.0, v=0.2)";
-                Connect_Client.enviarMSG(Comando);
-            }
-        });
-
-        //seekBar_Wrist1
-        seekBar_Wrist1.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean fromUser) {
-                editText_Wrist1.setText(String.valueOf(i - 360));
-
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                double res = Integer.parseInt(editText_Wrist1.getText().toString()) * 3.1416 / 180;
-                wrist1 = res;
-                String Comando = "movej(["+Double.toString(base)+
-                        ", "+Double.toString(shoulder)+
-                        ", "+Double.toString(elbow)+
-                        ", "+Double.toString(wrist1)+
-                        ", "+Double.toString(wrist2)+
-                        ", "+Double.toString(wrist3)+
-                        "], a=1.0, v=0.2)";
-                Connect_Client.enviarMSG(Comando);
-            }
-        });
-
-        //seekBar_Wrist2
-        seekBar_Wrist2.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean fromUser) {
-                editText_Wrist2.setText(String.valueOf(i - 360));
-
-
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                double res = Integer.parseInt(editText_Wrist2.getText().toString()) * 3.1416 / 180;
-                wrist2 = res;
-                String Comando = "movej(["+Double.toString(base)+
-                        ", "+Double.toString(shoulder)+
-                        ", "+Double.toString(elbow)+
-                        ", "+Double.toString(wrist1)+
-                        ", "+Double.toString(wrist2)+
-                        ", "+Double.toString(wrist3)+
-                        "], a=1.0, v=0.2)";
-                Connect_Client.enviarMSG(Comando);
-            }
-        });
-
-        //seekBar_Wrist3
-        seekBar_Wrist3.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean fromUser) {
-                editText_Wrist3.setText(String.valueOf(i - 360));
-
-
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                double res = Integer.parseInt(editText_Wrist3.getText().toString()) * 3.1416 / 180;
-                wrist3 = res;
-                String Comando = "movej(["+Double.toString(base)+
-                        ", "+Double.toString(shoulder)+
-                        ", "+Double.toString(elbow)+
-                        ", "+Double.toString(wrist1)+
-                        ", "+Double.toString(wrist2)+
-                        ", "+Double.toString(wrist3)+
-                        "], a=1.0, v=0.2)";
-                Connect_Client.enviarMSG(Comando);
-            }
-        });
-    }
-
-
-
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -364,76 +231,68 @@ public class MoveRobotFragment extends Fragment {
         return bigDecimal.intValue();
     }
 
-    public void GetPositions (){
-
-        Connect_Client socket = new Connect_Client("192.168.15.21", 1025);
-        socket.conectarServidor();
-
-        Connect_Client.enviarMSG("Socket_Closed=True\n" +
-                "  while (True):\n" +
-                "    if (Socket_Closed ==  True  ):\n" +
-                "      socket_open(“192.168.15.21″, 1025)\n" +
-                "      global Socket_Closed =   False \n" +
-                "      varmsg(“Socket_Closed”,Socket_Closed)\n" +
-                "    end\n" +
-                "    socket_send_string(“Asking_Waypoint_1″)\n" +
-                "    sleep(3.0)\n" +
-                "  end");
-
-        Log.i("Respuesta", Connect_Client.serverResponse);
-
-        String cadena = Connect_Client.serverResponse;
-
-        String Base, Shoulder, Elbow, Wrist1, Wrist2, Wrist3;
-
-        cadena = cadena.replace("(", "");
-        cadena = cadena.replace(")", "");
-
-        String parte[] = cadena.split(",");
-
-        Base = parte[0];
-        Shoulder = parte[1];
-        Elbow = parte[2];
-        Wrist1 = parte[3];
-        Wrist2 = parte[4];
-        Wrist3 = parte[5];
-
-        seekBar_Base.setProgress(Integer.valueOf(Base));
-        seekBar_Shoulder.setProgress(Integer.valueOf(Shoulder));
-        seekBar_Elbow.setProgress(Integer.valueOf(Elbow));
-        seekBar_Wrist1.setProgress(Integer.valueOf(Wrist1));
-        seekBar_Wrist2.setProgress(Integer.valueOf(Wrist2));
-        seekBar_Wrist3.setProgress(Integer.valueOf(Wrist3));
+    public void sendToHomePosition() {
+        Connect_Client.enviarMSG("movej([" + Double.toString(initPositions[0] * 3.1416 / 180) +
+                ", " + Double.toString(initPositions[1] * 3.1416 / 180) +
+                ", " + Double.toString(initPositions[2] * 3.1416 / 180) +
+                ", " + Double.toString(initPositions[3] * 3.1416 / 180) +
+                ", " + Double.toString(initPositions[4] * 3.1416 / 180) +
+                ", " + Double.toString(initPositions[5] * 3.1416 / 180) +
+                "], a=1.0, v=0.3)");
     }
 
-    public void InitRobot() {
-        base = 1.57;
-        shoulder = -2.12;
-        elbow = 1.39;
-        wrist1 = -0.84;
-        wrist2 = -1.57;
-        wrist3 = 1.57;
+    public void convertAndSendCommand() {
+        Log.i("grados", etxtArray[0].getText().toString());
 
-        seekBar_Base.setProgress(roundDouble(base * 180 / 3.1416, 0) + 360);
-        seekBar_Shoulder.setProgress(roundDouble(shoulder * 180 / 3.1416, 0) + 360);
-        seekBar_Elbow.setProgress(roundDouble(elbow * 180 / 3.1416, 0) + 360);
-        seekBar_Wrist1.setProgress(roundDouble(wrist1 * 180 / 3.1416, 0) + 360);
-        seekBar_Wrist2.setProgress(roundDouble(wrist2 * 180 / 3.1416, 0) + 360);
-        seekBar_Wrist3.setProgress(roundDouble(wrist3 * 180 / 3.1416, 0) + 360);
+        Connect_Client.enviarMSG("movej([" + Double.toString(countArray[0] * 3.1416 / 180) +
+                ", " + Double.toString(countArray[1] * 3.1416 / 180) +
+                ", " + Double.toString(countArray[2] * 3.1416 / 180) +
+                ", " + Double.toString(countArray[3] * 3.1416 / 180) +
+                ", " + Double.toString(countArray[4] * 3.1416 / 180) +
+                ", " + Double.toString(countArray[5] * 3.1416 / 180) +
+                "], a=1.0, v=0.3)");
+    }
 
-        editText_Base.setText(Integer.toString(seekBar_Base.getProgress()-360));
-        editText_Shoulder.setText(Integer.toString(seekBar_Shoulder.getProgress()-360));
-        editText_Elbow.setText(Integer.toString(seekBar_Elbow.getProgress()-360));
-        editText_Wrist1.setText(Integer.toString(seekBar_Wrist1.getProgress()-360));
-        editText_Wrist2.setText(Integer.toString(seekBar_Wrist2.getProgress()-360));
-        editText_Wrist3.setText(Integer.toString(seekBar_Wrist3.getProgress()-360));
+    private class AsyncTaskCounter extends AsyncTask<String, Void, Void> {
+        int acceleration = 500;
+        int motorValue;
+        String directionValue;
 
-        Connect_Client.enviarMSG("movej(["+Double.toString(base)+
-                ", "+Double.toString(shoulder)+
-                ", "+Double.toString(elbow)+
-                ", "+Double.toString(wrist1)+
-                ", "+Double.toString(wrist2)+
-                ", "+Double.toString(wrist3)+
-                "], a=1.0, v=0.2)");
+        @Override
+        protected Void doInBackground(String... tags) {
+
+            String[] parts = tags[0].split(":");
+            motorValue = Integer.parseInt(parts[0]);
+            directionValue = parts[1];
+
+            while (pressed) {
+                taskIncrementaContador();
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        etxtArray[motorValue].setText(String.valueOf(countArray[motorValue]));
+                        seekBarsArray[motorValue].setProgress(Integer.parseInt(etxtArray[motorValue].getText().toString()) + 360);
+                    }
+                });
+                try {
+                    Thread.sleep(acceleration);
+                } catch (InterruptedException e) {
+                    Log.d("ERROR", e.getMessage());
+                }
+            }
+            return null;
+        }
+
+        private void taskIncrementaContador() {
+            if (acceleration != 50)
+                acceleration -= 50;
+            if (directionValue.equals("+")) {
+                countArray[motorValue]+=1;
+            } else {
+                countArray[motorValue]-=1;
+            }
+            //convertAndSendCommand();
+            Log.d("CONTADOR", "Valor: " + String.valueOf(countArray[motorValue]));
+        }
     }
 }

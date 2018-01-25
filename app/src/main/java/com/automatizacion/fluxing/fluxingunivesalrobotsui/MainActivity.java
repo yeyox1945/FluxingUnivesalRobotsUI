@@ -23,10 +23,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
 
@@ -34,10 +32,8 @@ public class MainActivity extends AppCompatActivity
         Fragment fragment = new ConnectRobotFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.Contenedor, fragment).commit();
 
-
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -89,7 +85,6 @@ public class MainActivity extends AppCompatActivity
 
             FragmentSelect = true;
             fragment = new URPRobotFragment();
-            URPRobotFragment.sftp.Disconnect();
 
         } else if (id == R.id.nav_manage) {
 

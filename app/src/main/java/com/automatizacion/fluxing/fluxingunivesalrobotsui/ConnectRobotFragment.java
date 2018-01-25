@@ -81,12 +81,7 @@ public class ConnectRobotFragment extends Fragment {
         TxtLog.setMovementMethod(new ScrollingMovementMethod());
         SpinnerRobot = view.findViewById(R.id.spinner_Robots);
 
-
-        TxtMSG = view.findViewById(R.id.EditCommand);
-
         Button button_Connect = view.findViewById(R.id.button_Connect);
-        Button button_send = view.findViewById(R.id.button_send);
-
 
         // Fill_Spinner_Robots();//llena el sipiner con las ip registradas
 
@@ -94,9 +89,6 @@ public class ConnectRobotFragment extends Fragment {
         button_Connect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                TxtLog = view.findViewById(R.id.TxtLog);
-
                 StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
                 StrictMode.setThreadPolicy(policy);
                 Connect_Client = new Connect_Client("192.168.15.155", 29999);
@@ -107,6 +99,20 @@ public class ConnectRobotFragment extends Fragment {
             }
         });
 
+        Button button_Pause = view.findViewById(R.id.button_Pause);
+        button_Pause.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Connect_Client.enviarMSG("Power Off");
+
+            }
+        });
+
+
+      /*  //Metodo para enviar un comando
+        Button button_send = view.findViewById(R.id.button_send);
+        TxtMSG = view.findViewById(R.id.EditCommand);
         button_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -118,7 +124,7 @@ public class ConnectRobotFragment extends Fragment {
                 TxtLog.setText(TxtLog.getText() + "\nServidor : " + TxtMSG.getText());
                 TxtMSG.setText("");
             }
-        });
+        });*/
 
         return view;
     }
@@ -126,19 +132,21 @@ public class ConnectRobotFragment extends Fragment {
     public void Fill_Spinner_Robots() {
         //SpinnerRobot
 
-        RobotsList.add("Seleccióna..");
+        RobotsList.clear();
+        SpinnerRobot.setAdapter(null);
 
+        RobotsList.add("Seleccióna..");
         //LLenar Con datos de SQL
 
         ConnectSQL SQL = new ConnectSQL();
-            SQL.Fill_Combo_IP_RobotsSQL();
+        SQL.Fill_Combo_IP_RobotsSQL();
 
         assert SpinnerRobot != null;
         SpinnerRobot.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, RobotsList));
         SpinnerRobot.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
-
+                    ///Agregar codigo de selecionde ip aqui
 
             }
 

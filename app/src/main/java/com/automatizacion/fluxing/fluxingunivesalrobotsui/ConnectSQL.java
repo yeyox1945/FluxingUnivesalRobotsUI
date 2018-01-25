@@ -35,10 +35,9 @@ public class ConnectSQL {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         java.sql.Connection connection = null;
-        String ConnectionURL;
+        String ConnectionURL = "jdbc:jtds:sqlserver://" + IP + ";databaseName=" + DB + ";user=" + User + ";password=" + Password + ";";
         try {
             Class.forName("net.sourceforge.jtds.jdbc.Driver");
-            ConnectionURL = "jdbc:jtds:sqlserver://" + IP + ";databaseName=" + DB + ";user=" + User + ";password=" + Password + ";";
             connection = DriverManager.getConnection(ConnectionURL);
         } catch (SQLException se) {
             Log.e("error here 1 : ", se.getMessage());
@@ -72,7 +71,7 @@ public class ConnectSQL {
         } else {
 
             try {
-                PreparedStatement pst = ConnectSQL().prepareStatement("INSERT INTO dbo.FluxingUniversalRobots(Nombre,Modelo,IP) VALUES(?,?,?);");
+                PreparedStatement pst = ConnectSQL().prepareStatement("INSERT INTO RegistroRobot(Nombre,Modelo,IP) VALUES(?,?,?);");
                 pst.setString(1, Name);
                 pst.setString(2, Model);
                 pst.setString(3, IP);
@@ -101,21 +100,23 @@ public class ConnectSQL {
         String Robot = "";
         ConnectRobotFragment ConnectRobot = new ConnectRobotFragment();
 
+
+
         try {
-            String Query = "SELECT id,Nombre,IP FROM dbo.FluxingUniversalRobots ORDER BY id;";
+            String Query = "SELECT id,Nombre,IP FROM RegistroRobots ORDER BY id;";
 
             stmt = ConnectSQL().prepareStatement(Query);
 
             rs = stmt.executeQuery();
 
-
+            System.out.println("Entra a SQL");
             while (rs.next()) {
 
                 String id = rs.getString(1);
                 String Nombre = rs.getString(2);
                 String IP = rs.getString(3);
 
-                Robot = id + " - " + Nombre + " - " + IP;
+                Robot = id + "-" + Nombre + "-" + IP;
                 ConnectRobot.RobotsList.add(Robot);
 
             }

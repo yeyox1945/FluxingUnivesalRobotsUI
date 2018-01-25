@@ -103,6 +103,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:scrollbars="vertical"
+        android:gravity="bottom"
         android:text="Area para enviar URScripts"
         android:textColor="@color/colorNegrote"
         app:layout_constraintBottom_toBottomOf="parent"

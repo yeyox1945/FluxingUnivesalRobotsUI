@@ -85,7 +85,6 @@ public class MainActivity extends AppCompatActivity
 
             FragmentSelect = true;
             fragment = new URPRobotFragment();
-            URPRobotFragment.sftp.Disconnect();
 
         } else if (id == R.id.nav_manage) {
 

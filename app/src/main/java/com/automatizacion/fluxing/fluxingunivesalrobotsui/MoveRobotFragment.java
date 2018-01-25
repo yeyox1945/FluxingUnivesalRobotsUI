@@ -130,6 +130,15 @@ public class MoveRobotFragment extends Fragment {
             }
         });
 
+        Button button_Power_Off = view.findViewById(R.id.button_Power_Off);
+        button_Power_Off.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Connect_Client.enviarMSG("Power Off");
+
+            }
+        });
+
         ListenersSeekBars();
 
         return view;

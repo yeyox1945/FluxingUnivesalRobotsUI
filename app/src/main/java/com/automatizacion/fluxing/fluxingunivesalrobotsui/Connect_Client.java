@@ -47,8 +47,6 @@ public class Connect_Client extends Thread {
                 synchronized (this) {
                     final String finalTexto = texto;
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
-
-
                         @Override
                         public void run() {
                             if (finalTexto != null) {

@@ -385,15 +385,5 @@
         app:layout_constraintStart_toEndOf="@+id/textView_Wrist3"
         app:layout_constraintTop_toBottomOf="@+id/editText_Wrist2" />
 
-    <Button
-        android:id="@+id/button_Power_Off"
-        android:layout_width="106dp"
-        android:layout_height="92dp"
-        android:layout_marginEnd="50dp"
-        android:layout_marginTop="5dp"
-        android:text="Pausa"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_HomePosition" />
-
 
 </android.support.constraint.ConstraintLayout>

@@ -7,15 +7,18 @@ package com.automatizacion.fluxing.fluxingunivesalrobotsui;
 import android.annotation.SuppressLint;
 import android.os.StrictMode;
 import android.util.Log;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 //Fluxing.ddns.net:1433:1433  -- Remota
 //192.168.15.131:1433   -- local
 
-public class SQLConexion {
+public class ConnectSQL {
 
     private String IP, DB, User, Password;
 
@@ -32,10 +35,9 @@ public class SQLConexion {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         java.sql.Connection connection = null;
-        String ConnectionURL;
+        String ConnectionURL = "jdbc:jtds:sqlserver://" + IP + ";databaseName=" + DB + ";user=" + User + ";password=" + Password + ";";
         try {
             Class.forName("net.sourceforge.jtds.jdbc.Driver");
-            ConnectionURL = "jdbc:jtds:sqlserver://" + IP + ";databaseName=" + DB + ";user=" + User + ";password=" + Password + ";";
             connection = DriverManager.getConnection(ConnectionURL);
         } catch (SQLException se) {
             Log.e("error here 1 : ", se.getMessage());
@@ -69,7 +71,7 @@ public class SQLConexion {
         } else {
 
             try {
-                PreparedStatement pst = ConnectSQL().prepareStatement("INSERT INTO dbo.FluxingUniversalRobots(Nombre,Modelo,IP) VALUES(?,?,?);");
+                PreparedStatement pst = ConnectSQL().prepareStatement("INSERT INTO RegistroRobot(Nombre,Modelo,IP) VALUES(?,?,?);");
                 pst.setString(1, Name);
                 pst.setString(2, Model);
                 pst.setString(3, IP);
@@ -89,6 +91,41 @@ public class SQLConexion {
         }
 
         return Validate;
+    }
+
+    public String Fill_Combo_IP_RobotsSQL() {
+
+        PreparedStatement stmt;
+        ResultSet rs;
+        String Robot = "";
+        ConnectRobotFragment ConnectRobot = new ConnectRobotFragment();
+
+
+
+        try {
+            String Query = "SELECT id,Nombre,IP FROM RegistroRobots ORDER BY id;";
+
+            stmt = ConnectSQL().prepareStatement(Query);
+
+            rs = stmt.executeQuery();
+
+            System.out.println("Entra a SQL");
+            while (rs.next()) {
+
+                String id = rs.getString(1);
+                String Nombre = rs.getString(2);
+                String IP = rs.getString(3);
+
+                Robot = id + "-" + Nombre + "-" + IP;
+                ConnectRobot.RobotsList.add(Robot);
+
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al llenar Spinner :" + e.getMessage());
+        }
+
+
+        return Robot;
     }
 
 }

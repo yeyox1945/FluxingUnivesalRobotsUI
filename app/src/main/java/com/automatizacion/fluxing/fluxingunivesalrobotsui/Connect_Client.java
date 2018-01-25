@@ -14,7 +14,7 @@ import java.net.Socket;
 /*
  * @author Jorge Manzano
  */
-public class Conector_Cliente extends Thread {
+public class Connect_Client extends Thread {
 
     private Socket s;
     private ServerSocket ss;
@@ -30,7 +30,7 @@ public class Conector_Cliente extends Thread {
     public String serverResponse = "sin respuesta";
     public MainActivity Main = new MainActivity();
 
-    public Conector_Cliente(String ip, int port) {
+    public Connect_Client(String ip, int port) {
         this.port = port;
         this.ip = ip;
     }
@@ -47,6 +47,8 @@ public class Conector_Cliente extends Thread {
                 synchronized (this) {
                     final String finalTexto = texto;
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
+
+
                         @Override
                         public void run() {
                             if (finalTexto != null) {
@@ -121,7 +123,7 @@ public class Conector_Cliente extends Thread {
 
     public void conectarServidor() {
 
-        new AsyncTask<Integer, Void, Void>() {
+         new AsyncTask<Integer, Void, Void>() {
 
             @Override
             protected Void doInBackground(Integer... integers) {

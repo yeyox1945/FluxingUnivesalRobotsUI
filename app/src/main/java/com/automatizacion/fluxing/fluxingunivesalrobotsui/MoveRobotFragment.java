@@ -25,7 +25,6 @@ public class MoveRobotFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-
     public SeekBar seekBar_Base;
     public SeekBar seekBar_Shoulder;
     public SeekBar seekBar_Elbow;
@@ -41,7 +40,6 @@ public class MoveRobotFragment extends Fragment {
     public EditText editText_Wrist3;
 
     public boolean activeFreeDrive = false;
-    public static Conector_Cliente Connect_Client;
     // setting a home position before manually moving the robot
 
     double base;
@@ -51,6 +49,7 @@ public class MoveRobotFragment extends Fragment {
     double wrist2;
     double wrist3;
 
+    public static Connect_Client Connect_Client;
 
     private OnFragmentInteractionListener mListener;
 
@@ -81,16 +80,14 @@ public class MoveRobotFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        //return inflater.inflate(R.layout.fragment_move_robot, container, false);
-
         View view = inflater.inflate(R.layout.fragment_move_robot, container, false);
 
-        seekBar_Base = view.findViewById(R.id.seekBar_Base);
-        seekBar_Shoulder = view.findViewById(R.id.seekBar_Shoulder);
-        seekBar_Elbow = view.findViewById(R.id.seekBar_Elbow);
-        seekBar_Wrist1 = view.findViewById(R.id.seekBar_Wrist1);
-        seekBar_Wrist2 = view.findViewById(R.id.seekBar_Wrist2);
-        seekBar_Wrist3 = view.findViewById(R.id.seekBar_Wrist3);
+        seekBar_Base = view.findViewById(R.id.seekBar_Base); //seekBar_Base.setEnabled(false);
+        seekBar_Shoulder = view.findViewById(R.id.seekBar_Shoulder); //seekBar_Shoulder.setEnabled(false);
+        seekBar_Elbow = view.findViewById(R.id.seekBar_Elbow); //seekBar_Elbow.setEnabled(false);
+        seekBar_Wrist1 = view.findViewById(R.id.seekBar_Wrist1); //seekBar_Wrist1.setEnabled(false);
+        seekBar_Wrist2 = view.findViewById(R.id.seekBar_Wrist2); //seekBar_Wrist2.setEnabled(false);
+        seekBar_Wrist3 = view.findViewById(R.id.seekBar_Wrist3); //seekBar_Wrist3.setEnabled(false);
 
         editText_Base = view.findViewById(R.id.editText_Base);
         editText_Shoulder = view.findViewById(R.id.editText_Shoulder);
@@ -101,8 +98,10 @@ public class MoveRobotFragment extends Fragment {
 
 
         //Hace cambio de puerto
-        Connect_Client = new Conector_Cliente("192.168.15.155", 30001);
+        Connect_Client = new Connect_Client("192.168.15.155", 30001);
         Connect_Client.conectar();
+
+
 
         InitRobot();
 
@@ -128,6 +127,15 @@ public class MoveRobotFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 InitRobot();
+            }
+        });
+
+        Button button_Power_Off = view.findViewById(R.id.button_Power_Off);
+        button_Power_Off.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Connect_Client.enviarMSG("Power Off");
+
             }
         });
 
@@ -358,10 +366,10 @@ public class MoveRobotFragment extends Fragment {
 
     public void GetPositions (){
 
-        /*Conector_Cliente socket = new Conector_Cliente("192.168.15.21", 1025);
-        socket.conectarServidor();*/
+        Connect_Client socket = new Connect_Client("192.168.15.21", 1025);
+        socket.conectarServidor();
 
-        /*Connect_Client.enviarMSG("Socket_Closed=True\n" +
+        Connect_Client.enviarMSG("Socket_Closed=True\n" +
                 "  while (True):\n" +
                 "    if (Socket_Closed ==  True  ):\n" +
                 "      socket_open(“192.168.15.21″, 1025)\n" +
@@ -370,7 +378,7 @@ public class MoveRobotFragment extends Fragment {
                 "    end\n" +
                 "    socket_send_string(“Asking_Waypoint_1″)\n" +
                 "    sleep(3.0)\n" +
-                "  end");*/
+                "  end");
 
         Log.i("Respuesta", Connect_Client.serverResponse);
 

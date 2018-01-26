@@ -83,7 +83,7 @@ public class ConnectRobotFragment extends Fragment {
 
         Button button_Connect = view.findViewById(R.id.button_Connect);
 
-        // Fill_Spinner_Robots();//llena el sipiner con las ip registradas
+        Fill_Spinner_Robots();//llena el sipiner con las ip registradas
 
         // Metodo se ejecuta al conectar un robot
         button_Connect.setOnClickListener(new View.OnClickListener() {
@@ -132,29 +132,33 @@ public class ConnectRobotFragment extends Fragment {
     public void Fill_Spinner_Robots() {
         //SpinnerRobot
 
+
         RobotsList.clear();
         SpinnerRobot.setAdapter(null);
-
         RobotsList.add("Seleccióna..");
         //LLenar Con datos de SQL
 
         ConnectSQL SQL = new ConnectSQL();
-        SQL.Fill_Combo_IP_RobotsSQL();
+        if (SQL.Validate_Connection() == false) {
+            Toast.makeText(getContext(), "No se encontro una conexión a internet.", Toast.LENGTH_SHORT).show();
 
-        assert SpinnerRobot != null;
-        SpinnerRobot.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, RobotsList));
-        SpinnerRobot.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
+        } else {
+            SQL.Fill_Combo_IP_RobotsSQL();
+
+            assert SpinnerRobot != null;
+            SpinnerRobot.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, RobotsList));
+            SpinnerRobot.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
                     ///Agregar codigo de selecionde ip aqui
 
-            }
+                }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
-
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                }
+            });
+        }
     }
 
 

@@ -7,6 +7,7 @@ package com.automatizacion.fluxing.fluxingunivesalrobotsui;
 import android.annotation.SuppressLint;
 import android.os.StrictMode;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -35,7 +36,7 @@ public class ConnectSQL {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         java.sql.Connection connection = null;
-        String ConnectionURL = "jdbc:jtds:sqlserver://" + IP + ";databaseName=" + DB + ";user=" + User + ";password=" + Password + ";";
+        String ConnectionURL = "jdbc:jtds:sqlserver://" + IP + ";databaseName=" + DB + ";user=" + User + ";password=" + Password + ";loginTimeout=2;socketTimeout=2";
         try {
             Class.forName("net.sourceforge.jtds.jdbc.Driver");
             connection = DriverManager.getConnection(ConnectionURL);
@@ -86,7 +87,6 @@ public class ConnectSQL {
             } catch (NullPointerException e) {
                 System.out.println("null error : " + e.getMessage());
                 // Toast.makeText(this, "Llena correctamente todos los campos", Toast.LENGTH_SHORT).show();
-
             }
         }
 
@@ -101,12 +101,9 @@ public class ConnectSQL {
         ConnectRobotFragment ConnectRobot = new ConnectRobotFragment();
 
 
-
         try {
             String Query = "SELECT * FROM [FluxingUniversalRobot].[dbo].[RegistroRobot] ORDER BY id;";
-
             stmt = ConnectSQL().prepareStatement(Query);
-
             rs = stmt.executeQuery();
 
             System.out.println("Entra a SQL");
@@ -114,19 +111,17 @@ public class ConnectSQL {
 
                 String id = rs.getString(1).trim();
                 String Nombre = rs.getString(2).trim();
-                String IP = rs.getString(3).trim();
+                String Modelo = rs.getString(3).trim();
+                String ip = rs.getString(4).trim();
 
-
-
-                Robot = id + "-" + Nombre + "-" + IP;
+                Robot = id + " - " + Nombre + " - " + Modelo + " - " + ip;
+                System.out.println(Robot);
                 ConnectRobot.RobotsList.add(Robot);
-
             }
         } catch (SQLException e) {
             System.out.println("Error al llenar Spinner :" + e.getMessage());
-        }
-
-
+        }catch (NullPointerException e){
+  }
         return Robot;
     }
 

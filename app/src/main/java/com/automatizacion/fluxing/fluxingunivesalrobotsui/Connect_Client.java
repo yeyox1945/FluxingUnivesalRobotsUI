@@ -3,6 +3,7 @@ package com.automatizacion.fluxing.fluxingunivesalrobotsui;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -54,6 +55,10 @@ public class Connect_Client extends Thread {
                                 TxtLog = "\nServidor : " + serverResponse; //Imprime la conversacion
                                 Main.PrintToTextview(TxtLog);
 
+
+                                Log.i("Recibio:", finalTexto);
+
+
                             } else {
                                 TxtLog = "\nServidor :  Desconectado.";//Cuando se cierra el servidor
                                 Main.PrintToTextview(TxtLog);
@@ -87,6 +92,7 @@ public class Connect_Client extends Thread {
         try {
             return entrada.readLine();
         } catch (IOException e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -132,7 +138,6 @@ public class Connect_Client extends Thread {
                     entradaSocket = new InputStreamReader(s.getInputStream());
                     entrada = new BufferedReader(entradaSocket);
                     salida = new DataOutputStream(s.getOutputStream());
-                    TxtLog = "\nServidor Conectado."; // cuando da error
                     start();
                 } catch (IOException e) {
                     e.printStackTrace();

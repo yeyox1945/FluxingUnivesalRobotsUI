@@ -49,7 +49,6 @@ public class MoveRobotFragment extends Fragment {
         // Required empty public constructor
     }
 
-
     public static MoveRobotFragment newInstance(String param1, String param2) {
         MoveRobotFragment fragment = new MoveRobotFragment();
         Bundle args = new Bundle();
@@ -119,9 +118,14 @@ public class MoveRobotFragment extends Fragment {
         etxtArray[4] = view.findViewById(R.id.editText_Wrist2);
         etxtArray[5] = view.findViewById(R.id.editText_Wrist3);
 
-        //Hace cambio de puerto
+        // Hace cambio de puerto
         Connect_Client = new Connect_Client("192.168.15.155", 30001);
         Connect_Client.conectar();
+
+        // nuevo socket para recibir info
+        Connect_Client socketServer = new Connect_Client("192.168.15.21", 1025);
+        socketServer.conectarServidor();
+
 
         for (int i = 0; i < initPositions.length; i++) {
             etxtArray[i].setText(String.valueOf(initPositions[i]));
@@ -286,6 +290,7 @@ public class MoveRobotFragment extends Fragment {
         private void taskIncrementaContador() {
             if (acceleration != 50)
                 acceleration -= 50;
+
             if (directionValue.equals("+")) {
                 countArray[motorValue]+=1;
             } else {

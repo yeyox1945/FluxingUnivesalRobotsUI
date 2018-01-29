@@ -23,7 +23,7 @@ public class Connect_Client extends Thread {
     private DataOutputStream salida;
     private BufferedReader entrada;
     private int port = 29999;
-    private String ip = "0.0.0.0";
+    private String ip = ConnectRobotFragment.ip_Robot;
 
     static boolean Stop = true;
 
@@ -67,6 +67,10 @@ public class Connect_Client extends Thread {
                     });
                 }
             } catch (IOException e) {
+                TxtLog = "\nError :" + e.getMessage(); // cuando da error
+                Main.PrintToTextview(TxtLog);
+            }
+            catch (Exception e) {
                 TxtLog = "\nError :" + e.getMessage(); // cuando da error
                 Main.PrintToTextview(TxtLog);
             }

@@ -28,7 +28,7 @@ public class Connect_Server extends Thread {
     private DataOutputStream salida;
     private BufferedReader entrada;
     private int port = 29999;
-    private String ip = "0.0.0.0";
+    private String ip = ConnectRobotFragment.ip_Robot;
 
     static boolean Stop = true;
 
@@ -78,6 +78,9 @@ public class Connect_Server extends Thread {
     }
 
 
+
+
+
     public void sendProgram() {
 
         Connect_Client Connect_Client;
@@ -86,24 +89,23 @@ public class Connect_Server extends Thread {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        ftp.host = "192.168.15.52";
-        ftp.username = "ur";
-        ftp.password = "easybot";
+        ftp.host = ConnectRobotFragment.ip_Robot;
+        ftp.username = URPRobotFragment.eT_FTP_Username.getText().toString();
+        ftp.password = URPRobotFragment.eT_FTP_Password.getText().toString();
         ftp.Connect();
         ftp.WaitTask();
         ftp.ChangeDirectoryAsync("/home/ur/ursim-current/programs.UR10/Program");
 
-                   String archivo = "android.resource://com.automatizacion.fluxing.fluxingunivesalrobotsui/raw/prueba.urp";
+        String archivo = "android.resource://com.automatizacion.fluxing.fluxingunivesalrobotsui/raw/prueba.urp";
         Uri ruta = Uri.parse(archivo);
 
         ftp.SendFileAsync(ruta.toString(), "prueba.urp");
         System.out.println(ftp.ReadLog());
-        Connect_Client = new Connect_Client("192.168.15.52", 29999);
+        Connect_Client = new Connect_Client(ConnectRobotFragment.ip_Robot, 29999);
         Connect_Client.conectar();
         Connect_Client.start();
         Connect_Client.enviarMSG("load prueba.urp ");
         Connect_Client.enviarMSG("play");
-
 
 
         Connect_Client.enviarMSG("stop");

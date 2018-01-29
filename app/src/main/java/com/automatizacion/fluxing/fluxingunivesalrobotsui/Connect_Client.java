@@ -44,7 +44,9 @@ public class Connect_Client extends Thread {
 
         while (true) {
             try {
+                System.out.println("esperando msj...");
                 texto = entrada.readLine();
+                System.out.println("msj recibido");
                 synchronized (this) {
                     final String finalTexto = texto;
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -55,9 +57,7 @@ public class Connect_Client extends Thread {
                                 TxtLog = "\nServidor : " + serverResponse; //Imprime la conversacion
                                 Main.PrintToTextview(TxtLog);
 
-
                                 Log.i("Recibio:", finalTexto);
-
 
                             } else {
                                 TxtLog = "\nServidor :  Desconectado.";//Cuando se cierra el servidor
@@ -117,34 +117,12 @@ public class Connect_Client extends Thread {
 
     public void desconectar() {
         try {
+            stop();
             s.close();
         } catch (IOException e) {
             TxtLog = "\nError : " + e.getMessage(); // cuando da error
             Main.PrintToTextview(TxtLog);
 
         }
-    }
-
-    public void conectarServidor() {
-
-         new AsyncTask<Integer, Void, Void>() {
-
-            @Override
-            protected Void doInBackground(Integer... integers) {
-
-                try {
-                    ss = new ServerSocket(port);
-                    s = ss.accept();
-                    entradaSocket = new InputStreamReader(s.getInputStream());
-                    entrada = new BufferedReader(entradaSocket);
-                    salida = new DataOutputStream(s.getOutputStream());
-                    start();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                return null;
-            }
-        }.execute(1);
     }
 }

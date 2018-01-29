@@ -66,13 +66,12 @@ public class ConnectRobotFragment extends Fragment {
         }
     }
 
-    //  public com.automatizacion.fluxing.fluxingunivesalrobotsui.Connect_Client Connect_Client;
+    //  public com.automatizacion.fluxing.fluxingunivesalrobotsui.socketMove socketMove;
     public Connect_Client Connect_Client;
     public static TextView TxtLog;
     public EditText TxtMSG;
     public Spinner SpinnerRobot;
     public static ArrayList<String> RobotsList = new ArrayList<>();
-
 
 
     @Override
@@ -99,9 +98,6 @@ public class ConnectRobotFragment extends Fragment {
                 Connect_Client.start();
                 Connect_Client.enviarMSG(getResources().getString(R.string.Power_on));
                 Connect_Client.enviarMSG(getResources().getString(R.string.Brake_release));
-                MenuItem itemMenu = view.findViewById(R.id.Move_Robot);
-                itemMenu.setEnabled(true);
-
             }
         });
 
@@ -110,19 +106,16 @@ public class ConnectRobotFragment extends Fragment {
         button_server.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Connect_Server server =  new Connect_Server("",0);
+                Connect_Server server = new Connect_Server("", 0);
                 server.sendProgram();
-
-
-  }
+            }
         });
 
-            return view;
+        return view;
     }
 
     public void Fill_Spinner_Robots() {
         //SpinnerRobot
-
 
         RobotsList.clear();
         SpinnerRobot.setAdapter(null);
@@ -137,7 +130,7 @@ public class ConnectRobotFragment extends Fragment {
             SQL.Fill_Combo_IP_RobotsSQL();
 
             assert SpinnerRobot != null;
-            SpinnerRobot.setAdapter(new ArrayAdapter<>(getContext(),R.layout.spinner_style_items, RobotsList));
+            SpinnerRobot.setAdapter(new ArrayAdapter<>(getContext(), R.layout.spinner_style_items, RobotsList));
             SpinnerRobot.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {

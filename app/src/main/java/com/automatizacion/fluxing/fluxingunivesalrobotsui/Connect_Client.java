@@ -18,14 +18,13 @@ import java.net.Socket;
 public class Connect_Client extends Thread {
 
     private Socket s;
-    private ServerSocket ss;
     private InputStreamReader entradaSocket;
     private DataOutputStream salida;
     private BufferedReader entrada;
     private int port = 29999;
     private String ip = ConnectRobotFragment.ip_Robot;
 
-    static boolean Stop = true;
+    private static boolean Stop = false;
 
     public String TxtLog;
     public String serverResponse = "sin respuesta";
@@ -34,6 +33,7 @@ public class Connect_Client extends Thread {
     public Connect_Client(String ip, int port) {
         this.port = port;
         this.ip = ip;
+        Stop = false;
     }
 
 
@@ -42,7 +42,7 @@ public class Connect_Client extends Thread {
         //Metodo en segundo plano
         String texto;
 
-        while (true) {
+        while (!Stop) {
             try {
                 System.out.println("esperando msj...");
                 texto = entrada.readLine();
@@ -121,7 +121,7 @@ public class Connect_Client extends Thread {
 
     public void desconectar() {
         try {
-            stop();
+            Stop = true;
             s.close();
         } catch (IOException e) {
             TxtLog = "\nError : " + e.getMessage(); // cuando da error

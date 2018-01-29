@@ -126,11 +126,12 @@ public class MoveRobotFragment extends Fragment {
         etxtArray[5] = view.findViewById(R.id.editText_Wrist3);
 
             // Hace cambio de puerto
+       // ConnectRobotFragment.socketInitRobot.desconectar();
         socketMove = new Connect_Client(ConnectRobotFragment.ip_Robot, 30001);
         socketMove.conectar();
 
-
-        // nuevo socket para recibir info
+        Connect_Server socketServer = new Connect_Server("192.168.15.21", 1025);
+        socketServer.conectarServidor();
 
         for (int i = 0; i < initPositions.length; i++) {
             etxtArray[i].setText(String.valueOf(initPositions[i]));

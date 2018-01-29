@@ -1,8 +1,6 @@
 package com.automatizacion.fluxing.fluxingunivesalrobotsui;
 
-import android.content.ContentResolver;
 import android.content.Context;
-import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -55,7 +53,7 @@ public class ConnectRobotFragment extends Fragment {
         }
     }
 
-    public Connect_Client Connect_Client;
+    public static Connect_Client socketInitRobot;
     public static TextView TxtLog;
     public EditText TxtMSG;
     public Spinner SpinnerRobot;
@@ -85,11 +83,11 @@ public class ConnectRobotFragment extends Fragment {
             public void onClick(View v) {
                 StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
                 StrictMode.setThreadPolicy(policy);
-                Connect_Client = new Connect_Client(ip_Robot, 29999);
-                Connect_Client.conectar();
-                Connect_Client.start();
-                Connect_Client.enviarMSG(getResources().getString(R.string.Power_on));
-                Connect_Client.enviarMSG(getResources().getString(R.string.Brake_release));
+                socketInitRobot = new Connect_Client(ip_Robot, 29999);
+                socketInitRobot.conectar();
+                socketInitRobot.start();
+                socketInitRobot.enviarMSG(getResources().getString(R.string.Power_on));
+                socketInitRobot.enviarMSG(getResources().getString(R.string.Brake_release));
             }
         });
 

@@ -30,7 +30,7 @@ public class Connect_Server extends Thread {
     private int port = 29999;
     private String ip = ConnectRobotFragment.ip_Robot;
 
-    static boolean Stop = true;
+    private static boolean Stop = false;
 
     public String TxtLog;
     public String serverResponse = "sin respuesta";
@@ -39,15 +39,15 @@ public class Connect_Server extends Thread {
     public Connect_Server(String ip, int port) {
         this.port = port;
         this.ip = ip;
+        Stop = false;
     }
-
 
     @Override
     public void run() {
         //Metodo en segundo plano
         String texto;
 
-        while (true) {
+        while (!Stop) {
             try {
                 texto = entrada.readLine();
                 synchronized (this) {
@@ -76,10 +76,6 @@ public class Connect_Server extends Thread {
         }
 
     }
-
-
-
-
 
     public void sendProgram() {
 
@@ -112,7 +108,6 @@ public class Connect_Server extends Thread {
 
     }
 
-
     public void conectarServidor() {
 
         new AsyncTask<Integer, Void, Void>() {
@@ -138,6 +133,7 @@ public class Connect_Server extends Thread {
 
     public void desconectar() {
         try {
+            Stop = true;
             s.close();
         } catch (IOException e) {
             TxtLog = "\nError : " + e.getMessage(); // cuando da error
@@ -158,5 +154,4 @@ public class Connect_Server extends Thread {
             Main.PrintToTextview(TxtLog);
         }
     }
-
 }

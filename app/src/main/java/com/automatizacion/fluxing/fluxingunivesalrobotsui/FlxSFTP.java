@@ -359,7 +359,7 @@ public class FlxSFTP {
         return FileNames;
     }
 
-    private void WaitTask()
+    public void WaitTask()
     {
         while(Busy == true) {
             try {

@@ -27,7 +27,7 @@ public class ConnectSQL {
     @SuppressLint("NewApi")
     public Connection ConnectSQL() {
 
-        //IP = "Fluxing.ddns.net:1433";
+       // IP = "Fluxing.ddns.net:1433";
         IP = "192.168.15.131:1433";
         DB = "FluxingUniversalRobot";
         User = "sa";

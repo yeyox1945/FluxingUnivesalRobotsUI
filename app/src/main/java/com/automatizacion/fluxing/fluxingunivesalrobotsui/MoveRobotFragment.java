@@ -118,9 +118,10 @@ public class MoveRobotFragment extends Fragment {
         etxtArray[4] = view.findViewById(R.id.editText_Wrist2);
         etxtArray[5] = view.findViewById(R.id.editText_Wrist3);
 
-        // Hace cambio de puerto
-        Connect_Client = new Connect_Client("192.168.15.155", 30001);
-        Connect_Client.conectar();
+            // Hace cambio de puerto
+            Connect_Client = new Connect_Client("192.168.15.155", 30001);
+            Connect_Client.conectar();
+
 
         // nuevo socket para recibir info
         Connect_Client socketServer = new Connect_Client("192.168.15.21", 1025);

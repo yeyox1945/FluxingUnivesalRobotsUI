@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -41,7 +42,7 @@ public class MoveRobotFragment extends Fragment {
     public boolean activeFreeDrive = false;
     // setting a home position before manually moving the robot
 
-    public static Connect_Client Connect_Client;
+    public static Connect_Client socketMove;
 
     private OnFragmentInteractionListener mListener;
 
@@ -104,12 +105,18 @@ public class MoveRobotFragment extends Fragment {
         btnArray[10] = view.findViewById(R.id.btnWrist3Left);
         btnArray[11] = view.findViewById(R.id.btnWrist3Right);
 
-        seekBarsArray[0] = view.findViewById(R.id.seekBar_Base); //seekBar_Base.setEnabled(false);
-        seekBarsArray[1] = view.findViewById(R.id.seekBar_Shoulder); //seekBar_Shoulder.setEnabled(false);
-        seekBarsArray[2] = view.findViewById(R.id.seekBar_Elbow); //seekBar_Elbow.setEnabled(false);
-        seekBarsArray[3] = view.findViewById(R.id.seekBar_Wrist1); //seekBar_Wrist1.setEnabled(false);
-        seekBarsArray[4] = view.findViewById(R.id.seekBar_Wrist2); //seekBar_Wrist2.setEnabled(false);
-        seekBarsArray[5] = view.findViewById(R.id.seekBar_Wrist3); //seekBar_Wrist3.setEnabled(false);
+        seekBarsArray[0] = view.findViewById(R.id.seekBar_Base);
+        seekBarsArray[0].setEnabled(false);
+        seekBarsArray[1] = view.findViewById(R.id.seekBar_Shoulder);
+        seekBarsArray[1].setEnabled(false);
+        seekBarsArray[2] = view.findViewById(R.id.seekBar_Elbow);
+        seekBarsArray[2].setEnabled(false);
+        seekBarsArray[3] = view.findViewById(R.id.seekBar_Wrist1);
+        seekBarsArray[3].setEnabled(false);
+        seekBarsArray[4] = view.findViewById(R.id.seekBar_Wrist2);
+        seekBarsArray[4].setEnabled(false);
+        seekBarsArray[5] = view.findViewById(R.id.seekBar_Wrist3);
+        seekBarsArray[5].setEnabled(false);
 
         etxtArray[0] = view.findViewById(R.id.editText_Base);
         etxtArray[1] = view.findViewById(R.id.editText_Shoulder);
@@ -119,13 +126,11 @@ public class MoveRobotFragment extends Fragment {
         etxtArray[5] = view.findViewById(R.id.editText_Wrist3);
 
             // Hace cambio de puerto
-            Connect_Client = new Connect_Client(ConnectRobotFragment.ip_Robot, 30001);
-            Connect_Client.conectar();
+        socketMove = new Connect_Client(ConnectRobotFragment.ip_Robot, 30001);
+        socketMove.conectar();
 
 
         // nuevo socket para recibir info
-
-
 
         for (int i = 0; i < initPositions.length; i++) {
             etxtArray[i].setText(String.valueOf(initPositions[i]));
@@ -158,8 +163,29 @@ public class MoveRobotFragment extends Fragment {
             }
         };
 
-        for (Button btn : btnArray) {
+        View.OnKeyListener onKeyListener = new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+
+                //If the keyevent is a key-down event on the "enter" button
+                if ((keyEvent.getAction() == KeyEvent.ACTION_DOWN) && (i == KeyEvent.KEYCODE_ENTER)) {
+
+                    EditText etxt = (EditText) view;
+                    countArray[Integer.parseInt(etxt.getTag().toString())] = Integer.parseInt(etxt.getText().toString());
+                    seekBarsArray[Integer.parseInt(etxt.getTag().toString())].setProgress(Integer.parseInt(etxtArray[Integer.parseInt(etxt.getTag().toString())].getText().toString()) + 360);
+                    convertAndSendCommand();
+
+                    return true;
+                }
+                return false;
+            }
+        };
+
+        for(Button btn : btnArray) {
             btn.setOnTouchListener(onTouchListener);
+        }
+        for(EditText etxt : etxtArray) {
+            etxt.setOnKeyListener(onKeyListener);
         }
 
         sendToHomePosition();
@@ -172,11 +198,11 @@ public class MoveRobotFragment extends Fragment {
                 if (!activeFreeDrive) {
                     activeFreeDrive = true;
                     String Comando = "teach_mode()";
-                    Connect_Client.enviarMSG(Comando);
+                    socketMove.enviarMSG(Comando);
                 } else {
                     activeFreeDrive = false;
 
-                    Connect_Client.enviarMSG("end_teach_mode()");
+                    socketMove.enviarMSG("end_teach_mode()");
                 }
             }
         });
@@ -186,7 +212,7 @@ public class MoveRobotFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 sendToHomePosition();
-                for(int i=0; i<etxtArray.length; i++) {
+                for (int i = 0; i < etxtArray.length; i++) {
                     etxtArray[i].setText(Integer.toString(initPositions[i]));
                     seekBarsArray[i].setProgress(initPositions[i] + 360);
                     countArray[i] = initPositions[i];
@@ -236,7 +262,7 @@ public class MoveRobotFragment extends Fragment {
     }
 
     public void sendToHomePosition() {
-        Connect_Client.enviarMSG("movej([" + Double.toString(initPositions[0] * 3.1416 / 180) +
+        socketMove.enviarMSG("movej([" + Double.toString(initPositions[0] * 3.1416 / 180) +
                 ", " + Double.toString(initPositions[1] * 3.1416 / 180) +
                 ", " + Double.toString(initPositions[2] * 3.1416 / 180) +
                 ", " + Double.toString(initPositions[3] * 3.1416 / 180) +
@@ -248,7 +274,7 @@ public class MoveRobotFragment extends Fragment {
     public void convertAndSendCommand() {
         Log.i("grados", etxtArray[0].getText().toString());
 
-        Connect_Client.enviarMSG("movej([" + Double.toString(countArray[0] * 3.1416 / 180) +
+        socketMove.enviarMSG("movej([" + Double.toString(countArray[0] * 3.1416 / 180) +
                 ", " + Double.toString(countArray[1] * 3.1416 / 180) +
                 ", " + Double.toString(countArray[2] * 3.1416 / 180) +
                 ", " + Double.toString(countArray[3] * 3.1416 / 180) +
@@ -292,9 +318,9 @@ public class MoveRobotFragment extends Fragment {
                 acceleration -= 50;
 
             if (directionValue.equals("+")) {
-                countArray[motorValue]+=1;
+                countArray[motorValue] += 1;
             } else {
-                countArray[motorValue]-=1;
+                countArray[motorValue] -= 1;
             }
             //convertAndSendCommand();
             Log.d("CONTADOR", "Valor: " + String.valueOf(countArray[motorValue]));

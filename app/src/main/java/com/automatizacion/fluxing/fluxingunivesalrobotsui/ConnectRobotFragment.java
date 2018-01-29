@@ -1,6 +1,8 @@
 package com.automatizacion.fluxing.fluxingunivesalrobotsui;
 
+import android.content.ContentResolver;
 import android.content.Context;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;

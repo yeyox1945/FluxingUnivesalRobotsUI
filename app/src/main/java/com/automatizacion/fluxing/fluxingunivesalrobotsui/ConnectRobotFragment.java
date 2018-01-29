@@ -1,12 +1,15 @@
 package com.automatizacion.fluxing.fluxingunivesalrobotsui;
 
+import android.content.ContentResolver;
 import android.content.Context;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v4.app.Fragment;
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -71,6 +74,7 @@ public class ConnectRobotFragment extends Fragment {
     public static ArrayList<String> RobotsList = new ArrayList<>();
 
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -81,11 +85,10 @@ public class ConnectRobotFragment extends Fragment {
         TxtLog.setMovementMethod(new ScrollingMovementMethod());
         SpinnerRobot = view.findViewById(R.id.spinner_Robots);
 
-        Button button_Connect = view.findViewById(R.id.button_Connect);
-
         Fill_Spinner_Robots();//llena el sipiner con las ip registradas
 
         // Metodo se ejecuta al conectar un robot
+        Button button_Connect = view.findViewById(R.id.button_Connect);
         button_Connect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -96,37 +99,25 @@ public class ConnectRobotFragment extends Fragment {
                 Connect_Client.start();
                 Connect_Client.enviarMSG(getResources().getString(R.string.Power_on));
                 Connect_Client.enviarMSG(getResources().getString(R.string.Brake_release));
-            }
-        });
-
-        Button button_Pause = view.findViewById(R.id.button_Pause);
-        button_Pause.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Connect_Client.enviarMSG("Power Off");
+                MenuItem itemMenu = view.findViewById(R.id.Move_Robot);
+                itemMenu.setEnabled(true);
 
             }
         });
 
-
-      /*  //Metodo para enviar un comando
-        Button button_send = view.findViewById(R.id.button_send);
-        TxtMSG = view.findViewById(R.id.EditCommand);
-        button_send.setOnClickListener(new View.OnClickListener() {
+        // Metodo se ejecuta al conectar un robot
+        Button button_server = view.findViewById(R.id.button_Servidor);
+        button_server.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Connect_Server server =  new Connect_Server("",0);
+                server.sendProgram();
 
-                TxtLog = view.findViewById(R.id.TxtLog);
-                TxtMSG = view.findViewById(R.id.EditCommand);
 
-                Connect_Client.enviarMSG(TxtMSG.getText().toString());
-                TxtLog.setText(TxtLog.getText() + "\nServidor : " + TxtMSG.getText());
-                TxtMSG.setText("");
-            }
-        });*/
+  }
+        });
 
-        return view;
+            return view;
     }
 
     public void Fill_Spinner_Robots() {
@@ -146,7 +137,7 @@ public class ConnectRobotFragment extends Fragment {
             SQL.Fill_Combo_IP_RobotsSQL();
 
             assert SpinnerRobot != null;
-            SpinnerRobot.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, RobotsList));
+            SpinnerRobot.setAdapter(new ArrayAdapter<>(getContext(),R.layout.spinner_style_items, RobotsList));
             SpinnerRobot.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {

@@ -128,27 +128,6 @@ public class URPRobotFragment extends Fragment {
             }
         });
 
-        /*Button b_FTP_CD = view.findViewById(R.id.b_FTP_CD);
-        b_FTP_CD.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(sftp.IsConnected())
-                    sftp.ChangeDirectoryAsync(eT_Directory.getText().toString());
-            }
-        });
-
-        Button b_FTP_LS = view.findViewById(R.id.b_FTP_LS);
-        b_FTP_LS.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(sftp.IsConnected())
-                    tV_FTP_Output.append(sftp.ReadDirectoryContentAsync());
-                Vector FileNames = sftp.GetFilesByExtension(".jpg");
-                for(Object FileName : FileNames)
-                    tV_FTP_Output.append(FileName.toString() + "\n");
-            }
-        });*/
-
         Button b_URP_SearchFile = view.findViewById(R.id.b_URP_SearchFile);
         b_URP_SearchFile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -175,6 +154,30 @@ public class URPRobotFragment extends Fragment {
             public void onClick(View v) {
                 if(sftp.IsConnected())
                     sftp.SendFileAsync( eT_URP_FilePath.getText().toString(), FileName);
+            }
+        });
+
+        Button b_URP_Load = view.findViewById(R.id.b_URP_LoadProgram);
+        b_URP_Load.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Socket_Load(FileName);
+            }
+        });
+
+        Button b_URP_Start = view.findViewById(R.id.b_URP_StartProgram);
+        b_URP_Start.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Socket_Start();
+            }
+        });
+
+        Button b_URP_Stop = view.findViewById(R.id.b_URP_StopProgram);
+        b_URP_Stop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Socket_Stop();
             }
         });
 

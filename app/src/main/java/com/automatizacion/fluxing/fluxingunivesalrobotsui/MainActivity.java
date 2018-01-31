@@ -119,7 +119,6 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-
     public static void PrintToTextview(String s) {
         ConnectRobotFragment.TxtLog.setText(ConnectRobotFragment.TxtLog.getText() + " " + s);
     }

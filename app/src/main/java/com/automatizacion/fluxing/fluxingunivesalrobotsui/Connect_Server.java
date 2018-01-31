@@ -1,15 +1,11 @@
 package com.automatizacion.fluxing.fluxingunivesalrobotsui;
 
-import android.app.Activity;
-import android.content.res.Resources;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.StrictMode;
 import android.util.Log;
-import android.view.View;
-
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -32,9 +28,7 @@ public class Connect_Server extends Thread {
 
     private static boolean Stop = false;
 
-    public String TxtLog;
-    public String serverResponse = "sin respuesta";
-    public MainActivity Main = new MainActivity();
+    public String serverResponse;
 
     public Connect_Server(String ip, int port) {
         this.port = port;
@@ -57,21 +51,14 @@ public class Connect_Server extends Thread {
                         public void run() {
                             if (finalTexto != null) {
                                 serverResponse = finalTexto;
-                                TxtLog = "\nServidor : " + serverResponse; //Imprime la conversacion
-                                Main.PrintToTextview(TxtLog);
+                                Log.i("Recibio server", finalTexto);
 
-                                Log.i("Recibio:", finalTexto);
-
-                            } else {
-                                TxtLog = "\nServidor :  Desconectado.";//Cuando se cierra el servidor
-                                Main.PrintToTextview(TxtLog);
                             }
                         }
                     });
                 }
             } catch (IOException e) {
-                TxtLog = "\nError :" + e.getMessage(); // cuando da error
-                Main.PrintToTextview(TxtLog);
+                e.printStackTrace();
             }
         }
 
@@ -102,7 +89,6 @@ public class Connect_Server extends Thread {
         Connect_Client.start();
         Connect_Client.enviarMSG("load prueba.urp ");
         Connect_Client.enviarMSG("play");
-
 
         Connect_Client.enviarMSG("stop");
 
@@ -136,22 +122,17 @@ public class Connect_Server extends Thread {
             Stop = true;
             s.close();
         } catch (IOException e) {
-            TxtLog = "\nError : " + e.getMessage(); // cuando da error
-            Main.PrintToTextview(TxtLog);
-
+            e.printStackTrace();
         }
     }
 
     public void enviarMSG(String msg) {
         try {
-            this.salida = new DataOutputStream(s.getOutputStream());
-            this.salida.writeBytes(msg + "\n");
-            TxtLog = "\nCliente : " + msg + "\n";//Cuando le envio un mensaje
-            Main.PrintToTextview(TxtLog);
+            salida = new DataOutputStream(s.getOutputStream());
+            salida.writeBytes(msg + "\n");
 
         } catch (IOException e) {
-            TxtLog = "\nError : " + e.getMessage(); // cuando da error
-            Main.PrintToTextview(TxtLog);
+            e.printStackTrace();
         }
     }
 }

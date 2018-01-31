@@ -74,14 +74,6 @@ public class MoveRobotFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_move_robot, container, false);
 
-        // init Positions
-        initPositions[0] = 90;
-        initPositions[1] = -120;
-        initPositions[2] = 80;
-        initPositions[3] = -48;
-        initPositions[4] = -90;
-        initPositions[5] = 90;
-
         // Inicializacion de arreglos de botones, editext y seekbars.
         // Base
         btnArray[0] = view.findViewById(R.id.btnBaseLeft);
@@ -125,13 +117,15 @@ public class MoveRobotFragment extends Fragment {
         etxtArray[4] = view.findViewById(R.id.editText_Wrist2);
         etxtArray[5] = view.findViewById(R.id.editText_Wrist3);
 
-            // Hace cambio de puerto
-       // ConnectRobotFragment.socketInitRobot.desconectar();
+        // Hace cambio de puerto
+        ConnectRobotFragment.socketInitRobot.desconectar();
         socketMove = new Connect_Client(ConnectRobotFragment.ip_Robot, 30001);
         socketMove.conectar();
 
         Connect_Server socketServer = new Connect_Server("192.168.15.21", 1025);
         socketServer.conectarServidor();
+
+        getJointPositions(socketServer.serverResponse);
 
         for (int i = 0; i < initPositions.length; i++) {
             etxtArray[i].setText(String.valueOf(initPositions[i]));
@@ -182,14 +176,14 @@ public class MoveRobotFragment extends Fragment {
             }
         };
 
-        for(Button btn : btnArray) {
+        for (Button btn : btnArray) {
             btn.setOnTouchListener(onTouchListener);
         }
-        for(EditText etxt : etxtArray) {
+        for (EditText etxt : etxtArray) {
             etxt.setOnKeyListener(onKeyListener);
         }
 
-        sendToHomePosition();
+        //sendToHomePosition();
 
         Button Button_FreeDrive = view.findViewById(R.id.button_FreeDrive);
         Button_FreeDrive.setOnClickListener(new View.OnClickListener() {
@@ -262,13 +256,27 @@ public class MoveRobotFragment extends Fragment {
         return bigDecimal.intValue();
     }
 
+    public void getJointPositions(String positions) {
+
+        if (!positions.equals(null)) {
+            positions = positions.replace("[", "");
+            positions = positions.replace("]", "");
+
+            String[] parts = positions.split(",");
+
+            for (int i = 0; i < initPositions.length; i++) {
+                initPositions[i] = roundDouble(Double.parseDouble(parts[i]) * 180 / 3.1416, 0);
+            }
+        }
+    }
+
     public void sendToHomePosition() {
-        socketMove.enviarMSG("movej([" + Double.toString(initPositions[0] * 3.1416 / 180) +
-                ", " + Double.toString(initPositions[1] * 3.1416 / 180) +
-                ", " + Double.toString(initPositions[2] * 3.1416 / 180) +
-                ", " + Double.toString(initPositions[3] * 3.1416 / 180) +
-                ", " + Double.toString(initPositions[4] * 3.1416 / 180) +
-                ", " + Double.toString(initPositions[5] * 3.1416 / 180) +
+        socketMove.enviarMSG("movej([" + Double.toString(90 * 3.1416 / 180) +
+                ", " + Double.toString(-120 * 3.1416 / 180) +
+                ", " + Double.toString(80 * 3.1416 / 180) +
+                ", " + Double.toString(-48 * 3.1416 / 180) +
+                ", " + Double.toString(-90 * 3.1416 / 180) +
+                ", " + Double.toString(90 * 3.1416 / 180) +
                 "], a=1.0, v=0.3)");
     }
 
@@ -323,7 +331,6 @@ public class MoveRobotFragment extends Fragment {
             } else {
                 countArray[motorValue] -= 1;
             }
-            //convertAndSendCommand();
             Log.d("CONTADOR", "Valor: " + String.valueOf(countArray[motorValue]));
         }
     }

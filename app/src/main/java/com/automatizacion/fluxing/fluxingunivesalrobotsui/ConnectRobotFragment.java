@@ -1,18 +1,12 @@
 package com.automatizacion.fluxing.fluxingunivesalrobotsui;
 
-import android.content.ContentResolver;
 import android.content.Context;
-import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -80,7 +74,7 @@ public class ConnectRobotFragment extends Fragment {
         TxtLog.setMovementMethod(new ScrollingMovementMethod());
         SpinnerRobot = view.findViewById(R.id.spinner_Robots);
 
-        Fill_Spinner_Robots();//llena el sipiner con las ip registradas
+        Fill_Spinner_Robots(); // llena el sipiner con las ip registradas
 
         // Metodo se ejecuta al conectar un robot
         final Button button_Connect = view.findViewById(R.id.button_Connect);

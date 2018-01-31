@@ -35,9 +35,14 @@ public class URPRobotFragment extends Fragment {
     private URPRobotFragment.OnFragmentInteractionListener mListener;
 
     public static FlxSFTP sftp = new FlxSFTP();
+    private Connect_Client conn = new Connect_Client(ConnectRobotFragment.ip_Robot, 29999);
     private EditText eT_URP_FilePath;
     private String FileName = "";
+    private TextView tV_FTP_Output;
+    private Spinner s_RemotePrograms;
+    private final int iLoad = 0, iStart = 1, iStop = 2;
     private boolean bListenLog = true;
+    private boolean bConnected = false;
 
     public URPRobotFragment() {
     }
@@ -67,16 +72,15 @@ public class URPRobotFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_urp_robot, container, false);
 
-        sftp = new FlxSFTP();
         eT_FTP_Host = view.findViewById(R.id.eT_FTP_Host);
         eT_FTP_Username = view.findViewById(R.id.eT_FTP_Username);
         eT_FTP_Password = view.findViewById(R.id.eT_FTP_Password);
         eT_Directory = view.findViewById(R.id.eT_Directory);
         eT_URP_FilePath = view.findViewById(R.id.eT_URP_FilePath);
 
-        final Spinner s_RemotePrograms = view.findViewById(R.id.s_RemotePrograms);
+        s_RemotePrograms = view.findViewById(R.id.s_RemotePrograms);
 
-        final TextView tV_FTP_Output = view.findViewById(R.id.tV_Output);
+        tV_FTP_Output = view.findViewById(R.id.tV_Output);
         tV_FTP_Output.setMovementMethod(new ScrollingMovementMethod());
 
         Thread th = new Thread(new Runnable() {
@@ -102,6 +106,10 @@ public class URPRobotFragment extends Fragment {
         b_FTP_Connect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(sftp.IsConnected()) {
+                    tV_FTP_Output.append("Ya existe una conexión con el servidor\n");
+                    return;
+                }
                 sftp.host = eT_FTP_Host.getText().toString();
                 sftp.username = eT_FTP_Username.getText().toString();
                 sftp.password = eT_FTP_Password.getText().toString();
@@ -115,7 +123,6 @@ public class URPRobotFragment extends Fragment {
             public void onClick(View v) {
                 if (sftp.ChangeDirectoryAsync(eT_Directory.getText().toString())) {
                     ArrayAdapter<Object> filenames;
-
                     Vector FileNames = sftp.GetFilesByExtension(".urp");
                     filenames = new ArrayAdapter<>(getContext(),
                             R.layout.support_simple_spinner_dropdown_item, FileNames.toArray());
@@ -151,12 +158,72 @@ public class URPRobotFragment extends Fragment {
         b_URP_Send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (sftp.IsConnected())
-                    sftp.SendFileAsync(eT_URP_FilePath.getText().toString(), FileName);
+                sftp.SendFileAsync(eT_URP_FilePath.getText().toString(), FileName);
+            }
+        });
+
+        Button b_URP_Load = view.findViewById(R.id.b_URP_LoadProgram);
+        b_URP_Load.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ExecuteOnRobot(iLoad);
+            }
+        });
+
+        Button b_URP_Start = view.findViewById(R.id.b_URP_StartProgram);
+        b_URP_Start.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ExecuteOnRobot(iStart);
+            }
+        });
+
+        Button b_URP_Stop = view.findViewById(R.id.b_URP_StopProgram);
+        b_URP_Stop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ExecuteOnRobot(iStop);
             }
         });
 
         return view;
+    }
+
+    private void ConnectToRobot() {
+        conn.conectar();
+        System.out.println("Conexión: " + conn.TxtLog);
+        tV_FTP_Output.append(conn.TxtLog + "\n");
+        bConnected = true;
+    }
+
+    private void ExecuteOnRobot(int Code) {
+        try {
+            if(!bConnected) ConnectToRobot();
+            switch(Code) {
+                case iLoad:
+                    if(s_RemotePrograms.getSelectedItem() == null) {
+                        tV_FTP_Output.append("No hay ningún programa seleccionado\n");
+                        return;
+                    }
+                    if(s_RemotePrograms.getSelectedItem().toString().length() == 0) {
+                        tV_FTP_Output.append("No hay ningún programa seleccionado\n");
+                        return;
+                    }
+                    tV_FTP_Output.append("Cargando programa: " +
+                                s_RemotePrograms.getSelectedItem().toString() + "\n");
+                    conn.enviarMSG("load " + eT_Directory.getText() + "/" +
+                            s_RemotePrograms.getSelectedItem().toString());
+                    break;
+                case iStart:
+                    conn.enviarMSG("play");
+                    break;
+                case iStop:
+                    conn.enviarMSG("stop");
+                    break;
+            }
+        } catch (Exception e) {
+            tV_FTP_Output.append(e.getMessage() + "\n");
+        }
     }
 
     @Override

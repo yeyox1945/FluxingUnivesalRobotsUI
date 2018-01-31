@@ -113,7 +113,7 @@
         android:layout_marginTop="8dp"
         android:gravity="bottom"
         android:scrollbars="vertical"
-        android:text="Registro de acciones realizadas"
+        android:text="Registro de acciones realizadas\n"
         android:textColor="@color/colorNegrote"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

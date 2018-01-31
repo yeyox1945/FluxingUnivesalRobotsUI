@@ -93,7 +93,7 @@ public class Connect_Client extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
+        return "";
     }
 
     public void conectar() {

@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.StrictMode;
 import android.util.Log;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -24,15 +25,13 @@ public class Connect_Server extends Thread {
     private DataOutputStream salida;
     private BufferedReader entrada;
     private int port = 29999;
-    private String ip = ConnectRobotFragment.ip_Robot;
 
     private static boolean Stop = false;
 
     public String serverResponse;
 
-    public Connect_Server(String ip, int port) {
+    public Connect_Server(int port) {
         this.port = port;
-        this.ip = ip;
         Stop = false;
     }
 
@@ -66,31 +65,34 @@ public class Connect_Server extends Thread {
 
     public void sendProgram() {
 
-        Connect_Client Connect_Client;
-        FlxSFTP ftp = new FlxSFTP();
+        try {
+            FlxSFTP ftp = new FlxSFTP();
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
 
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
+            ftp.host = ConnectRobotFragment.ip_Robot;
+            ftp.username = URPRobotFragment.eT_FTP_Username.getText().toString();
+            ftp.password = URPRobotFragment.eT_FTP_Password.getText().toString();
+            ftp.Connect();
+            ftp.WaitTask();
+            ftp.ChangeDirectoryAsync("/programs");
 
-        ftp.host = ConnectRobotFragment.ip_Robot;
-        ftp.username = URPRobotFragment.eT_FTP_Username.getText().toString();
-        ftp.password = URPRobotFragment.eT_FTP_Password.getText().toString();
-        ftp.Connect();
-        ftp.WaitTask();
-        ftp.ChangeDirectoryAsync("/home/ur/ursim-current/programs.UR10/Program");
+            String archivo = "android.resource://com.automatizacion.fluxing.fluxingunivesalrobotsui/raw/urclient.urp";
+            Uri ruta = Uri.parse(archivo);
 
-        String archivo = "android.resource://com.automatizacion.fluxing.fluxingunivesalrobotsui/raw/prueba.urp";
-        Uri ruta = Uri.parse(archivo);
+            ftp.SendFileAsync(ruta.toString(), "urclient.urp");
+            System.out.println(ftp.ReadLog());
 
-        ftp.SendFileAsync(ruta.toString(), "prueba.urp");
-        System.out.println(ftp.ReadLog());
-        Connect_Client = new Connect_Client(ConnectRobotFragment.ip_Robot, 29999);
+            System.out.println("Enviado");
+        } catch (Exception e) {
+            System.out.println("Hubo un error : " + e.getMessage());
+        }
+   /* Connect_Client = new Connect_Client(ConnectRobotFragment.ip_Robot, 29999);
         Connect_Client.conectar();
         Connect_Client.start();
-        Connect_Client.enviarMSG("load prueba.urp ");
+        Connect_Client.enviarMSG("load /programs/urclient.urp ");
         Connect_Client.enviarMSG("play");
-
-        Connect_Client.enviarMSG("stop");
+        Connect_Client.enviarMSG("stop");*/
 
     }
 

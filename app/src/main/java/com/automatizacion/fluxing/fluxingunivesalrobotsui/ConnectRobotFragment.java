@@ -1,14 +1,16 @@
 package com.automatizacion.fluxing.fluxingunivesalrobotsui;
 
-import android.content.ContentResolver;
 import android.content.Context;
-import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -18,6 +20,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import java.util.ArrayList;
 
 public class ConnectRobotFragment extends Fragment {
@@ -79,17 +82,29 @@ public class ConnectRobotFragment extends Fragment {
         Fill_Spinner_Robots();//llena el sipiner con las ip registradas
 
         // Metodo se ejecuta al conectar un robot
-        Button button_Connect = view.findViewById(R.id.button_Connect);
+        final Button button_Connect = view.findViewById(R.id.button_Connect);
         button_Connect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-                StrictMode.setThreadPolicy(policy);
-                Connect_Client = new Connect_Client(ip_Robot, 29999);
-                Connect_Client.conectar();
-                Connect_Client.start();
-                Connect_Client.enviarMSG(getResources().getString(R.string.Power_on));
-                Connect_Client.enviarMSG(getResources().getString(R.string.Brake_release));
+
+                String Robot = SpinnerRobot.getSelectedItem().toString();
+
+                if (!Robot.equals("Seleccióna..")) {
+
+                    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                    StrictMode.setThreadPolicy(policy);
+                    Connect_Client = new Connect_Client(ip_Robot, 29999);
+                    Connect_Client.conectar();
+                    Connect_Client.start();
+                    Connect_Client.enviarMSG(getResources().getString(R.string.Power_on));
+                    Connect_Client.enviarMSG(getResources().getString(R.string.Brake_release));
+
+                    MainActivity Main = new MainActivity();
+                    Main.BlockItem(false);
+
+                } else {
+                    Toast.makeText(getContext(),"Seleccióna un robot", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -112,7 +127,6 @@ public class ConnectRobotFragment extends Fragment {
         SpinnerRobot.setAdapter(null);
         RobotsList.add("Seleccióna..");
         //LLenar Con datos de SQL
-
         ConnectSQL SQL = new ConnectSQL();
         if (SQL.Validate_Connection() == false) {
             Toast.makeText(getContext(), "No se encontro una conexión a internet.", Toast.LENGTH_SHORT).show();

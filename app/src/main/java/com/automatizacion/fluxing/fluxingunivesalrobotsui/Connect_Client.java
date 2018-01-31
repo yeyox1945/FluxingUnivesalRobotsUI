@@ -44,9 +44,7 @@ public class Connect_Client extends Thread {
 
         while (true) {
             try {
-                System.out.println("esperando msj...");
                 texto = entrada.readLine();
-                System.out.println("msj recibido");
                 synchronized (this) {
                     final String finalTexto = texto;
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -69,8 +67,7 @@ public class Connect_Client extends Thread {
             } catch (IOException e) {
                 TxtLog = "\nError :" + e.getMessage(); // cuando da error
                 Main.PrintToTextview(TxtLog);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 TxtLog = "\nError :" + e.getMessage(); // cuando da error
                 Main.PrintToTextview(TxtLog);
             }
@@ -84,7 +81,7 @@ public class Connect_Client extends Thread {
             this.salida = new DataOutputStream(s.getOutputStream());
             this.salida.writeBytes(msg + "\n");
             TxtLog = "\nCliente : " + msg + "\n";//Cuando le envio un mensaje
-           Main.PrintToTextview(TxtLog);
+            Main.PrintToTextview(TxtLog);
 
         } catch (IOException e) {
             TxtLog = "\nError : " + e.getMessage(); // cuando da error

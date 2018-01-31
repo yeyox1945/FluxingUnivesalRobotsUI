@@ -38,11 +38,12 @@ public class URPRobotFragment extends Fragment {
     private Connect_Client conn = new Connect_Client(ConnectRobotFragment.ip_Robot, 29999);
     private EditText eT_URP_FilePath;
     private String FileName = "";
-    private TextView tV_FTP_Output;
+    private TextView tV_FTP_Output, tV_URP_Name, tV_URP_State;
     private Spinner s_RemotePrograms;
-    private final int iLoad = 0, iStart = 1, iStop = 2;
+    private final int iLoad = 0, iStart = 1, iStop = 2, iName = 3, iState = 4;
     private boolean bListenLog = true;
     private boolean bConnected = false;
+    private boolean bBusy = false;
 
     public URPRobotFragment() {
     }
@@ -81,6 +82,8 @@ public class URPRobotFragment extends Fragment {
         s_RemotePrograms = view.findViewById(R.id.s_RemotePrograms);
 
         tV_FTP_Output = view.findViewById(R.id.tV_Output);
+        tV_URP_Name = view.findViewById(R.id.tV_URP_Name);
+        tV_URP_State = view.findViewById(R.id.tV_URP_State);
         tV_FTP_Output.setMovementMethod(new ScrollingMovementMethod());
 
         Thread th = new Thread(new Runnable() {
@@ -186,6 +189,15 @@ public class URPRobotFragment extends Fragment {
             }
         });
 
+        Button b_URP_CheckProgram = view.findViewById(R.id.b_URP_CheckProgram);
+        b_URP_CheckProgram.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ExecuteOnRobot(iName);
+                ExecuteOnRobot(iState);
+            }
+        });
+
         return view;
     }
 
@@ -216,9 +228,32 @@ public class URPRobotFragment extends Fragment {
                     break;
                 case iStart:
                     conn.enviarMSG("play");
+                    tV_FTP_Output.append("Enviado comando: play" + "\n");
                     break;
                 case iStop:
                     conn.enviarMSG("stop");
+                    tV_FTP_Output.append("Enviado comando: stop" + "\n");
+                    break;
+                case iName:
+                    conn.enviarMSG("get loaded program");
+                    tV_FTP_Output.append("Leyendo nombre de programa cargado..." + "\n");
+                    String sName;
+                    do {
+                        sName = conn.leerMSG();
+                    } while(!sName.startsWith("Loaded"));
+                    tV_URP_Name.setText("Nombre: " + sName.split(":")[1]);
+                    tV_FTP_Output.append("Nombre leido" + "\n");
+                    break;
+                case iState:
+                    conn.enviarMSG("programState");
+                    tV_FTP_Output.append("Solicitando el estado del programa..." + "\n");
+                    String sState;
+                    do {
+                        sState = conn.leerMSG();
+                    } while(!sState.startsWith("STOPPED") && !sState.startsWith("PLAYING") &&
+                        !sState.startsWith("PAUSED"));
+                    tV_URP_State.setText("Estado: " + sState.split(" ")[0]);
+                    tV_FTP_Output.append("Estado leido" + "\n");
                     break;
             }
         } catch (Exception e) {

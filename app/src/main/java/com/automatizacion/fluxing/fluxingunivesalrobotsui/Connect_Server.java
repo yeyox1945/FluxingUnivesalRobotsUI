@@ -77,10 +77,6 @@ public class Connect_Server extends Thread {
 
     }
 
-
-
-
-
     public void sendProgram() {
 
         Connect_Client Connect_Client;

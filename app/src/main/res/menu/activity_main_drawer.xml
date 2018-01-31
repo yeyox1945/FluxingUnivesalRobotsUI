@@ -15,7 +15,8 @@
         <item
             android:id="@+id/Move_Robot"
             android:icon="@drawable/move"
-            android:title="Mover Robot" />
+            android:title="Mover Robot"
+          />
         <item
             android:id="@+id/URP_Robot"
             android:icon="@drawable/addrobot"

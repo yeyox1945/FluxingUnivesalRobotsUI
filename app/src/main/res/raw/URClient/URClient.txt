@@ -1,0 +1,10 @@
+ Program
+   BeforeStart
+     socket≔socket_open("192.168.15.21", 1025)
+     Loop socket≟ False 
+       socket≔socket_open("192.168.15.21", 1025)
+     position≔get_actual_joint_positions()
+     socket_send_string(position)
+     socket_close()
+   Robot Program
+     Wait: 0.5

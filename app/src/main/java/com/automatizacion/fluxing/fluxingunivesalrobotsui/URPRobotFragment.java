@@ -72,7 +72,6 @@ public class URPRobotFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_urp_robot, container, false);
 
-        sftp = new FlxSFTP();
         eT_FTP_Host = view.findViewById(R.id.eT_FTP_Host);
         eT_FTP_Username = view.findViewById(R.id.eT_FTP_Username);
         eT_FTP_Password = view.findViewById(R.id.eT_FTP_Password);
@@ -107,6 +106,10 @@ public class URPRobotFragment extends Fragment {
         b_FTP_Connect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(sftp.IsConnected()) {
+                    tV_FTP_Output.append("Ya existe una conexión con el servidor\n");
+                    return;
+                }
                 sftp.host = eT_FTP_Host.getText().toString();
                 sftp.username = eT_FTP_Username.getText().toString();
                 sftp.password = eT_FTP_Password.getText().toString();
@@ -120,7 +123,6 @@ public class URPRobotFragment extends Fragment {
             public void onClick(View v) {
                 if (sftp.ChangeDirectoryAsync(eT_Directory.getText().toString())) {
                     ArrayAdapter<Object> filenames;
-
                     Vector FileNames = sftp.GetFilesByExtension(".urp");
                     filenames = new ArrayAdapter<>(getContext(),
                             R.layout.support_simple_spinner_dropdown_item, FileNames.toArray());
@@ -156,8 +158,7 @@ public class URPRobotFragment extends Fragment {
         b_URP_Send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (sftp.IsConnected())
-                    sftp.SendFileAsync(eT_URP_FilePath.getText().toString(), FileName);
+                sftp.SendFileAsync(eT_URP_FilePath.getText().toString(), FileName);
             }
         });
 
@@ -200,6 +201,14 @@ public class URPRobotFragment extends Fragment {
             if(!bConnected) ConnectToRobot();
             switch(Code) {
                 case iLoad:
+                    if(s_RemotePrograms.getSelectedItem() == null) {
+                        tV_FTP_Output.append("No hay ningún programa seleccionado\n");
+                        return;
+                    }
+                    if(s_RemotePrograms.getSelectedItem().toString().length() == 0) {
+                        tV_FTP_Output.append("No hay ningún programa seleccionado\n");
+                        return;
+                    }
                     tV_FTP_Output.append("Cargando programa: " +
                                 s_RemotePrograms.getSelectedItem().toString() + "\n");
                     conn.enviarMSG("load " + eT_Directory.getText() + "/" +

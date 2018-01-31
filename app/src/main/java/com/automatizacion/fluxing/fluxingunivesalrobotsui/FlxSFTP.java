@@ -59,6 +59,10 @@ public class FlxSFTP {
 
     public void Disconnect() {
         LogWriteLn("");
+        if(!IsConnected()) {
+            LogWriteLn("Error: Doesn't exists connection with the server");
+            return;
+        }
         try {
             if (session == null || sftp == null) return;
             sftp.exit();
@@ -70,6 +74,10 @@ public class FlxSFTP {
     }
     
     public void DisconnectAsync() {
+        if(!IsConnected()) {
+            LogWriteLn("Error: Doesn't exists connection with the server");
+            return;
+        }
         if (Busy) return;
         Busy = true;
         new AsyncTask<Object, Void, Void>() {
@@ -97,10 +105,15 @@ public class FlxSFTP {
     }
 
     public boolean IsConnected() {
+        if(sftp == null) return false;
         return sftp.isConnected();
     }
 
     public String GetCurrentLocalPath() {
+        if(!IsConnected()) {
+            LogWriteLn("Error: Doesn't exists connection with the server");
+            return "";
+        }
         try {
             return sftp.lpwd();
         } catch (Exception e) {
@@ -110,6 +123,10 @@ public class FlxSFTP {
     }
     
     public String GetCurrentLocalPathAsync() {
+        if(!IsConnected()) {
+            LogWriteLn("Error: Doesn't exists connection with the server");
+            return "";
+        }
         if (Busy) return "";
         Busy = true;
         final String[] ret = {""};
@@ -130,6 +147,10 @@ public class FlxSFTP {
     }
 
     public String GetCurrentRemotePath() {
+        if(!IsConnected()) {
+            LogWriteLn("Error: Doesn't exists connection with the server");
+            return "";
+        }
         try {
             return sftp.pwd();
         } catch (Exception e) {
@@ -139,6 +160,10 @@ public class FlxSFTP {
     }
     
     public String GetCurrentRemotePathAsync() {
+        if(!IsConnected()) {
+            LogWriteLn("Error: Doesn't exists connection with the server");
+            return "";
+        }
         if (Busy) return "";
         Busy = true;
         final String[] ret = {""};
@@ -160,6 +185,10 @@ public class FlxSFTP {
 
     public String ReadDirectoryContent()
     {
+        if(!IsConnected()) {
+            LogWriteLn("Error: Doesn't exists connection with the server");
+            return "";
+        }
         String ret = "";
         try
         {
@@ -186,6 +215,10 @@ public class FlxSFTP {
     }
     
     public String ReadDirectoryContentAsync() {
+        if(!IsConnected()) {
+            LogWriteLn("Error: Doesn't exists connection with the server");
+            return "";
+        }
         if (Busy) return "";
         Busy = true;
         final String[] ret = {""};
@@ -219,6 +252,10 @@ public class FlxSFTP {
 
     public boolean ChangeDirectory(String Path)
     {
+        if(!IsConnected()) {
+            LogWriteLn("Error: Doesn't exists connection with the server");
+            return false;
+        }
         LogWriteLn("");
         try
         {
@@ -234,6 +271,10 @@ public class FlxSFTP {
     }
     
     public boolean ChangeDirectoryAsync(final String Path) {
+        if(!IsConnected()) {
+            LogWriteLn("Error: Doesn't exists connection with the server");
+            return false;
+        }
         if (Busy) return false;
         Busy = true;
         ret = false;
@@ -259,6 +300,10 @@ public class FlxSFTP {
 
     public boolean SendFile(String LocalPath, String RemoteName)
     {
+        if(!IsConnected()) {
+            LogWriteLn("Error: Doesn't exists connection with the server");
+            return false;
+        }
         LogWriteLn("");
         try
         {
@@ -273,8 +318,11 @@ public class FlxSFTP {
         return true;
     }
     
-    public void SendFileAsync(final String LocalPath, final String RemoteName)
-    {
+    public void SendFileAsync(final String LocalPath, final String RemoteName) {
+        if (!IsConnected()) {
+            LogWriteLn("Error: Doesn't exists connection with the server");
+            return;
+        }
         if (Busy) return;
         Busy = true;
         new AsyncTask<Object, Void, Void>() {
@@ -295,17 +343,17 @@ public class FlxSFTP {
         WaitTask();
     }
 
-    public boolean ReceiveFile(String RemoteName, String LocalPath)
-    {
+    public boolean ReceiveFile(String RemoteName, String LocalPath) {
+        if (!IsConnected()) {
+            LogWriteLn("Error: Doesn't exists connection with the server");
+            return false;
+        }
         LogWriteLn("");
-        try
-        {
+        try {
             LogWriteLn("Receiving file...");
             sftp.get(RemoteName, LocalPath);
             LogWriteLn("File received!");
-        }
-        catch(SftpException e)
-        {
+        } catch (SftpException e) {
             LogWriteLn("Error: " + e.getMessage());
             return false;
         }
@@ -313,6 +361,10 @@ public class FlxSFTP {
     }
     
     public void ReceiveFileAsync(final String RemoteName, final String LocalPath) {
+        if(!IsConnected()) {
+            LogWriteLn("Error: Doesn't exists connection with the server");
+            return;
+        }
         if (Busy) return;
         Busy = true;
         new AsyncTask<Object, Void, Void>() {
@@ -333,6 +385,10 @@ public class FlxSFTP {
     }
 
     public Vector GetFilesByExtension(final String Extension) {
+        if(!IsConnected()) {
+            LogWriteLn("Error: Doesn't exists connection with the server");
+            return new Vector();
+        }
         if (Busy) return new Vector();
         Busy = true;
         final Vector FileNames = new Vector();

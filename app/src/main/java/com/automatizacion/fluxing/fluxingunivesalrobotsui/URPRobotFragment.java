@@ -60,17 +60,18 @@ public class URPRobotFragment extends Fragment {
         }
     }
 
+    public static EditText eT_FTP_Host, eT_FTP_Username, eT_FTP_Password, eT_Directory;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_urp_robot, container, false);
 
         sftp = new FlxSFTP();
-
-        final EditText eT_FTP_Host = view.findViewById(R.id.eT_FTP_Host),
-                eT_FTP_Username = view.findViewById(R.id.eT_FTP_Username),
-                eT_FTP_Password = view.findViewById(R.id.eT_FTP_Password),
-                eT_Directory = view.findViewById(R.id.eT_Directory);
+        eT_FTP_Host = view.findViewById(R.id.eT_FTP_Host);
+        eT_FTP_Username = view.findViewById(R.id.eT_FTP_Username);
+        eT_FTP_Password = view.findViewById(R.id.eT_FTP_Password);
+        eT_Directory = view.findViewById(R.id.eT_Directory);
         eT_URP_FilePath = view.findViewById(R.id.eT_URP_FilePath);
 
         final Spinner s_RemotePrograms = view.findViewById(R.id.s_RemotePrograms);
@@ -89,8 +90,7 @@ public class URPRobotFragment extends Fragment {
                     });
                     try {
                         Thread.sleep(300);
-                    }
-                    catch (InterruptedException e) {
+                    } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
@@ -113,8 +113,7 @@ public class URPRobotFragment extends Fragment {
         b_URP_GetList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(sftp.ChangeDirectoryAsync(eT_Directory.getText().toString()))
-                {
+                if (sftp.ChangeDirectoryAsync(eT_Directory.getText().toString())) {
                     ArrayAdapter<Object> filenames;
 
                     Vector FileNames = sftp.GetFilesByExtension(".urp");
@@ -122,11 +121,11 @@ public class URPRobotFragment extends Fragment {
                             R.layout.support_simple_spinner_dropdown_item, FileNames.toArray());
                     filenames.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
                     s_RemotePrograms.setAdapter(filenames);
-                }
-                else
+                } else
                     tV_FTP_Output.append("No se pudo acceder al directorio de programas\n");
             }
         });
+
 
         Button b_URP_SearchFile = view.findViewById(R.id.b_URP_SearchFile);
         b_URP_SearchFile.setOnClickListener(new View.OnClickListener() {
@@ -152,8 +151,8 @@ public class URPRobotFragment extends Fragment {
         b_URP_Send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(sftp.IsConnected())
-                    sftp.SendFileAsync( eT_URP_FilePath.getText().toString(), FileName);
+                if (sftp.IsConnected())
+                    sftp.SendFileAsync(eT_URP_FilePath.getText().toString(), FileName);
             }
         });
 

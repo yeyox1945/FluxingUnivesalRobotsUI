@@ -23,7 +23,7 @@ public class Connect_Client extends Thread {
     private DataOutputStream salida;
     private BufferedReader entrada;
     private int port = 29999;
-    private String ip = "0.0.0.0";
+    private String ip = ConnectRobotFragment.ip_Robot;
 
     static boolean Stop = true;
 
@@ -55,9 +55,7 @@ public class Connect_Client extends Thread {
                                 TxtLog = "\nServidor : " + serverResponse; //Imprime la conversacion
                                 Main.PrintToTextview(TxtLog);
 
-
                                 Log.i("Recibio:", finalTexto);
-
 
                             } else {
                                 TxtLog = "\nServidor :  Desconectado.";//Cuando se cierra el servidor
@@ -67,6 +65,9 @@ public class Connect_Client extends Thread {
                     });
                 }
             } catch (IOException e) {
+                TxtLog = "\nError :" + e.getMessage(); // cuando da error
+                Main.PrintToTextview(TxtLog);
+            } catch (Exception e) {
                 TxtLog = "\nError :" + e.getMessage(); // cuando da error
                 Main.PrintToTextview(TxtLog);
             }
@@ -80,7 +81,7 @@ public class Connect_Client extends Thread {
             this.salida = new DataOutputStream(s.getOutputStream());
             this.salida.writeBytes(msg + "\n");
             TxtLog = "\nCliente : " + msg + "\n";//Cuando le envio un mensaje
-           Main.PrintToTextview(TxtLog);
+            Main.PrintToTextview(TxtLog);
 
         } catch (IOException e) {
             TxtLog = "\nError : " + e.getMessage(); // cuando da error
@@ -117,34 +118,12 @@ public class Connect_Client extends Thread {
 
     public void desconectar() {
         try {
+            stop();
             s.close();
         } catch (IOException e) {
             TxtLog = "\nError : " + e.getMessage(); // cuando da error
             Main.PrintToTextview(TxtLog);
 
         }
-    }
-
-    public void conectarServidor() {
-
-         new AsyncTask<Integer, Void, Void>() {
-
-            @Override
-            protected Void doInBackground(Integer... integers) {
-
-                try {
-                    ss = new ServerSocket(port);
-                    s = ss.accept();
-                    entradaSocket = new InputStreamReader(s.getInputStream());
-                    entrada = new BufferedReader(entradaSocket);
-                    salida = new DataOutputStream(s.getOutputStream());
-                    start();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                return null;
-            }
-        }.execute(1);
     }
 }

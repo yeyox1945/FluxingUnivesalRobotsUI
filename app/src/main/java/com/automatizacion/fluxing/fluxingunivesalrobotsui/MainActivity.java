@@ -10,8 +10,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
-
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -19,6 +19,10 @@ public class MainActivity extends AppCompatActivity
         ConnectRobotFragment.OnFragmentInteractionListener,
         MoveRobotFragment.OnFragmentInteractionListener,
         URPRobotFragment.OnFragmentInteractionListener {
+
+
+    public static NavigationView navigationView;
+    public static Menu nav_Menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,8 +45,20 @@ public class MainActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        nav_Menu = navigationView.getMenu();
+
+        BlockItem(true);// Verdadero para bloquear
+    }
+
+    public void BlockItem(boolean v) {
+        if (v) {
+            nav_Menu.findItem(R.id.Move_Robot).setEnabled(false);
+        } else {
+            nav_Menu.findItem(R.id.Move_Robot).setEnabled(true);
+        }
     }
 
     @Override
@@ -55,14 +71,12 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Menu hamburguesa
 
         int id = item.getItemId();
-
         Fragment fragment = null;
         Boolean FragmentSelect = false;
 
@@ -78,6 +92,7 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.Move_Robot) {
 
+            
             FragmentSelect = true;
             fragment = new MoveRobotFragment();
 

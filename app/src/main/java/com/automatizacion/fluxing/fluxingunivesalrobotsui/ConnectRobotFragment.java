@@ -94,22 +94,15 @@ public class ConnectRobotFragment extends Fragment {
                     socketInitRobot.enviarMSG(getResources().getString(R.string.Power_on));
                     socketInitRobot.enviarMSG(getResources().getString(R.string.Brake_release));
 
+                    Connect_Server SocketServer = new Connect_Server(1025);
+                    SocketServer.sendProgram();
+
                     MainActivity Main = new MainActivity();
                     Main.BlockItem(false);
 
                 } else {
                     Toast.makeText(getContext(),"Seleccióna un robot", Toast.LENGTH_SHORT).show();
                 }
-            }
-        });
-
-        // Metodo se ejecuta al conectar un robot
-        Button button_server = view.findViewById(R.id.button_Servidor);
-        button_server.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Connect_Server server = new Connect_Server("", 0);
-                server.sendProgram();
             }
         });
 

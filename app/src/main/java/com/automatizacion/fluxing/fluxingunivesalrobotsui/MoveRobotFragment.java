@@ -183,8 +183,6 @@ public class MoveRobotFragment extends Fragment {
             etxt.setOnKeyListener(onKeyListener);
         }
 
-        //sendToHomePosition();
-
         Button Button_FreeDrive = view.findViewById(R.id.button_FreeDrive);
         Button_FreeDrive.setOnClickListener(new View.OnClickListener() {
             @Override

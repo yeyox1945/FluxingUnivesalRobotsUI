@@ -35,9 +35,14 @@ public class URPRobotFragment extends Fragment {
     private URPRobotFragment.OnFragmentInteractionListener mListener;
 
     public static FlxSFTP sftp = new FlxSFTP();
+    private Connect_Client conn = new Connect_Client(ConnectRobotFragment.ip_Robot, 29999);
     private EditText eT_URP_FilePath;
     private String FileName = "";
+    private TextView tV_FTP_Output;
+    private Spinner s_RemotePrograms;
+    private final int iLoad = 0, iStart = 1, iStop = 2;
     private boolean bListenLog = true;
+    private boolean bConnected = false;
 
     public URPRobotFragment() {
     }
@@ -74,9 +79,9 @@ public class URPRobotFragment extends Fragment {
         eT_Directory = view.findViewById(R.id.eT_Directory);
         eT_URP_FilePath = view.findViewById(R.id.eT_URP_FilePath);
 
-        final Spinner s_RemotePrograms = view.findViewById(R.id.s_RemotePrograms);
+        s_RemotePrograms = view.findViewById(R.id.s_RemotePrograms);
 
-        final TextView tV_FTP_Output = view.findViewById(R.id.tV_Output);
+        tV_FTP_Output = view.findViewById(R.id.tV_Output);
         tV_FTP_Output.setMovementMethod(new ScrollingMovementMethod());
 
         Thread th = new Thread(new Runnable() {
@@ -160,7 +165,7 @@ public class URPRobotFragment extends Fragment {
         b_URP_Load.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Socket_Load(FileName);
+                ExecuteOnRobot(iLoad);
             }
         });
 
@@ -168,7 +173,7 @@ public class URPRobotFragment extends Fragment {
         b_URP_Start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Socket_Start();
+                ExecuteOnRobot(iStart);
             }
         });
 
@@ -176,11 +181,40 @@ public class URPRobotFragment extends Fragment {
         b_URP_Stop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Socket_Stop();
+                ExecuteOnRobot(iStop);
             }
         });
 
         return view;
+    }
+
+    private void ConnectToRobot() {
+        conn.conectar();
+        System.out.println("Conexión: " + conn.TxtLog);
+        tV_FTP_Output.append(conn.TxtLog + "\n");
+        bConnected = true;
+    }
+
+    private void ExecuteOnRobot(int Code) {
+        try {
+            if(!bConnected) ConnectToRobot();
+            switch(Code) {
+                case iLoad:
+                    tV_FTP_Output.append("Cargando programa: " +
+                                s_RemotePrograms.getSelectedItem().toString() + "\n");
+                    conn.enviarMSG("load " + eT_Directory.getText() + "/" +
+                            s_RemotePrograms.getSelectedItem().toString());
+                    break;
+                case iStart:
+                    conn.enviarMSG("play");
+                    break;
+                case iStop:
+                    conn.enviarMSG("stop");
+                    break;
+            }
+        } catch (Exception e) {
+            tV_FTP_Output.append(e.getMessage() + "\n");
+        }
     }
 
     @Override

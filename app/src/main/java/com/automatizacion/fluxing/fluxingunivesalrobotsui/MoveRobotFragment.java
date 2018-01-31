@@ -122,7 +122,7 @@ public class MoveRobotFragment extends Fragment {
         socketMove = new Connect_Client(ConnectRobotFragment.ip_Robot, 30001);
         socketMove.conectar();
 
-        Connect_Server socketServer = new Connect_Server("192.168.15.21", 1025);
+        Connect_Server socketServer = new Connect_Server(1025);
         socketServer.conectarServidor();
 
         getJointPositions(socketServer.serverResponse);

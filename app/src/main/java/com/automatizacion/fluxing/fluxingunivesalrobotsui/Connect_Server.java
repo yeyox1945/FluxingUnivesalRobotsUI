@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.StrictMode;
 import android.util.Log;
-
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -28,7 +27,7 @@ public class Connect_Server extends Thread {
 
     private static boolean Stop = false;
 
-    public String serverResponse;
+    public String serverResponse = "";
 
     public Connect_Server(int port) {
         this.port = port;
@@ -38,8 +37,18 @@ public class Connect_Server extends Thread {
     @Override
     public void run() {
         //Metodo en segundo plano
-        String texto;
 
+        try {
+            ss = new ServerSocket(port);
+            s = ss.accept();
+            entradaSocket = new InputStreamReader(s.getInputStream());
+            entrada = new BufferedReader(entradaSocket);
+            salida = new DataOutputStream(s.getOutputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        String texto;
         while (!Stop) {
             try {
                 texto = entrada.readLine();
@@ -51,7 +60,6 @@ public class Connect_Server extends Thread {
                             if (finalTexto != null) {
                                 serverResponse = finalTexto;
                                 Log.i("Recibio server", finalTexto);
-
                             }
                         }
                     });
@@ -97,26 +105,7 @@ public class Connect_Server extends Thread {
     }
 
     public void conectarServidor() {
-
-        new AsyncTask<Integer, Void, Void>() {
-
-            @Override
-            protected Void doInBackground(Integer... integers) {
-
-                try {
-                    ss = new ServerSocket(port);
-                    s = ss.accept();
-                    entradaSocket = new InputStreamReader(s.getInputStream());
-                    entrada = new BufferedReader(entradaSocket);
-                    salida = new DataOutputStream(s.getOutputStream());
-                    start();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                return null;
-            }
-        }.execute(1);
+        start();
     }
 
     public void desconectar() {

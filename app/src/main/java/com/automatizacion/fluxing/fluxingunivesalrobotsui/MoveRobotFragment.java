@@ -74,6 +74,15 @@ public class MoveRobotFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_move_robot, container, false);
 
+
+        initPositions[0] = 90;
+        initPositions[1] = -120;
+        initPositions[2] = 80;
+        initPositions[3] = -48;
+        initPositions[4] = -90;
+        initPositions[5] = 90;
+
+
         // Inicializacion de arreglos de botones, editext y seekbars.
         // Base
         btnArray[0] = view.findViewById(R.id.btnBaseLeft);
@@ -117,6 +126,7 @@ public class MoveRobotFragment extends Fragment {
         etxtArray[4] = view.findViewById(R.id.editText_Wrist2);
         etxtArray[5] = view.findViewById(R.id.editText_Wrist3);
 
+
         // Hace cambio de puerto
         ConnectRobotFragment.socketInitRobot.desconectar();
         socketMove = new Connect_Client(ConnectRobotFragment.ip_Robot, 30001);
@@ -125,7 +135,7 @@ public class MoveRobotFragment extends Fragment {
         Connect_Server socketServer = new Connect_Server(1025);
         socketServer.conectarServidor();
 
-        getJointPositions(socketServer.serverResponse);
+        //getJointPositions(socketServer.serverResponse);
 
         for (int i = 0; i < initPositions.length; i++) {
             etxtArray[i].setText(String.valueOf(initPositions[i]));

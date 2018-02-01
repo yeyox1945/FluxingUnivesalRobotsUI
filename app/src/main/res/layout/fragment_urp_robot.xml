@@ -23,7 +23,7 @@
         android:layout_marginTop="4dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="192.168.15.52"
+        android:text=""
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
@@ -60,7 +60,7 @@
         android:layout_marginTop="4dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="ur"
+        android:text="root"
         app:layout_constraintStart_toEndOf="@+id/eT_FTP_Host"
         app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
@@ -106,7 +106,7 @@
     <TextView
         android:id="@+id/tV_Output"
         android:layout_width="570dp"
-        android:layout_height="92dp"
+        android:layout_height="94dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -130,7 +130,7 @@
         android:layout_marginTop="8dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="/home/ur/ursim-current/programs.UR10/Program"
+        android:text="/programs"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.32"
         app:layout_constraintStart_toStartOf="parent"

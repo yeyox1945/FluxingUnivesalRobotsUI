@@ -63,6 +63,7 @@ public class AddRobotFragment extends Fragment {
         final EditText Edit_Registro_Nombre = view.findViewById(R.id.Edit_Registro_Nombre);
         final EditText Edit_Registro_Modelo = view.findViewById(R.id.Edit_Registro_Modelo);
         final EditText Edit_Registro_IP = view.findViewById(R.id.Edit_Registro_IP);
+        final EditText Edit_Registro_Dir = view.findViewById(R.id.Edit_Direccion_Programs);
 
 
         Button BtnRegister = view.findViewById(R.id.buttonRegistrar);
@@ -72,11 +73,12 @@ public class AddRobotFragment extends Fragment {
             public void onClick(View v) {
 
                 ConnectSQL SQL = new ConnectSQL();
-                Boolean Validate = SQL.RegisterRobot(Edit_Registro_Nombre.getText().toString(), Edit_Registro_Modelo.getText().toString(), Edit_Registro_IP.getText().toString());
+                Boolean Validate = SQL.RegisterRobot(Edit_Registro_Nombre.getText().toString(), Edit_Registro_Modelo.getText().toString(), Edit_Registro_IP.getText().toString(),Edit_Registro_Dir.getText().toString());
 
                 Edit_Registro_Nombre.setText("");
                 Edit_Registro_Modelo.setText("");
                 Edit_Registro_IP.setText("");
+                Edit_Registro_Dir.setText("");
 
                 if(Validate){
                     Toast.makeText(getContext(), "Registro Exitoso",

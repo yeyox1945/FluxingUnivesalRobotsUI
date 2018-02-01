@@ -64,6 +64,8 @@ public class ConnectRobotFragment extends Fragment {
     public static String nombre_Robot = "";
     public static String modelo_Robot = "";
     public static String ip_Robot = "0.0.0.0";
+    public static String DirRobot = ConnectSQL.dir;
+    ///la direccion se consigue desde la clase connect SQL
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -95,8 +97,8 @@ public class ConnectRobotFragment extends Fragment {
                     socketInitRobot.enviarMSG(getResources().getString(R.string.Power_on));
                     socketInitRobot.enviarMSG(getResources().getString(R.string.Brake_release));
 
-                    /*SocketServer = new Connect_Server(1025);
-                    SocketServer.sendProgram();*/
+                    SocketServer = new Connect_Server(1025);
+                    SocketServer.sendProgram();
 
                     MainActivity Main = new MainActivity();
                     Main.BlockItem(false);

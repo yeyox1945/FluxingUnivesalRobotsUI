@@ -54,6 +54,7 @@ public class ConnectRobotFragment extends Fragment {
     }
 
     public static Connect_Client socketInitRobot;
+    public static Connect_Server SocketServer;
     public static TextView TxtLog;
     public EditText TxtMSG;
     public Spinner SpinnerRobot;
@@ -94,8 +95,8 @@ public class ConnectRobotFragment extends Fragment {
                     socketInitRobot.enviarMSG(getResources().getString(R.string.Power_on));
                     socketInitRobot.enviarMSG(getResources().getString(R.string.Brake_release));
 
-                    Connect_Server SocketServer = new Connect_Server(1025);
-                    SocketServer.sendProgram();
+                    /*SocketServer = new Connect_Server(1025);
+                    SocketServer.sendProgram();*/
 
                     MainActivity Main = new MainActivity();
                     Main.BlockItem(false);

@@ -1,9 +1,6 @@
 package com.automatizacion.fluxing.fluxingunivesalrobotsui;
 
 import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Handler;
-import android.os.Looper;
 import android.os.StrictMode;
 import android.util.Log;
 import java.io.BufferedReader;
@@ -13,9 +10,6 @@ import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-/*
- * @author Jorge Manzano
- */
 public class Connect_Server extends Thread {
 
     private Socket s;
@@ -23,11 +17,10 @@ public class Connect_Server extends Thread {
     private InputStreamReader entradaSocket;
     private DataOutputStream salida;
     private BufferedReader entrada;
+    private String serverResponse = "";
     private int port = 29999;
-
+    private boolean Busy = false;
     private static boolean Stop = false;
-
-    public String serverResponse = "";
 
     public Connect_Server(int port) {
         this.port = port;
@@ -36,39 +29,21 @@ public class Connect_Server extends Thread {
 
     @Override
     public void run() {
-        //Metodo en segundo plano
-
         try {
             ss = new ServerSocket(port);
             s = ss.accept();
             entradaSocket = new InputStreamReader(s.getInputStream());
             entrada = new BufferedReader(entradaSocket);
             salida = new DataOutputStream(s.getOutputStream());
+
+            serverResponse = entrada.readLine();
+            if (serverResponse != null) {
+                Log.i("Recibio server", serverResponse);
+                Busy = false;
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        String texto;
-        while (!Stop) {
-            try {
-                texto = entrada.readLine();
-                synchronized (this) {
-                    final String finalTexto = texto;
-                    new Handler(Looper.getMainLooper()).post(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (finalTexto != null) {
-                                serverResponse = finalTexto;
-                                Log.i("Recibio server", finalTexto);
-                            }
-                        }
-                    });
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
     }
 
     public void sendProgram() {
@@ -101,11 +76,18 @@ public class Connect_Server extends Thread {
         Connect_Client.enviarMSG("load /programs/urclient.urp ");
         Connect_Client.enviarMSG("play");
         Connect_Client.enviarMSG("stop");*/
-
     }
 
     public void conectarServidor() {
+        Busy = true;
         start();
+        while(Busy == true) {
+            try {
+                sleep(300);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void desconectar() {
@@ -117,13 +99,7 @@ public class Connect_Server extends Thread {
         }
     }
 
-    public void enviarMSG(String msg) {
-        try {
-            salida = new DataOutputStream(s.getOutputStream());
-            salida.writeBytes(msg + "\n");
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public String getServerResponse() {
+        return serverResponse;
     }
 }

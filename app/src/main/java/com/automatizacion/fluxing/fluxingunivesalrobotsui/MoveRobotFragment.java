@@ -35,6 +35,7 @@ public class MoveRobotFragment extends Fragment {
     static SeekBar[] seekBarsArray = new SeekBar[6];
     static Integer[] countArray = new Integer[6];
     static Integer[] initPositions = new Integer[6];
+    static Integer[] homePositions = new Integer[6];
 
     //Define variable para validar estado.
     private boolean pressed = false;
@@ -43,7 +44,7 @@ public class MoveRobotFragment extends Fragment {
     // setting a home position before manually moving the robot
 
     public static Connect_Client socketMove;
-
+    public static Connect_Server socketServer;
     private OnFragmentInteractionListener mListener;
 
     public MoveRobotFragment() {
@@ -74,13 +75,12 @@ public class MoveRobotFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_move_robot, container, false);
 
-
-        initPositions[0] = 90;
-        initPositions[1] = -120;
-        initPositions[2] = 80;
-        initPositions[3] = -48;
-        initPositions[4] = -90;
-        initPositions[5] = 90;
+        homePositions[0] = 90;
+        homePositions[1] = -120;
+        homePositions[2] = 80;
+        homePositions[3] = -48;
+        homePositions[4] = -90;
+        homePositions[5] = 90;
 
 
         // Inicializacion de arreglos de botones, editext y seekbars.
@@ -126,16 +126,9 @@ public class MoveRobotFragment extends Fragment {
         etxtArray[4] = view.findViewById(R.id.editText_Wrist2);
         etxtArray[5] = view.findViewById(R.id.editText_Wrist3);
 
-
         // Hace cambio de puerto
-        ConnectRobotFragment.socketInitRobot.desconectar();
         socketMove = new Connect_Client(ConnectRobotFragment.ip_Robot, 30001);
         socketMove.conectar();
-
-        Connect_Server socketServer = new Connect_Server(1025);
-        socketServer.conectarServidor();
-
-        //getJointPositions(socketServer.serverResponse);
 
         for (int i = 0; i < initPositions.length; i++) {
             etxtArray[i].setText(String.valueOf(initPositions[i]));
@@ -146,7 +139,6 @@ public class MoveRobotFragment extends Fragment {
         View.OnTouchListener onTouchListener = new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-
                 Button btnPressed = (Button) v;
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
@@ -204,7 +196,6 @@ public class MoveRobotFragment extends Fragment {
                     socketMove.enviarMSG(Comando);
                 } else {
                     activeFreeDrive = false;
-
                     socketMove.enviarMSG("end_teach_mode()");
                 }
             }
@@ -216,9 +207,9 @@ public class MoveRobotFragment extends Fragment {
             public void onClick(View v) {
                 sendToHomePosition();
                 for (int i = 0; i < etxtArray.length; i++) {
-                    etxtArray[i].setText(Integer.toString(initPositions[i]));
-                    seekBarsArray[i].setProgress(initPositions[i] + 360);
-                    countArray[i] = initPositions[i];
+                    etxtArray[i].setText(Integer.toString(homePositions[i]));
+                    seekBarsArray[i].setProgress(homePositions[i] + 360);
+                    countArray[i] = homePositions[i];
                 }
             }
         });
@@ -241,12 +232,16 @@ public class MoveRobotFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
+        socketServer = new Connect_Server(1025);
+        socketServer.conectarServidor();
+        getJointPositions(socketServer.getServerResponse());
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        socketServer.desconectar();
     }
 
     public interface OnFragmentInteractionListener {
@@ -279,18 +274,16 @@ public class MoveRobotFragment extends Fragment {
     }
 
     public void sendToHomePosition() {
-        socketMove.enviarMSG("movej([" + Double.toString(90 * 3.1416 / 180) +
-                ", " + Double.toString(-120 * 3.1416 / 180) +
-                ", " + Double.toString(80 * 3.1416 / 180) +
-                ", " + Double.toString(-48 * 3.1416 / 180) +
-                ", " + Double.toString(-90 * 3.1416 / 180) +
-                ", " + Double.toString(90 * 3.1416 / 180) +
+        socketMove.enviarMSG("movej([" + Double.toString(homePositions[0] * 3.1416 / 180) +
+                ", " + Double.toString(homePositions[1] * 3.1416 / 180) +
+                ", " + Double.toString(homePositions[2] * 3.1416 / 180) +
+                ", " + Double.toString(homePositions[3] * 3.1416 / 180) +
+                ", " + Double.toString(homePositions[4] * 3.1416 / 180) +
+                ", " + Double.toString(homePositions[5] * 3.1416 / 180) +
                 "], a=1.0, v=0.3)");
     }
 
     public void convertAndSendCommand() {
-        Log.i("grados", etxtArray[0].getText().toString());
-
         socketMove.enviarMSG("movej([" + Double.toString(countArray[0] * 3.1416 / 180) +
                 ", " + Double.toString(countArray[1] * 3.1416 / 180) +
                 ", " + Double.toString(countArray[2] * 3.1416 / 180) +

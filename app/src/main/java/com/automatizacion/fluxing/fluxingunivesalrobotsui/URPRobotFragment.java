@@ -86,6 +86,12 @@ public class URPRobotFragment extends Fragment {
         tV_URP_State = view.findViewById(R.id.tV_URP_State);
         tV_FTP_Output.setMovementMethod(new ScrollingMovementMethod());
 
+
+        //Settear valores del robot seleccionado
+        eT_FTP_Host.setText(ConnectRobotFragment.ip_Robot);
+        eT_Directory.setText(ConnectRobotFragment.DirRobot);
+
+
         Thread th = new Thread(new Runnable() {
             public void run() {
                 while (bListenLog) {

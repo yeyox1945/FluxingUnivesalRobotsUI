@@ -61,7 +61,7 @@ public class ConnectSQL {
         return Connected;
     }
 
-    public Boolean RegisterRobot(String Name, String Model, String IP) {
+    public Boolean RegisterRobot(String Name, String Model, String IP,String Directorio) {
 
         boolean Validate = false;
 
@@ -72,10 +72,11 @@ public class ConnectSQL {
         } else {
 
             try {
-                PreparedStatement pst = ConnectSQL().prepareStatement("INSERT INTO RegistroRobot(Nombre,Modelo,IP) VALUES(?,?,?);");
+                PreparedStatement pst = ConnectSQL().prepareStatement("INSERT INTO RegistroRobot(Nombre,Modelo,IP,Directorio) VALUES(?,?,?,?);");
                 pst.setString(1, Name);
                 pst.setString(2, Model);
                 pst.setString(3, IP);
+                pst.setString(4, Directorio);
 
                 pst.executeUpdate();
 
@@ -92,6 +93,8 @@ public class ConnectSQL {
 
         return Validate;
     }
+
+    public static String dir = "/programs";
 
     public String Fill_Combo_IP_RobotsSQL() {
 
@@ -113,6 +116,7 @@ public class ConnectSQL {
                 String Nombre = rs.getString(2).trim();
                 String Modelo = rs.getString(3).trim();
                 String ip = rs.getString(4).trim();
+                dir = rs.getString(5).trim();
 
                 Robot = id + " - " + Nombre + " - " + Modelo + " - " + ip;
                 System.out.println(Robot);

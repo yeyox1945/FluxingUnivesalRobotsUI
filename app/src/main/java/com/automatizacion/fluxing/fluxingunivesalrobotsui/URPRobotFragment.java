@@ -302,5 +302,4 @@ public class URPRobotFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
     }
-
 }

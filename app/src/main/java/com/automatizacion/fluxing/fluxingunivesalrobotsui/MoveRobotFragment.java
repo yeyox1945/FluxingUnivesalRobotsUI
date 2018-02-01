@@ -43,8 +43,9 @@ public class MoveRobotFragment extends Fragment {
     public boolean activeFreeDrive = false;
     // setting a home position before manually moving the robot
 
-    public static Connect_Client socketMove;
-    public static Connect_Server socketServer;
+    public  Connect_Client socketMove;
+    public Connect_Client socketInit;
+    public  Connect_Server socketServer;
     private OnFragmentInteractionListener mListener;
 
     public MoveRobotFragment() {
@@ -232,6 +233,13 @@ public class MoveRobotFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
+        socketInit = new Connect_Client(ConnectRobotFragment.ip_Robot, 29999);
+        Log.i("ip", ConnectRobotFragment.ip_Robot);
+        socketInit.conectar();
+
+        //socketInit.enviarMSG("stop");
+        //socketInit.enviarMSG("play");
+
         socketServer = new Connect_Server(1025);
         socketServer.conectarServidor();
         getJointPositions(socketServer.getServerResponse());
@@ -242,6 +250,8 @@ public class MoveRobotFragment extends Fragment {
         super.onDetach();
         mListener = null;
         socketServer.desconectar();
+        socketInit.desconectar();
+        socketMove.desconectar();
     }
 
     public interface OnFragmentInteractionListener {

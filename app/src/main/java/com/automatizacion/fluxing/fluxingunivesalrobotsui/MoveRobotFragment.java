@@ -19,6 +19,9 @@ import android.widget.Toast;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+/*
+    Created by Diego Vargas
+ */
 
 public class MoveRobotFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
@@ -82,7 +85,6 @@ public class MoveRobotFragment extends Fragment {
         homePositions[3] = -48;
         homePositions[4] = -90;
         homePositions[5] = 90;
-
 
         // Inicializacion de arreglos de botones, editext y seekbars.
         // Base
@@ -164,7 +166,6 @@ public class MoveRobotFragment extends Fragment {
         View.OnKeyListener onKeyListener = new View.OnKeyListener() {
             @Override
             public boolean onKey(View view, int i, KeyEvent keyEvent) {
-
                 //If the keyevent is a key-down event on the "enter" button
                 if ((keyEvent.getAction() == KeyEvent.ACTION_DOWN) && (i == KeyEvent.KEYCODE_ENTER)) {
 
@@ -233,8 +234,8 @@ public class MoveRobotFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
+
         socketInit = new Connect_Client(ConnectRobotFragment.ip_Robot, 29999);
-        Log.i("ip", ConnectRobotFragment.ip_Robot);
         socketInit.conectar();
 
         //socketInit.enviarMSG("stop");

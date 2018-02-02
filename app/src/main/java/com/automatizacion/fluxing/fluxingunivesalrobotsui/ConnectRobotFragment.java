@@ -109,6 +109,30 @@ public class ConnectRobotFragment extends Fragment {
             }
         });
 
+        Button btnPowerOff = view.findViewById(R.id.btnPowerOff);
+        btnPowerOff.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    socketInitRobot.enviarMSG(getResources().getString(R.string.Power_off));
+                } catch (Exception e) {
+                    Toast.makeText(getContext(), "No te has conectado a ningun robot :(", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        Button btnShutDown = view.findViewById(R.id.btnShutDown);
+        btnShutDown.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    socketInitRobot.enviarMSG(getResources().getString(R.string.Shutdown));
+                    socketInitRobot.enviarMSG(getResources().getString(R.string.Quit));
+                } catch (Exception e) {
+                    Toast.makeText(getContext(), "No te has conectado a ningun robot :(", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         return view;
     }
 
@@ -173,7 +197,6 @@ public class ConnectRobotFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
-
 
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name

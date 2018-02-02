@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.text.method.ScrollingMovementMethod;
+import android.widget.Toast;
 
 import java.io.File;
 import java.util.Vector;
@@ -44,6 +45,7 @@ public class URPRobotFragment extends Fragment {
     private boolean bListenLog = true;
     private boolean bConnected = false;
     private boolean bBusy = false;
+    private String sName = "";
 
     public URPRobotFragment() {
     }
@@ -86,11 +88,9 @@ public class URPRobotFragment extends Fragment {
         tV_URP_State = view.findViewById(R.id.tV_URP_State);
         tV_FTP_Output.setMovementMethod(new ScrollingMovementMethod());
 
-
         //Settear valores del robot seleccionado
         eT_FTP_Host.setText(ConnectRobotFragment.ip_Robot);
         eT_Directory.setText(ConnectRobotFragment.DirRobot);
-
 
         Thread th = new Thread(new Runnable() {
             public void run() {
@@ -115,14 +115,16 @@ public class URPRobotFragment extends Fragment {
         b_FTP_Connect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(sftp.IsConnected()) {
+                if (sftp.IsConnected()) {
                     tV_FTP_Output.append("Ya existe una conexión con el servidor\n");
+                    Toast.makeText(getContext(), "Ya existe una conexión con el servidor", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 sftp.host = eT_FTP_Host.getText().toString();
                 sftp.username = eT_FTP_Username.getText().toString();
                 sftp.password = eT_FTP_Password.getText().toString();
                 sftp.Connect();
+                Toast.makeText(getContext(), "Conectado", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -137,8 +139,10 @@ public class URPRobotFragment extends Fragment {
                             R.layout.support_simple_spinner_dropdown_item, FileNames.toArray());
                     filenames.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
                     s_RemotePrograms.setAdapter(filenames);
-                } else
+                } else {
                     tV_FTP_Output.append("No se pudo acceder al directorio de programas\n");
+                    Toast.makeText(getContext(), "No se pudo acceder al directorio de programas", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -216,54 +220,85 @@ public class URPRobotFragment extends Fragment {
 
     private void ExecuteOnRobot(int Code) {
         try {
-            if(!bConnected) ConnectToRobot();
-            switch(Code) {
+            if (!bConnected) ConnectToRobot();
+            switch (Code) {
                 case iLoad:
-                    if(s_RemotePrograms.getSelectedItem() == null) {
+                    if (s_RemotePrograms.getSelectedItem() == null) {
                         tV_FTP_Output.append("No hay ningún programa seleccionado\n");
+                        Toast.makeText(getContext(), "No hay ningún programa seleccionado", Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    if(s_RemotePrograms.getSelectedItem().toString().length() == 0) {
+                    if (s_RemotePrograms.getSelectedItem().toString().length() == 0) {
                         tV_FTP_Output.append("No hay ningún programa seleccionado\n");
+                        Toast.makeText(getContext(), "No hay ningún programa seleccionado", Toast.LENGTH_SHORT).show();
                         return;
                     }
                     tV_FTP_Output.append("Cargando programa: " +
-                                s_RemotePrograms.getSelectedItem().toString() + "\n");
+                            s_RemotePrograms.getSelectedItem().toString() + "\n");
                     conn.enviarMSG("load " + eT_Directory.getText() + "/" +
                             s_RemotePrograms.getSelectedItem().toString());
+                    conn.enviarMSG(getResources().getString(R.string.Power_on));
+                    conn.enviarMSG(getResources().getString(R.string.Brake_release));
                     break;
                 case iStart:
                     conn.enviarMSG("play");
                     tV_FTP_Output.append("Enviado comando: play" + "\n");
+                    String sPlay;
+                    while (true) {
+                        sPlay = conn.leerMSG();
+                        if (sPlay.startsWith("Failed") || sPlay.startsWith("Starting"))
+                            break;
+                    }
+                    if (sPlay.startsWith("Failed"))
+                        Toast.makeText(getContext(), "No se pudo iniciar programa", Toast.LENGTH_SHORT).show();
                     break;
                 case iStop:
                     conn.enviarMSG("stop");
                     tV_FTP_Output.append("Enviado comando: stop" + "\n");
+                    String sStop;
+                    while (true) {
+                        sStop = conn.leerMSG();
+                        if (sStop.startsWith("Failed") || sStop.startsWith("Stopped"))
+                            break;
+                    }
+                    if (sStop.startsWith("Failed"))
+                        Toast.makeText(getContext(), "No se pudo parar programa", Toast.LENGTH_SHORT).show();
                     break;
                 case iName:
                     conn.enviarMSG("get loaded program");
                     tV_FTP_Output.append("Leyendo nombre de programa cargado..." + "\n");
-                    String sName;
-                    do {
+
+                    while (true) {
                         sName = conn.leerMSG();
-                    } while(!sName.startsWith("Loaded"));
-                    tV_URP_Name.setText("Nombre: " + sName.split(":")[1]);
-                    tV_FTP_Output.append("Nombre leido" + "\n");
+                        if (sName.startsWith("No") || sName.startsWith("Loaded"))
+                            break;
+                    }
+                    if (sName.startsWith("Loaded")) {
+                        tV_URP_Name.setText("Nombre: " + sName.split(":")[1]);
+                        tV_FTP_Output.append("Nombre leido" + "\n");
+                    }
                     break;
                 case iState:
-                    conn.enviarMSG("programState");
-                    tV_FTP_Output.append("Solicitando el estado del programa..." + "\n");
-                    String sState;
-                    do {
-                        sState = conn.leerMSG();
-                    } while(!sState.startsWith("STOPPED") && !sState.startsWith("PLAYING") &&
-                        !sState.startsWith("PAUSED"));
-                    tV_URP_State.setText("Estado: " + sState.split(" ")[0]);
-                    tV_FTP_Output.append("Estado leido" + "\n");
+                    if (!sName.equals("No program loaded")) {
+                        conn.enviarMSG("programState");
+                        tV_FTP_Output.append("Solicitando el estado del programa..." + "\n");
+                        String sState;
+                        do {
+                            sState = conn.leerMSG();
+                        } while (!sState.startsWith("STOPPED") && !sState.startsWith("PLAYING") &&
+                                !sState.startsWith("PAUSED"));
+                        tV_URP_State.setText("Estado: " + sState.split(" ")[0]);
+                        tV_FTP_Output.append("Estado leido" + "\n");
+                    } else {
+                        tV_FTP_Output.append("No hay ningun programa cargado");
+                        Toast.makeText(getContext(), "No hay ningun programa cargado", Toast.LENGTH_SHORT).show();
+                    }
                     break;
             }
         } catch (Exception e) {
             tV_FTP_Output.append(e.getMessage() + "\n");
+            e.printStackTrace();
+            Toast.makeText(getContext(), "Algo salio mal con la comunicacion", Toast.LENGTH_SHORT).show();
         }
     }
 

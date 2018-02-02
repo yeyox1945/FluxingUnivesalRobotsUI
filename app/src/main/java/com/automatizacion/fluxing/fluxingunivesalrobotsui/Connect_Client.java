@@ -53,7 +53,7 @@ public class Connect_Client extends Thread {
                                 TxtLog = "\nServidor : " + serverResponse; //Imprime la conversacion
                                 Main.PrintToTextview(TxtLog);
 
-                                Log.i("Recibio:", finalTexto);
+                                Log.i("Recibio", finalTexto);
 
                             } else {
                                 TxtLog = "\nServidor :  Desconectado.";//Cuando se cierra el servidor

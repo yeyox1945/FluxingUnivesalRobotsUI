@@ -48,7 +48,6 @@ public class Connect_Server extends Thread {
     }
 
     public void sendProgram() {
-
         try {
             FlxSFTP ftp = new FlxSFTP();
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();

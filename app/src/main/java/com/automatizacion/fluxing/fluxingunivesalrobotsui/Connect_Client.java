@@ -25,7 +25,6 @@ public class Connect_Client extends Thread {
     private static boolean Stop = false;
 
     public String TxtLog;
-    public String serverResponse = "sin respuesta";
     public MainActivity Main = new MainActivity();
 
     public Connect_Client(String ip, int port) {
@@ -43,47 +42,26 @@ public class Connect_Client extends Thread {
         while (!Stop) {
             try {
                 texto = entrada.readLine();
-                synchronized (this) {
-                    final String finalTexto = texto;
-                    new Handler(Looper.getMainLooper()).post(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (finalTexto != null) {
-                                serverResponse = finalTexto;
-                                TxtLog = "\nServidor : " + serverResponse; //Imprime la conversacion
-                                Main.PrintToTextview(TxtLog);
-
-                                Log.i("Recibio", finalTexto);
-
-                            } else {
-                                TxtLog = "\nServidor :  Desconectado.";//Cuando se cierra el servidor
-                                Main.PrintToTextview(TxtLog);
-                            }
-                        }
-                    });
+                if (texto != null) {
+                    TxtLog = "Servidor : " + texto;
+                    Log.i("Recibio", texto);
+                } else {
+                    TxtLog = "\nServidor :  Desconectado.";//Cuando se cierra el servidor
                 }
-            } catch (IOException e) {
-                TxtLog = "\nError :" + e.getMessage(); // cuando da error
-                Main.PrintToTextview(TxtLog);
             } catch (Exception e) {
                 TxtLog = "\nError :" + e.getMessage(); // cuando da error
-                Main.PrintToTextview(TxtLog);
             }
         }
 
     }
-
 
     public void enviarMSG(String msg) {
         try {
             this.salida = new DataOutputStream(s.getOutputStream());
             this.salida.writeBytes(msg + "\n");
             TxtLog = "\nCliente : " + msg + "\n";//Cuando le envio un mensaje
-            Main.PrintToTextview(TxtLog);
-
         } catch (IOException e) {
             TxtLog = "\nError : " + e.getMessage(); // cuando da error
-            Main.PrintToTextview(TxtLog);
         }
     }
 
@@ -105,12 +83,9 @@ public class Connect_Client extends Thread {
             entrada = new BufferedReader(entradaSocket);
             salida = new DataOutputStream(s.getOutputStream());
             TxtLog = "\nServidor Conectado.";
-            Main.PrintToTextview(TxtLog);
 
         } catch (IOException e) {
-
             TxtLog = "\nError : " + e.getMessage(); // cuando da error
-            Main.PrintToTextview(TxtLog);
         }
     }
 
@@ -120,8 +95,6 @@ public class Connect_Client extends Thread {
             s.close();
         } catch (IOException e) {
             TxtLog = "\nError : " + e.getMessage(); // cuando da error
-            Main.PrintToTextview(TxtLog);
-
         }
     }
 }

@@ -85,26 +85,30 @@ public class ConnectRobotFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                String Robot = SpinnerRobot.getSelectedItem().toString();
+                try {
+                    String Robot = SpinnerRobot.getSelectedItem().toString();
 
-                if (!Robot.equals("Seleccióna..")) {
+                    if (!Robot.equals("Seleccióna..")) {
 
-                    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-                    StrictMode.setThreadPolicy(policy);
-                    socketInitRobot = new Connect_Client(ip_Robot, 29999);
-                    socketInitRobot.conectar();
-                    socketInitRobot.start();
-                    socketInitRobot.enviarMSG(getResources().getString(R.string.Power_on));
-                    socketInitRobot.enviarMSG(getResources().getString(R.string.Brake_release));
+                        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                        StrictMode.setThreadPolicy(policy);
+                        socketInitRobot = new Connect_Client(ip_Robot, 29999);
+                        socketInitRobot.conectar();
+                        socketInitRobot.start();
+                        socketInitRobot.enviarMSG(getResources().getString(R.string.Power_on));
+                        socketInitRobot.enviarMSG(getResources().getString(R.string.Brake_release));
 
-                    SocketServer = new Connect_Server(1025);
-                    SocketServer.sendProgram();
+                        SocketServer = new Connect_Server(1025);
+                        SocketServer.sendProgram();
 
-                    MainActivity Main = new MainActivity();
-                    Main.BlockItem(false);
+                        MainActivity Main = new MainActivity();
+                        Main.BlockItem(false);
 
-                } else {
-                    Toast.makeText(getContext(),"Seleccióna un robot", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getContext(), "Seleccióna un robot", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    Toast.makeText(getContext(), "No se pudo realizar la conexion, revisa el robot", Toast.LENGTH_SHORT).show();
                 }
             }
         });

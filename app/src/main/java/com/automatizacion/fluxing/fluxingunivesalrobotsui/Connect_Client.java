@@ -1,9 +1,6 @@
 package com.automatizacion.fluxing.fluxingunivesalrobotsui;
 
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
-
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;

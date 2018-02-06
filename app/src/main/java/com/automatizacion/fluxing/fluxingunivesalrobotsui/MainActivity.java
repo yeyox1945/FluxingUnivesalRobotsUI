@@ -92,17 +92,16 @@ public class MainActivity extends AppCompatActivity
             fragment = new ConnectRobotFragment();
 
         } else if (id == R.id.Move_Robot) {
-
             
             FragmentSelect = true;
             fragment = new MoveRobotFragment();
 
-        } else if (id == R.id.URP_Robot) {
+        } else if (id == R.id.FTP_Robot) {
 
             FragmentSelect = true;
             fragment = new URPRobotFragment();
 
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.Monitor_Robot) {
 
         }
 
@@ -120,7 +119,4 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    public static void PrintToTextview(String s) {
-        ConnectRobotFragment.TxtLog.setText(ConnectRobotFragment.TxtLog.getText() + " " + s);
-    }
 }

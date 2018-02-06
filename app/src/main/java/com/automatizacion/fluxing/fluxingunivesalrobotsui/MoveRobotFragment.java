@@ -301,7 +301,7 @@ public class MoveRobotFragment extends Fragment {
                 ", " + Double.toString(countArray[3] * 3.1416 / 180) +
                 ", " + Double.toString(countArray[4] * 3.1416 / 180) +
                 ", " + Double.toString(countArray[5] * 3.1416 / 180) +
-                "], a=1.0, v=0.3)");
+                "], a=1.0, v=0.5)");
     }
 
     private class AsyncTaskCounter extends AsyncTask<String, Void, Void> {

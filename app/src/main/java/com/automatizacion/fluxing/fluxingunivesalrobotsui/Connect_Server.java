@@ -17,7 +17,7 @@ public class Connect_Server extends Thread {
     private ServerSocket ss;
     private InputStreamReader entradaSocket;
     private DataOutputStream salida;
-    private BufferedReader entrada;
+    private static BufferedReader entrada;
     private String serverResponse = "";
     private int port = 29999;
     private boolean Busy = false;
@@ -31,12 +31,6 @@ public class Connect_Server extends Thread {
     @Override
     public void run() {
         try {
-            ss = new ServerSocket(port);
-            s = ss.accept();
-            entradaSocket = new InputStreamReader(s.getInputStream());
-            entrada = new BufferedReader(entradaSocket);
-            salida = new DataOutputStream(s.getOutputStream());
-
             serverResponse = entrada.readLine();
             if (serverResponse != null) {
                 Log.i("Recibio server", serverResponse);
@@ -80,6 +74,15 @@ public class Connect_Server extends Thread {
 
     public void conectarServidor() {
         Busy = true;
+        try {
+            ss = new ServerSocket(port);
+            s = ss.accept();
+            entradaSocket = new InputStreamReader(s.getInputStream());
+            entrada = new BufferedReader(entradaSocket);
+            salida = new DataOutputStream(s.getOutputStream());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         start();
         while(Busy == true) {
             try {

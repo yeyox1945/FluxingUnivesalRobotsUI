@@ -1,13 +1,13 @@
 package com.automatizacion.fluxing.fluxingunivesalrobotsui;
 
-import android.net.Uri;
+
 import android.os.StrictMode;
 import android.util.Log;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -17,7 +17,7 @@ public class Connect_Server extends Thread {
     private ServerSocket ss;
     private InputStreamReader entradaSocket;
     private DataOutputStream salida;
-    private static BufferedReader entrada;
+    private BufferedReader entrada;
     private String serverResponse = "";
     private int port = 29999;
     private boolean Busy = false;
@@ -48,19 +48,20 @@ public class Connect_Server extends Thread {
             StrictMode.setThreadPolicy(policy);
 
             ftp.host = ConnectRobotFragment.ip_Robot;
-            ftp.username = URPRobotFragment.eT_FTP_Username.getText().toString();
-            ftp.password = URPRobotFragment.eT_FTP_Password.getText().toString();
+            ftp.username = FTPRobotFragment.eT_FTP_Username.getText().toString();
+            ftp.password = FTPRobotFragment.eT_FTP_Password.getText().toString();
             ftp.Connect();
             ftp.WaitTask();
             ftp.ChangeDirectoryAsync("/programs");
 
-            String archivo = "android.resource://com.automatizacion.fluxing.fluxingunivesalrobotsui/raw/urclient.urp";
-            Uri ruta = Uri.parse(archivo);
 
-            ftp.SendFileAsync(ruta.toString(), "urclient.urp");
-            System.out.println(ftp.ReadLog());
+            //  File file = new File(context.getFilesDir(), filename);
+            //   String archivo = "android.resource://com.automatizacion.fluxing.fluxingunivesalrobotsui/raw/urclient.urp";
+
+            ftp.SendFileAsync("/data/data/com.automatizacion.fluxing.fluxingunivesalrobotsui/raw/urclient.urp", "urclient.urp");
 
             System.out.println("Enviado");
+
         } catch (Exception e) {
             System.out.println("Hubo un error : " + e.getMessage());
         }
@@ -72,31 +73,42 @@ public class Connect_Server extends Thread {
         Connect_Client.enviarMSG("stop");*/
     }
 
+
     public void conectarServidor() {
+
+
         Busy = true;
         try {
+
             ss = new ServerSocket(port);
             s = ss.accept();
             entradaSocket = new InputStreamReader(s.getInputStream());
             entrada = new BufferedReader(entradaSocket);
             salida = new DataOutputStream(s.getOutputStream());
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         start();
-        while(Busy == true) {
+
+        while (Busy == true) {
             try {
                 sleep(300);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
+
     }
+
 
     public void desconectar() {
         try {
             Stop = true;
             s.close();
+            ss.close();
+
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity
         AddRobotFragment.OnFragmentInteractionListener,
         ConnectRobotFragment.OnFragmentInteractionListener,
         MoveRobotFragment.OnFragmentInteractionListener,
-        URPRobotFragment.OnFragmentInteractionListener {
+        FTPRobotFragment.OnFragmentInteractionListener {
 
 
     public static NavigationView navigationView;
@@ -92,6 +92,7 @@ public class MainActivity extends AppCompatActivity
             fragment = new ConnectRobotFragment();
 
         } else if (id == R.id.Move_Robot) {
+
             
             FragmentSelect = true;
             fragment = new MoveRobotFragment();
@@ -99,7 +100,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.FTP_Robot) {
 
             FragmentSelect = true;
-            fragment = new URPRobotFragment();
+            fragment = new FTPRobotFragment();
 
         } else if (id == R.id.Monitor_Robot) {
 

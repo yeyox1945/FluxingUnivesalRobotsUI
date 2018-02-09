@@ -25,7 +25,7 @@ import java.util.Vector;
  * Created by Chava on 1/17/2018.
  */
 
-public class URPRobotFragment extends Fragment {
+public class FTPRobotFragment extends Fragment {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -33,10 +33,10 @@ public class URPRobotFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private URPRobotFragment.OnFragmentInteractionListener mListener;
+    private FTPRobotFragment.OnFragmentInteractionListener mListener;
 
     public static FlxSFTP sftp = new FlxSFTP();
-    private Connect_Client conn = new Connect_Client(ConnectRobotFragment.ip_Robot, 29999);
+    private Connect_Client SocketFTP = new Connect_Client(ConnectRobotFragment.ip_Robot, 29999);
     private EditText eT_URP_FilePath;
     private String FileName = "";
     private TextView tV_FTP_Output, tV_URP_Name, tV_URP_State;
@@ -47,11 +47,11 @@ public class URPRobotFragment extends Fragment {
     private boolean bBusy = false;
     private String sName = "";
 
-    public URPRobotFragment() {
+    public FTPRobotFragment() {
     }
 
-    public static URPRobotFragment newInstance(String param1, String param2) {
-        URPRobotFragment fragment = new URPRobotFragment();
+    public static FTPRobotFragment newInstance(String param1, String param2) {
+        FTPRobotFragment fragment = new FTPRobotFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -212,9 +212,9 @@ public class URPRobotFragment extends Fragment {
     }
 
     private void ConnectToRobot() {
-        conn.conectar();
-        System.out.println("Conexión: " + conn.TxtLog);
-        tV_FTP_Output.append(conn.TxtLog + "\n");
+        SocketFTP.conectar();
+        System.out.println("Conexión: " + SocketFTP.TxtLog);
+        tV_FTP_Output.append(SocketFTP.TxtLog + "\n");
         bConnected = true;
     }
 
@@ -235,17 +235,17 @@ public class URPRobotFragment extends Fragment {
                     }
                     tV_FTP_Output.append("Cargando programa: " +
                             s_RemotePrograms.getSelectedItem().toString() + "\n");
-                    conn.enviarMSG("load " + eT_Directory.getText() + "/" +
+                    SocketFTP.enviarMSG("load " + eT_Directory.getText() + "/" +
                             s_RemotePrograms.getSelectedItem().toString());
-                    conn.enviarMSG(getResources().getString(R.string.Power_on));
-                    conn.enviarMSG(getResources().getString(R.string.Brake_release));
+                    SocketFTP.enviarMSG(getResources().getString(R.string.Power_on));
+                    SocketFTP.enviarMSG(getResources().getString(R.string.Brake_release));
                     break;
                 case iStart:
-                    conn.enviarMSG("play");
+                    SocketFTP.enviarMSG("play");
                     tV_FTP_Output.append("Enviado comando: play" + "\n");
                     String sPlay;
                     while (true) {
-                        sPlay = conn.leerMSG();
+                        sPlay = SocketFTP.leerMSG();
                         if (sPlay.startsWith("Failed") || sPlay.startsWith("Starting"))
                             break;
                     }
@@ -253,11 +253,11 @@ public class URPRobotFragment extends Fragment {
                         Toast.makeText(getContext(), "No se pudo iniciar programa", Toast.LENGTH_SHORT).show();
                     break;
                 case iStop:
-                    conn.enviarMSG("stop");
+                    SocketFTP.enviarMSG("stop");
                     tV_FTP_Output.append("Enviado comando: stop" + "\n");
                     String sStop;
                     while (true) {
-                        sStop = conn.leerMSG();
+                        sStop = SocketFTP.leerMSG();
                         if (sStop.startsWith("Failed") || sStop.startsWith("Stopped"))
                             break;
                     }
@@ -265,11 +265,11 @@ public class URPRobotFragment extends Fragment {
                         Toast.makeText(getContext(), "No se pudo parar programa", Toast.LENGTH_SHORT).show();
                     break;
                 case iName:
-                    conn.enviarMSG("get loaded program");
+                    SocketFTP.enviarMSG("get loaded program");
                     tV_FTP_Output.append("Leyendo nombre de programa cargado..." + "\n");
 
                     while (true) {
-                        sName = conn.leerMSG();
+                        sName = SocketFTP.leerMSG();
                         if (sName.startsWith("No") || sName.startsWith("Loaded"))
                             break;
                     }
@@ -280,11 +280,11 @@ public class URPRobotFragment extends Fragment {
                     break;
                 case iState:
                     if (!sName.equals("No program loaded")) {
-                        conn.enviarMSG("programState");
+                        SocketFTP.enviarMSG("programState");
                         tV_FTP_Output.append("Solicitando el estado del programa..." + "\n");
                         String sState;
                         do {
-                            sState = conn.leerMSG();
+                            sState = SocketFTP.leerMSG();
                         } while (!sState.startsWith("STOPPED") && !sState.startsWith("PLAYING") &&
                                 !sState.startsWith("PAUSED"));
                         tV_URP_State.setText("Estado: " + sState.split(" ")[0]);
@@ -324,8 +324,8 @@ public class URPRobotFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         bListenLog = true;
-        if (context instanceof URPRobotFragment.OnFragmentInteractionListener) {
-            mListener = (URPRobotFragment.OnFragmentInteractionListener) context;
+        if (context instanceof FTPRobotFragment.OnFragmentInteractionListener) {
+            mListener = (FTPRobotFragment.OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");

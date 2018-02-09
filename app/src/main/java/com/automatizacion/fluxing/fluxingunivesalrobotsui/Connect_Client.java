@@ -21,8 +21,7 @@ public class Connect_Client extends Thread {
 
     private static boolean Stop = false;
 
-    public String TxtLog;
-    public MainActivity Main = new MainActivity();
+    public static String TxtLog;
 
     public Connect_Client(String ip, int port) {
         this.port = port;
@@ -46,7 +45,7 @@ public class Connect_Client extends Thread {
                     TxtLog = "\nServidor :  Desconectado.";//Cuando se cierra el servidor
                 }
             } catch (Exception e) {
-                TxtLog = "\nError :" + e.getMessage(); // cuando da error
+                TxtLog = "\nError : No se pudo conectar al robot"; // cuando da error
             }
         }
 

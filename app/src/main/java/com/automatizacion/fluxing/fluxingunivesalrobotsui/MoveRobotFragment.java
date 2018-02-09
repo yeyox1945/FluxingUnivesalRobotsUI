@@ -33,22 +33,22 @@ public class MoveRobotFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    static Button[] btnArray = new Button[12];
-    static EditText[] etxtArray = new EditText[6];
-    static SeekBar[] seekBarsArray = new SeekBar[6];
-    static Integer[] countArray = new Integer[6];
-    static Integer[] initPositions = new Integer[6];
-    static Integer[] homePositions = new Integer[6];
+
+    private Button[] btnArray = new Button[12];
+    private EditText[] etxtArray = new EditText[6];
+    private SeekBar[] seekBarsArray = new SeekBar[6];
+    private Integer[] countArray = new Integer[6];
+    private Integer[] initPositions = new Integer[6];
+    private Integer[] homePositions = new Integer[6];
 
     //Define variable para validar estado.
     private boolean pressed = false;
 
-    public boolean activeFreeDrive = false;
+    private boolean activeFreeDrive = false;
     // setting a home position before manually moving the robot
-
-    public  Connect_Client socketMove;
-    public Connect_Client socketInit;
-    public  Connect_Server socketServer;
+    private Connect_Client socketMove = new Connect_Client(ConnectRobotFragment.ip_Robot, 30001);
+    private Connect_Client socketInit = new Connect_Client(ConnectRobotFragment.ip_Robot, 29999);
+    private Connect_Server socketServer = new Connect_Server(1025);
     private OnFragmentInteractionListener mListener;
 
     public MoveRobotFragment() {
@@ -129,8 +129,6 @@ public class MoveRobotFragment extends Fragment {
         etxtArray[4] = view.findViewById(R.id.editText_Wrist2);
         etxtArray[5] = view.findViewById(R.id.editText_Wrist3);
 
-        // Hace cambio de puerto
-        socketMove = new Connect_Client(ConnectRobotFragment.ip_Robot, 30001);
         socketMove.conectar();
 
         for (int i = 0; i < initPositions.length; i++) {
@@ -234,15 +232,22 @@ public class MoveRobotFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
-
         socketInit = new Connect_Client(ConnectRobotFragment.ip_Robot, 29999);
         socketInit.conectar();
 
-        //socketInit.enviarMSG("stop");
-        //socketInit.enviarMSG("play");
+        socketInit.enviarMSG("stop");
 
-        socketServer = new Connect_Server(1025);
-        socketServer.conectarServidor();
+        socketInit.enviarMSG("play");
+
+        try {
+            socketServer.desconectar();
+           // socketInit.desconectar();
+            socketMove.desconectar();
+        }catch (Exception e){
+            System.out.printf("Esta apagado");
+        }
+            socketServer.conectarServidor();
+
         getJointPositions(socketServer.getServerResponse());
     }
 
@@ -285,7 +290,7 @@ public class MoveRobotFragment extends Fragment {
     }
 
     public void sendToHomePosition() {
-        socketMove.enviarMSG("movej([" + Double.toString(homePositions[0] * 3.1416 / 180) +
+                socketMove.enviarMSG("movej([" + Double.toString(homePositions[0] * 3.1416 / 180) +
                 ", " + Double.toString(homePositions[1] * 3.1416 / 180) +
                 ", " + Double.toString(homePositions[2] * 3.1416 / 180) +
                 ", " + Double.toString(homePositions[3] * 3.1416 / 180) +

@@ -3,6 +3,7 @@ package com.automatizacion.fluxing.fluxingunivesalrobotsui;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.StrictMode;
 import android.support.v4.app.Fragment;
 import android.text.method.ScrollingMovementMethod;
@@ -16,7 +17,9 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import java.util.ArrayList;
+import java.util.Timer;
 
 public class ConnectRobotFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
@@ -59,6 +62,7 @@ public class ConnectRobotFragment extends Fragment {
     public EditText TxtMSG;
     public Spinner SpinnerRobot;
     public static ArrayList<String> RobotsList = new ArrayList<>();
+    private Connect_Client conn = new Connect_Client(ConnectRobotFragment.ip_Robot, 29999);
 
     public static String id_Robot = "";
     public static String nombre_Robot = "";
@@ -84,6 +88,19 @@ public class ConnectRobotFragment extends Fragment {
         button_Connect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
+                new CountDownTimer(3000, 50) {
+
+                    public void onTick(long millisUntilFinished) {
+                        TxtLog.setText(TxtLog.getText() + "\n" + socketInitRobot.TxtLog);
+                    }
+
+                    public void onFinish() {
+
+                    }
+                }.start();
+
 
                 try {
                     String Robot = SpinnerRobot.getSelectedItem().toString();
@@ -132,8 +149,9 @@ public class ConnectRobotFragment extends Fragment {
                 try {
                     socketInitRobot.enviarMSG(getResources().getString(R.string.Shutdown));
                     socketInitRobot.enviarMSG(getResources().getString(R.string.Quit));
+
                 } catch (Exception e) {
-                    Toast.makeText(getContext(), "No te has conectado a ningun robot :(", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "No te has conectado a ningun robot :", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -152,6 +170,7 @@ public class ConnectRobotFragment extends Fragment {
             Toast.makeText(getContext(), "No se encontro una conexión a internet.", Toast.LENGTH_SHORT).show();
 
         } else {
+
             SQL.Fill_Combo_IP_RobotsSQL();
 
             assert SpinnerRobot != null;

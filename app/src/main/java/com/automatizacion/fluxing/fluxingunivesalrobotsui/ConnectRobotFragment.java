@@ -68,7 +68,7 @@ public class ConnectRobotFragment extends Fragment {
     public static String nombre_Robot = "";
     public static String modelo_Robot = "";
     public static String ip_Robot = "0.0.0.0";
-    public static String DirRobot = ConnectSQL.dir;
+    public static String DirRobot = "/Programs";
     ///la direccion se consigue desde la clase connect SQL
 
     @Override
@@ -116,7 +116,20 @@ public class ConnectRobotFragment extends Fragment {
                         socketInitRobot.enviarMSG(getResources().getString(R.string.Brake_release));
 
                         SocketServer = new Connect_Server(1025);
-                        SocketServer.sendProgram();
+
+                        try {
+
+                            socketInitRobot.enviarMSG("load "+ ConnectRobotFragment.DirRobot + "/URClient.urp");
+                            socketInitRobot.enviarMSG(getResources().getString(R.string.Power_on));
+                            socketInitRobot.enviarMSG(getResources().getString(R.string.Brake_release));
+
+                            socketInitRobot.enviarMSG("stop");
+                            socketInitRobot.enviarMSG("play");
+
+                        } catch (Exception e) {
+                            System.out.println("Hubo un error : " + e.getMessage());
+                        }
+
 
                         MainActivity Main = new MainActivity();
                         Main.BlockItem(false);
@@ -180,14 +193,18 @@ public class ConnectRobotFragment extends Fragment {
                 public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
 
                     ///Agregar codigo de selecionde ip aqui
-                    String Robot = SpinnerRobot.getSelectedItem().toString();
-                    String[] parts = Robot.split(" - ");
+                    String Robot_for_Combobox = SpinnerRobot.getSelectedItem().toString();
+                    String Robot = ConnectSQL.Robot;
+                    String[] parts_Combo = Robot_for_Combobox.split(" - ");
+                    String[] parts_Robot = Robot.split(" - ");
 
-                    if (!Robot.equals("Seleccióna..")) {
-                        id_Robot = parts[0];
-                        nombre_Robot = parts[1];
-                        modelo_Robot = parts[2];
-                        ip_Robot = parts[3];
+                    if (!Robot_for_Combobox.equals("Seleccióna..")) {
+                        id_Robot = parts_Combo[0];
+                        nombre_Robot = parts_Combo[1];
+                        modelo_Robot = parts_Combo[2];
+                        ip_Robot = parts_Combo[3];
+
+                        DirRobot = parts_Robot[4];
                     }
                 }
 

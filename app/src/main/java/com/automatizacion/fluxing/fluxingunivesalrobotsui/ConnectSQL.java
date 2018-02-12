@@ -22,6 +22,7 @@ import java.util.ArrayList;
 public class ConnectSQL {
 
     private String IP, DB, User, Password;
+    public static String Robot = "";
 
 
     @SuppressLint("NewApi")
@@ -100,7 +101,8 @@ public class ConnectSQL {
 
         PreparedStatement stmt;
         ResultSet rs;
-        String Robot = "";
+        String Robot_for_Combobox = "";
+
         ConnectRobotFragment ConnectRobot = new ConnectRobotFragment();
 
 
@@ -118,15 +120,17 @@ public class ConnectSQL {
                 String ip = rs.getString(4).trim();
                 dir = rs.getString(5).trim();
 
-                Robot = id + " - " + Nombre + " - " + Modelo + " - " + ip;
-                System.out.println(Robot);
-                ConnectRobot.RobotsList.add(Robot);
+                Robot_for_Combobox = id + " - " + Nombre + " - " + Modelo + " - " + ip;
+                Robot = id + " - " + Nombre + " - " + Modelo + " - " + ip + " - " + dir;
+
+                System.out.println(Robot_for_Combobox);
+                ConnectRobot.RobotsList.add(Robot_for_Combobox);
             }
         } catch (SQLException e) {
             System.out.println("Error al llenar Spinner :" + e.getMessage());
         }catch (NullPointerException e){
   }
-        return Robot;
+        return Robot_for_Combobox;
     }
 
 }

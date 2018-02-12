@@ -14,26 +14,23 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="8dp"
-        android:layout_marginRight="36dp"
+        android:layout_marginStart="52dp"
         android:layout_marginTop="8dp"
-        android:text="TRegistrar robot UR"
+        android:text="Registrar / Modificar / Eliminar"
         android:textSize="21sp"
         app:layout_constraintBottom_toTopOf="@+id/Edit_Registro_Nombre"
-        app:layout_constraintEnd_toEndOf="@+id/Edit_Registro_Nombre"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.216" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <EditText
         android:id="@+id/Edit_Registro_Nombre"
         android:layout_width="235dp"
         android:layout_height="45dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="52dp"
         android:layout_marginTop="56dp"
         android:hint="Nombre"
         android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.108"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -41,30 +38,26 @@
         android:id="@+id/Edit_Registro_Modelo"
         android:layout_width="235dp"
         android:layout_height="45dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="56dp"
+        android:layout_marginStart="52dp"
+        android:layout_marginTop="124dp"
         android:hint="Modelo"
         android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.715"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-    android:id="@+id/Edit_Registro_IP"
-    android:layout_width="235dp"
-    android:layout_height="45dp"
-    android:layout_below="@+id/textView4"
-    android:layout_marginEnd="8dp"
-    android:layout_marginStart="8dp"
-    android:layout_marginTop="120dp"
-    android:hint="Indroduce la IP del robot"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintHorizontal_bias="0.108"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    android:inputType="phone"/>
+        android:id="@+id/Edit_Registro_IP"
+        android:layout_width="235dp"
+        android:layout_height="45dp"
+        android:layout_below="@+id/textView4"
+        android:layout_marginEnd="92dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="124dp"
+        android:hint="Indroduce la IP del robot"
+        android:inputType="phone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/Edit_Registro_Modelo"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/Edit_Direccion_Programs"
@@ -87,13 +80,45 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView4"
         android:layout_centerHorizontal="true"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="256dp"
+        android:layout_marginBottom="32dp"
+        android:layout_marginStart="52dp"
+        android:background="@android:color/holo_green_dark"
         android:text="Registrar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.514"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="@color/colorfondoMenu"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/buttonModificar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:layout_marginEnd="35dp"
+        android:background="@android:color/holo_orange_light"
+        android:text="Modificar"
+        android:textColor="@color/colorfondoMenu"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/buttonEliminar" />
+
+    <Button
+        android:id="@+id/buttonEliminar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:layout_marginEnd="61dp"
+        android:background="@android:color/holo_red_dark"
+        android:text="Eliminar"
+        android:textColor="@color/colorfondoMenu"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Spinner
+        android:id="@+id/spnRobotsDB"
+        android:layout_width="318dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="56dp"
+        app:layout_constraintStart_toEndOf="@+id/Edit_Registro_Nombre"
         app:layout_constraintTop_toTopOf="parent" />
 
 

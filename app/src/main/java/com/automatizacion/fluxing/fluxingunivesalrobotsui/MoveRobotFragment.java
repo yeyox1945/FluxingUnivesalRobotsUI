@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -232,21 +233,33 @@ public class MoveRobotFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
+
         socketInit = new Connect_Client(ConnectRobotFragment.ip_Robot, 29999);
         socketInit.conectar();
 
-        socketInit.enviarMSG("stop");
+        try {
 
-        socketInit.enviarMSG("play");
+            socketInit.enviarMSG("load "+ ConnectRobotFragment.DirRobot + "/URClient.urp");
+            socketInit.enviarMSG(getResources().getString(R.string.Power_on));
+            socketInit.enviarMSG(getResources().getString(R.string.Brake_release));
 
+            socketInit.enviarMSG("stop");
+            socketInit.enviarMSG("play");
+
+        } catch (Exception e) {
+            System.out.println("Hubo un error : " + e.getMessage());
+        }
+
+
+        ///Cierra sockets si estan abiertos
         try {
             socketServer.desconectar();
-           // socketInit.desconectar();
             socketMove.desconectar();
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.printf("Esta apagado");
         }
-            socketServer.conectarServidor();
+
+        socketServer.conectarServidor();
 
         getJointPositions(socketServer.getServerResponse());
     }
@@ -290,7 +303,7 @@ public class MoveRobotFragment extends Fragment {
     }
 
     public void sendToHomePosition() {
-                socketMove.enviarMSG("movej([" + Double.toString(homePositions[0] * 3.1416 / 180) +
+        socketMove.enviarMSG("movej([" + Double.toString(homePositions[0] * 3.1416 / 180) +
                 ", " + Double.toString(homePositions[1] * 3.1416 / 180) +
                 ", " + Double.toString(homePositions[2] * 3.1416 / 180) +
                 ", " + Double.toString(homePositions[3] * 3.1416 / 180) +

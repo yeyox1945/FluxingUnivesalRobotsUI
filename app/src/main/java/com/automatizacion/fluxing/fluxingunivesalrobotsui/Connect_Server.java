@@ -41,7 +41,7 @@ public class Connect_Server extends Thread {
         }
     }
 
-    public void sendProgram() {
+    /*public void sendProgram() {
         try {
             FlxSFTP ftp = new FlxSFTP();
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -65,14 +65,9 @@ public class Connect_Server extends Thread {
         } catch (Exception e) {
             System.out.println("Hubo un error : " + e.getMessage());
         }
-   /* Connect_Client = new Connect_Client(ConnectRobotFragment.ip_Robot, 29999);
-        Connect_Client.conectar();
-        Connect_Client.start();
-        Connect_Client.enviarMSG("load /programs/urclient.urp ");
-        Connect_Client.enviarMSG("play");
-        Connect_Client.enviarMSG("stop");*/
-    }
 
+    }
+*/
 
     public void conectarServidor() {
 

@@ -38,6 +38,7 @@ public class AddRobotFragment extends Fragment {
     EditText Edit_Registro_Modelo;
     EditText Edit_Registro_IP;
     EditText Edit_Registro_Dir;
+    ConnectSQL SQL = new ConnectSQL();
 
     public AddRobotFragment() {
         // Required empty public constructor
@@ -81,14 +82,13 @@ public class AddRobotFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                ConnectSQL SQL = new ConnectSQL();
                 Boolean Validate = SQL.RegisterRobot(Edit_Registro_Nombre.getText().toString(),
                         Edit_Registro_Modelo.getText().toString(),
                         Edit_Registro_IP.getText().toString(),
                         Edit_Registro_Dir.getText().toString());
 
 
-                if(Validate){
+                if (Validate) {
                     Toast.makeText(getContext(), "Registro Exitoso",
                             Toast.LENGTH_LONG).show();
 
@@ -98,7 +98,7 @@ public class AddRobotFragment extends Fragment {
                     Edit_Registro_Dir.setText("");
 
                     Fill_Spinner_Robots();
-                }else{
+                } else {
                     Toast.makeText(getContext(), "Registro Erroneo comprueba los campos", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -108,13 +108,25 @@ public class AddRobotFragment extends Fragment {
         BtnModify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ConnectSQL SQL = new ConnectSQL();
-                Boolean Validate = SQL.ModifyRobot(Edit_Registro_Nombre.getText().toString(),
-                        Edit_Registro_Modelo.getText().toString(),
-                        Edit_Registro_IP.getText().toString(),
-                        Edit_Registro_Dir.getText().toString());
 
-                if(Validate){
+
+                String Robot = spnRobotsDB.getSelectedItem().toString();
+                String[] parts = Robot.split(" - ");
+
+
+                if (!Robot.equals("Modificar/Eliminar")) {
+
+                    System.out.println(parts[0]);
+                    SQL.GetDataByID(Integer.valueOf(parts[0]));
+
+                    Boolean Validate = SQL.ModifyRobot(Integer.valueOf(parts[0]),Edit_Registro_Nombre.getText().toString(),
+                            Edit_Registro_Modelo.getText().toString(),
+                            Edit_Registro_IP.getText().toString(),
+                            Edit_Registro_Dir.getText().toString());
+
+
+
+                if (Validate) {
                     Toast.makeText(getContext(), "Modificacion Exitosa",
                             Toast.LENGTH_LONG).show();
 
@@ -124,7 +136,11 @@ public class AddRobotFragment extends Fragment {
                     Edit_Registro_Dir.setText("");
 
                     Fill_Spinner_Robots();
+
                 }else{
+                    Toast.makeText(getContext(), "Lo sentimos hubo un error, intentalo mas tarde de nuevo", Toast.LENGTH_SHORT).show();
+                }
+                } else {
                     Toast.makeText(getContext(), "Modificacion Erronea comprueba los campos", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -134,7 +150,7 @@ public class AddRobotFragment extends Fragment {
         BtnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ConnectSQL SQL = new ConnectSQL();
+
                 Boolean Validate = SQL.DeleteRobot(Edit_Registro_Nombre.getText().toString(),
                         Edit_Registro_Modelo.getText().toString(),
                         Edit_Registro_IP.getText().toString(),
@@ -163,12 +179,16 @@ public class AddRobotFragment extends Fragment {
                 String Robot = spnRobotsDB.getSelectedItem().toString();
                 String[] parts = Robot.split(" - ");
 
+
                 if (!Robot.equals("Modificar/Eliminar")) {
 
-                    Edit_Registro_Nombre.setText(parts[0]);
-                    Edit_Registro_Modelo.setText(parts[1]);
-                    Edit_Registro_IP.setText(parts[2]);
-                    Edit_Registro_Dir.setText(parts[3]);
+                    System.out.println(parts[0]);
+                    SQL.GetDataByID(Integer.valueOf(parts[0]));
+
+                    Edit_Registro_Nombre.setText(SQL.ConsultaNombre);
+                    Edit_Registro_Modelo.setText(SQL.ConsultaModelo);
+                    Edit_Registro_IP.setText(SQL.Consultaip);
+                    Edit_Registro_Dir.setText(SQL.Consultadir);
                 }
             }
 
@@ -189,7 +209,6 @@ public class AddRobotFragment extends Fragment {
         RobotsList.add("Modificar/Eliminar");
 
         //LLenar Con datos de SQL
-        ConnectSQL SQL = new ConnectSQL();
         if (!SQL.Validate_Connection()) {
             Toast.makeText(getContext(), "No se encontro una conexión a internet.", Toast.LENGTH_SHORT).show();
         } else {

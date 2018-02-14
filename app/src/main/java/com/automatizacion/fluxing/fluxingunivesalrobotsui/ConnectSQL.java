@@ -24,10 +24,15 @@ public class ConnectSQL {
     private String IP, DB, User, Password;
     public static String Robot = "";
 
+    String ConsultaNombre;
+    String ConsultaModelo;
+    String Consultaip;
+    String Consultadir;
+
     @SuppressLint("NewApi")
     public Connection ConnectSQL() {
 
-       // IP = "Fluxing.ddns.net:1433";
+        // IP = "Fluxing.ddns.net:1433";
         IP = "192.168.15.131:1433";// ip del servidor sql
         DB = "FluxingUniversalRobot";
         User = "sa";
@@ -36,8 +41,8 @@ public class ConnectSQL {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         java.sql.Connection connection = null;
-            String ConnectionURL = "jdbc:jtds:sqlserver://" + IP + ";databaseName=" + DB + ";user=" + User + ";password=" + Password + ";loginTimeout=2;socketTimeout=2";
-            try {
+        String ConnectionURL = "jdbc:jtds:sqlserver://" + IP + ";databaseName=" + DB + ";user=" + User + ";password=" + Password + ";loginTimeout=2;socketTimeout=2";
+        try {
             Class.forName("net.sourceforge.jtds.jdbc.Driver");
             connection = DriverManager.getConnection(ConnectionURL);
         } catch (SQLException se) {
@@ -61,11 +66,11 @@ public class ConnectSQL {
         return Connected;
     }
 
-    public Boolean RegisterRobot(String Name, String Model, String IP, String Directorio) {
+    public Boolean RegisterRobot(String Name, String Model, String IP, String Dir) {
 
         boolean Validate = false;
 
-        if (Name.equals("") || Model.equals("") || IP.equals("") || Directorio.equals(""))
+        if (Name.equals("") || Model.equals("") || IP.equals("") || Dir.equals(""))
             return Validate;
 
         Validate_Connection();
@@ -79,7 +84,7 @@ public class ConnectSQL {
                 pst.setString(1, Name);
                 pst.setString(2, Model);
                 pst.setString(3, IP);
-                pst.setString(4, Directorio);
+                pst.setString(4, Dir);
 
                 pst.executeUpdate();
 
@@ -97,11 +102,11 @@ public class ConnectSQL {
         return Validate;
     }
 
-    public Boolean DeleteRobot(String Name, String Model, String IP, String Directorio) {
+    public Boolean DeleteRobot(String Name, String Model, String IP, String Dir) {
 
         boolean Validate = false;
 
-        if (Name.equals("") || Model.equals("") || IP.equals("") || Directorio.equals(""))
+        if (Name.equals("") || Model.equals("") || IP.equals("") || Dir.equals(""))
             return Validate;
 
         Validate_Connection();
@@ -115,7 +120,7 @@ public class ConnectSQL {
                 pst.setString(1, Name);
                 pst.setString(2, Model);
                 pst.setString(3, IP);
-                pst.setString(4, Directorio);
+                pst.setString(4, Dir);
 
                 pst.executeUpdate();
 
@@ -130,11 +135,11 @@ public class ConnectSQL {
         return Validate;
     }
 
-    public Boolean ModifyRobot(String Name, String Model, String IP, String Directorio) {
+    public Boolean ModifyRobot(int id, String Name, String Model, String IP, String Dir) {
 
         boolean Validate = false;
 
-        if (Name.equals("") || Model.equals("") || IP.equals("") || Directorio.equals(""))
+        if (Name.equals("") || Model.equals("") || IP.equals("") || Dir.equals(""))
             return Validate;
 
         Validate_Connection();
@@ -144,24 +149,27 @@ public class ConnectSQL {
         } else {
 
             try {
-                PreparedStatement pst = ConnectSQL().prepareStatement("UPDATE RegistroRobot SET Nombre=");
-                pst.setString(1, Name);
-                pst.executeUpdate();
 
+                String Querry = "UPDATE RegistroRobot SET" +
+                        " Nombre = '" + Name +
+                        "',Modelo = '" + Model +
+                        "',IP = '" + IP +
+                        "',Directorio = '" + Dir +
+                        "' WHERE ID = " + id + ";";
+
+                System.out.println(Querry);
+                PreparedStatement stmt = ConnectSQL().prepareStatement(Querry);
+                stmt.executeUpdate();
                 Validate = true;
 
             } catch (SQLException e) {
-                //   Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                 System.out.println("SQL  error : " + e.getMessage());
             } catch (NullPointerException e) {
                 System.out.println("null error : " + e.getMessage());
-                // Toast.makeText(this, "Llena correctamente todos los campos", Toast.LENGTH_SHORT).show();
             }
         }
         return Validate;
     }
-
-    public static String dir = "/programs";
 
     public String Fill_Combo_IP_RobotsSQL() {
 
@@ -176,17 +184,14 @@ public class ConnectSQL {
             stmt = ConnectSQL().prepareStatement(Query);
             rs = stmt.executeQuery();
 
-            System.out.println("Entra a SQL");
             while (rs.next()) {
 
                 String id = rs.getString(1).trim();
                 String Nombre = rs.getString(2).trim();
                 String Modelo = rs.getString(3).trim();
                 String ip = rs.getString(4).trim();
-                dir = rs.getString(5).trim();
 
                 Robot_for_Combobox = id + " - " + Nombre + " - " + Modelo + " - " + ip;
-                Robot = id + " - " + Nombre + " - " + Modelo + " - " + ip + " - " + dir;
 
                 ConnectRobot.RobotsList.add(Robot_for_Combobox);
                 AddRobotFragment.RobotsList.add(Robot_for_Combobox);
@@ -196,6 +201,28 @@ public class ConnectSQL {
         } catch (NullPointerException e) {
         }
         return Robot_for_Combobox;
+    }
+
+    public void GetDataByID(int id) {
+
+        try {
+            String Query = "SELECT * FROM [FluxingUniversalRobot].[dbo].[RegistroRobot] WHERE ID = " + id + ";";
+            PreparedStatement stmt = ConnectSQL().prepareStatement(Query);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+
+                ConsultaNombre = rs.getString(2).trim();
+                ConsultaModelo = rs.getString(3).trim();
+                Consultaip = rs.getString(4).trim();
+                Consultadir = rs.getString(5).trim();
+
+            }
+        } catch (SQLException e) {
+            System.out.println("Error GetDataById : " + e.getMessage());
+        } catch (NullPointerException e) {
+        }
+
     }
 
 }

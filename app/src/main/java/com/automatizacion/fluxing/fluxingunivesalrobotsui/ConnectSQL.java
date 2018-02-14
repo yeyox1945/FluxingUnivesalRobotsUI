@@ -80,7 +80,7 @@ public class ConnectSQL {
         } else {
 
             try {
-                PreparedStatement pst = ConnectSQL().prepareStatement("INSERT INTO RegistroRobot(Nombre,Modelo,IP,Directorio) VALUES(?,?,?,?);");
+                PreparedStatement pst = ConnectSQL().prepareStatement("exec [dbo].[sp_insertaModRobot] 1,?,?,?,?;");
                 pst.setString(1, Name);
                 pst.setString(2, Model);
                 pst.setString(3, IP);
@@ -91,18 +91,16 @@ public class ConnectSQL {
                 Validate = true;
 
             } catch (SQLException e) {
-                //   Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                 System.out.println("SQL  error : " + e.getMessage());
             } catch (NullPointerException e) {
                 System.out.println("null error : " + e.getMessage());
-                // Toast.makeText(this, "Llena correctamente todos los campos", Toast.LENGTH_SHORT).show();
             }
         }
 
         return Validate;
     }
 
-    public Boolean DeleteRobot(String Name, String Model, String IP, String Dir) {
+    public Boolean DeleteRobot(int id,String Name, String Model, String IP, String Dir) {
 
         boolean Validate = false;
 
@@ -116,12 +114,9 @@ public class ConnectSQL {
         } else {
 
             try {
-                PreparedStatement pst = ConnectSQL().prepareStatement("DELETE FROM RegistroRobot WHERE Nombre=? AND Modelo=? AND IP=? AND Directorio=?");
-                pst.setString(1, Name);
-                pst.setString(2, Model);
-                pst.setString(3, IP);
-                pst.setString(4, Dir);
+                String Query = "exec [dbo].[sp_verBorrarRobot] 3," + id + ";";
 
+                PreparedStatement pst = ConnectSQL().prepareStatement(Query);
                 pst.executeUpdate();
 
                 Validate = true;
@@ -149,13 +144,7 @@ public class ConnectSQL {
         } else {
 
             try {
-
-                String Querry = "UPDATE RegistroRobot SET" +
-                        " Nombre = '" + Name +
-                        "',Modelo = '" + Model +
-                        "',IP = '" + IP +
-                        "',Directorio = '" + Dir +
-                        "' WHERE ID = " + id + ";";
+                String Querry = "exec [dbo].[sp_insertaModRobot] 2,'"+ Name +"','"+Model +"','"+IP+"','"+Dir+"',"+ id +"";
 
                 System.out.println(Querry);
                 PreparedStatement stmt = ConnectSQL().prepareStatement(Querry);
@@ -180,7 +169,7 @@ public class ConnectSQL {
         ConnectRobotFragment ConnectRobot = new ConnectRobotFragment();
 
         try {
-            String Query = "SELECT * FROM [FluxingUniversalRobot].[dbo].[RegistroRobot] ORDER BY id;";
+            String Query = "exec [dbo].[sp_verBorrarRobot] 1";
             stmt = ConnectSQL().prepareStatement(Query);
             rs = stmt.executeQuery();
 
@@ -206,7 +195,7 @@ public class ConnectSQL {
     public void GetDataByID(int id) {
 
         try {
-            String Query = "SELECT * FROM [FluxingUniversalRobot].[dbo].[RegistroRobot] WHERE ID = " + id + ";";
+            String Query = "exec [dbo].[sp_verBorrarRobot] 2," + id + ";";
             PreparedStatement stmt = ConnectSQL().prepareStatement(Query);
             ResultSet rs = stmt.executeQuery();
 

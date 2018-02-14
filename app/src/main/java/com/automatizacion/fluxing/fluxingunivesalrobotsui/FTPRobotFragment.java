@@ -90,6 +90,8 @@ public class FTPRobotFragment extends Fragment {
 
         //Settear valores del robot seleccionado
         eT_FTP_Host.setText(ConnectRobotFragment.ip_Robot);
+
+        System.out.println(ConnectRobotFragment.DirRobot);
         eT_Directory.setText(ConnectRobotFragment.DirRobot);
 
         Thread th = new Thread(new Runnable() {

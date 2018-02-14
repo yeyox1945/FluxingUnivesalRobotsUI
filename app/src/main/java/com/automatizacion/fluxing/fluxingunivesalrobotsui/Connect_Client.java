@@ -1,6 +1,8 @@
 package com.automatizacion.fluxing.fluxingunivesalrobotsui;
 
 import android.util.Log;
+import android.widget.Toast;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -40,12 +42,19 @@ public class Connect_Client extends Thread {
                 texto = entrada.readLine();
                 if (texto != null) {
                     TxtLog = "Servidor : " + texto;
-                    Log.i("Recibio", texto);
+                    ConnectRobotFragment.PrintTxtLog();
                 } else {
-                    TxtLog = "\nServidor :  Desconectado.";//Cuando se cierra el servidor
+                    TxtLog = "Servidor :  Desconectado.";//Cuando se cierra el servidor
+                    ConnectRobotFragment.PrintTxtLog();
                 }
             } catch (Exception e) {
-                TxtLog = "\nError : No se pudo conectar al robot"; // cuando da error
+                try{
+                    TxtLog = "Error : No se pudo conectar al robot"; // cuando da error
+                    ConnectRobotFragment.PrintTxtLog();
+                }catch (Exception x){
+                    x.printStackTrace();
+                }
+
             }
         }
 
@@ -55,9 +64,11 @@ public class Connect_Client extends Thread {
         try {
             this.salida = new DataOutputStream(s.getOutputStream());
             this.salida.writeBytes(msg + "\n");
-            TxtLog = "\nCliente : " + msg + "\n";//Cuando le envio un mensaje
+            TxtLog = "Cliente : " + msg ;//Cuando le envio un mensaje
+            ConnectRobotFragment.PrintTxtLog();
         } catch (IOException e) {
-            TxtLog = "\nError : " + e.getMessage(); // cuando da error
+            TxtLog = "Error : " + e.getMessage(); // cuando da error
+            ConnectRobotFragment.PrintTxtLog();
         }
     }
 
@@ -78,10 +89,12 @@ public class Connect_Client extends Thread {
             entradaSocket = new InputStreamReader(s.getInputStream());
             entrada = new BufferedReader(entradaSocket);
             salida = new DataOutputStream(s.getOutputStream());
-            TxtLog = "\nServidor Conectado.";
+            TxtLog = "Servidor Conectado.";
+            ConnectRobotFragment.PrintTxtLog();
 
         } catch (IOException e) {
-            TxtLog = "\nError : " + e.getMessage(); // cuando da error
+            TxtLog = "Error : " + e.getMessage(); // cuando da error
+            ConnectRobotFragment.PrintTxtLog();
         }
     }
 
@@ -90,7 +103,10 @@ public class Connect_Client extends Thread {
             Stop = true;
             s.close();
         } catch (IOException e) {
-            TxtLog = "\nError : " + e.getMessage(); // cuando da error
+            TxtLog = "Error : " + e.getMessage(); // cuando da error
+            ConnectRobotFragment.PrintTxtLog();
         }
     }
+
+
 }

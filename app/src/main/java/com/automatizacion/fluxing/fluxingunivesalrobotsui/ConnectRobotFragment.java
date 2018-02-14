@@ -3,8 +3,6 @@ package com.automatizacion.fluxing.fluxingunivesalrobotsui;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.os.StrictMode;
 import android.support.v4.app.Fragment;
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
@@ -13,13 +11,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
-import java.util.Timer;
 
 public class ConnectRobotFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
@@ -59,17 +54,15 @@ public class ConnectRobotFragment extends Fragment {
     public static Connect_Client socketInitRobot;
     public static Connect_Server SocketServer;
     public static TextView TxtLog;
-    public EditText TxtMSG;
     public Spinner SpinnerRobot;
     public static ArrayList<String> RobotsList = new ArrayList<>();
-    private Connect_Client conn = new Connect_Client(ConnectRobotFragment.ip_Robot, 29999);
 
+    ConnectSQL SQL = new ConnectSQL();
     public static String id_Robot = "";
     public static String nombre_Robot = "";
     public static String modelo_Robot = "";
     public static String ip_Robot = "0.0.0.0";
-    public static String DirRobot = "/Programs";
-    ///la direccion se consigue desde la clase connect SQL
+    public static String DirRobot = "/programs";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -89,56 +82,42 @@ public class ConnectRobotFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-
-                new CountDownTimer(3000, 50) {
-
-                    public void onTick(long millisUntilFinished) {
-                        TxtLog.setText(TxtLog.getText() + "\n" + socketInitRobot.TxtLog);
-                    }
-
-                    public void onFinish() {
-
-                    }
-                }.start();
-
-
                 try {
-                    String Robot = SpinnerRobot.getSelectedItem().toString();
 
+                    String Robot = SpinnerRobot.getSelectedItem().toString();
                     if (!Robot.equals("Seleccióna..")) {
 
-                        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-                        StrictMode.setThreadPolicy(policy);
+
+                        System.out.println(ip_Robot);
                         socketInitRobot = new Connect_Client(ip_Robot, 29999);
                         socketInitRobot.conectar();
                         socketInitRobot.start();
                         socketInitRobot.enviarMSG(getResources().getString(R.string.Power_on));
                         socketInitRobot.enviarMSG(getResources().getString(R.string.Brake_release));
-
                         SocketServer = new Connect_Server(1025);
 
                         try {
 
-                            socketInitRobot.enviarMSG("load "+ ConnectRobotFragment.DirRobot + "/URClient.urp");
+                            socketInitRobot.enviarMSG("load " + DirRobot + "/URClient.urp");
                             socketInitRobot.enviarMSG(getResources().getString(R.string.Power_on));
                             socketInitRobot.enviarMSG(getResources().getString(R.string.Brake_release));
 
                             socketInitRobot.enviarMSG("stop");
                             socketInitRobot.enviarMSG("play");
 
+                            MainActivity Main = new MainActivity();
+                            Main.BlockItems(false);
+
                         } catch (Exception e) {
                             System.out.println("Hubo un error : " + e.getMessage());
                         }
-
-
-                        MainActivity Main = new MainActivity();
-                        Main.BlockItem(false);
 
                     } else {
                         Toast.makeText(getContext(), "Seleccióna un robot", Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
                     Toast.makeText(getContext(), "No se pudo realizar la conexion, revisa el robot", Toast.LENGTH_SHORT).show();
+                    System.out.println(e.getMessage());
                 }
             }
         });
@@ -178,7 +157,6 @@ public class ConnectRobotFragment extends Fragment {
         RobotsList.add("Seleccióna..");
 
         //LLenar Con datos de SQL
-        ConnectSQL SQL = new ConnectSQL();
         if (SQL.Validate_Connection() == false) {
             Toast.makeText(getContext(), "No se encontro una conexión a internet.", Toast.LENGTH_SHORT).show();
 
@@ -194,17 +172,17 @@ public class ConnectRobotFragment extends Fragment {
 
                     ///Agregar codigo de selecionde ip aqui
                     String Robot_for_Combobox = SpinnerRobot.getSelectedItem().toString();
-                    String Robot = ConnectSQL.Robot;
-                    String[] parts_Combo = Robot_for_Combobox.split(" - ");
-                    String[] parts_Robot = Robot.split(" - ");
 
+                    String parts[] = Robot_for_Combobox.split(" - ");
+                    id_Robot = parts[0];
                     if (!Robot_for_Combobox.equals("Seleccióna..")) {
-                        id_Robot = parts_Combo[0];
-                        nombre_Robot = parts_Combo[1];
-                        modelo_Robot = parts_Combo[2];
-                        ip_Robot = parts_Combo[3];
 
-                        DirRobot = parts_Robot[4];
+                        SQL.GetDataByID(Integer.parseInt(id_Robot));
+
+                        nombre_Robot = SQL.ConsultaNombre;
+                        modelo_Robot = SQL.ConsultaModelo;
+                        ip_Robot = SQL.Consultaip;
+                        DirRobot = SQL.Consultadir;
                     }
                 }
 
@@ -214,6 +192,11 @@ public class ConnectRobotFragment extends Fragment {
             });
         }
     }
+
+    public static void PrintTxtLog(){
+            TxtLog.setText(TxtLog.getText() + "\n" + socketInitRobot.TxtLog);
+    }
+
 
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {

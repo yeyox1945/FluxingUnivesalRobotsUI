@@ -18,8 +18,8 @@ public class MainActivity extends AppCompatActivity
         AddRobotFragment.OnFragmentInteractionListener,
         ConnectRobotFragment.OnFragmentInteractionListener,
         MoveRobotFragment.OnFragmentInteractionListener,
-        FTPRobotFragment.OnFragmentInteractionListener {
-
+        FTPRobotFragment.OnFragmentInteractionListener,
+        MonitorRobotFragment.OnFragmentInteractionListener {
 
     public static NavigationView navigationView;
     public static Menu nav_Menu;
@@ -51,14 +51,18 @@ public class MainActivity extends AppCompatActivity
 
         nav_Menu = navigationView.getMenu();
 
-        BlockItem(true);// Verdadero para bloquear
+        BlockItems(true);// Verdadero para bloquear
     }
 
-    public void BlockItem(boolean v) {
+    public void BlockItems(boolean v) {
         if (v) {
             nav_Menu.findItem(R.id.Move_Robot).setEnabled(false);
+            nav_Menu.findItem(R.id.FTP_Robot).setEnabled(false);
+            nav_Menu.findItem(R.id.Monitor_Robot).setEnabled(false);
         } else {
             nav_Menu.findItem(R.id.Move_Robot).setEnabled(true);
+            nav_Menu.findItem(R.id.FTP_Robot).setEnabled(true);
+            nav_Menu.findItem(R.id.Monitor_Robot).setEnabled(true);
         }
     }
 
@@ -93,7 +97,6 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.Move_Robot) {
 
-            
             FragmentSelect = true;
             fragment = new MoveRobotFragment();
 
@@ -104,6 +107,8 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.Monitor_Robot) {
 
+            FragmentSelect = true;
+            fragment = new MonitorRobotFragment();
         }
 
         if (FragmentSelect) {

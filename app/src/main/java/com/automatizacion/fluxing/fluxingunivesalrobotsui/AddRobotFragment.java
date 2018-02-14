@@ -151,7 +151,12 @@ public class AddRobotFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                Boolean Validate = SQL.DeleteRobot(Edit_Registro_Nombre.getText().toString(),
+                String Robot = spnRobotsDB.getSelectedItem().toString();
+                String[] parts = Robot.split(" - ");
+
+                if (!Robot.equals("Modificar/Eliminar")) {
+
+                Boolean Validate = SQL.DeleteRobot(Integer.valueOf(parts[0]),Edit_Registro_Nombre.getText().toString(),
                         Edit_Registro_Modelo.getText().toString(),
                         Edit_Registro_IP.getText().toString(),
                         Edit_Registro_Dir.getText().toString());
@@ -165,6 +170,8 @@ public class AddRobotFragment extends Fragment {
                     Edit_Registro_Dir.setText("");
 
                     Fill_Spinner_Robots();
+
+                }
                 } else {
                     Toast.makeText(getContext(), "Eliminacion Erronea comprueba los campos", Toast.LENGTH_SHORT).show();
                 }

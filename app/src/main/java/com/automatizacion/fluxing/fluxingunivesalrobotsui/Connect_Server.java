@@ -70,8 +70,6 @@ public class Connect_Server extends Thread {
 */
 
     public void conectarServidor() {
-
-
         Busy = true;
         try {
 
@@ -94,7 +92,6 @@ public class Connect_Server extends Thread {
                 e.printStackTrace();
             }
         }
-
     }
 
 

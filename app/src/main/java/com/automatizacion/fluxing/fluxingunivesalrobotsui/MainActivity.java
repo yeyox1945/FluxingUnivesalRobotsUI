@@ -1,5 +1,7 @@
 package com.automatizacion.fluxing.fluxingunivesalrobotsui;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,6 +12,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -23,6 +26,8 @@ public class MainActivity extends AppCompatActivity
 
     public static NavigationView navigationView;
     public static Menu nav_Menu;
+    Fragment fragment = null;
+    Boolean FragmentSelect = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,8 +87,6 @@ public class MainActivity extends AppCompatActivity
         // Menu hamburguesa
 
         int id = item.getItemId();
-        Fragment fragment = null;
-        Boolean FragmentSelect = false;
 
         if (id == R.id.Add_Robot) {
 
@@ -97,8 +100,28 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.Move_Robot) {
 
-            FragmentSelect = true;
-            fragment = new MoveRobotFragment();
+            AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
+            dlgAlert.setMessage("Para mover el robot se cargará otro programa y quitará el actual.\n ¿Está seguro de querer hacer esto?");
+            dlgAlert.setTitle("¡Precaución!");
+            dlgAlert.setIcon(R.drawable.warning);
+            dlgAlert.setPositiveButton("ACEPTO", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                    fragment = new MoveRobotFragment();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.Contenedor, fragment).commit();
+                    DrawerLayout drawer = findViewById(R.id.drawer_layout);
+                    drawer.closeDrawer(GravityCompat.START);
+                }
+            });
+
+            dlgAlert.setNegativeButton("CANCELAR", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.cancel();
+                }
+            });
+            dlgAlert.create().show();
 
         } else if (id == R.id.FTP_Robot) {
 
@@ -124,5 +147,4 @@ public class MainActivity extends AppCompatActivity
     public void onFragmentInteraction(Uri uri) {
 
     }
-
 }

@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import java.util.ArrayList;
 
 public class ConnectRobotFragment extends Fragment {
@@ -87,30 +88,15 @@ public class ConnectRobotFragment extends Fragment {
                     String Robot = SpinnerRobot.getSelectedItem().toString();
                     if (!Robot.equals("Seleccióna..")) {
 
-
-                        System.out.println(ip_Robot);
                         socketInitRobot = new Connect_Client(ip_Robot, 29999);
                         socketInitRobot.conectar();
                         socketInitRobot.start();
+
                         socketInitRobot.enviarMSG(getResources().getString(R.string.Power_on));
                         socketInitRobot.enviarMSG(getResources().getString(R.string.Brake_release));
-                        SocketServer = new Connect_Server(1025);
 
-                        try {
-
-                            socketInitRobot.enviarMSG("load " + DirRobot + "/URClient.urp");
-                            socketInitRobot.enviarMSG(getResources().getString(R.string.Power_on));
-                            socketInitRobot.enviarMSG(getResources().getString(R.string.Brake_release));
-
-                            socketInitRobot.enviarMSG("stop");
-                            socketInitRobot.enviarMSG("play");
-
-                            MainActivity Main = new MainActivity();
-                            Main.BlockItems(false);
-
-                        } catch (Exception e) {
-                            System.out.println("Hubo un error : " + e.getMessage());
-                        }
+                        MainActivity Main = new MainActivity();
+                        Main.BlockItems(false);
 
                     } else {
                         Toast.makeText(getContext(), "Seleccióna un robot", Toast.LENGTH_SHORT).show();
@@ -143,7 +129,7 @@ public class ConnectRobotFragment extends Fragment {
                     socketInitRobot.enviarMSG(getResources().getString(R.string.Quit));
 
                 } catch (Exception e) {
-                    Toast.makeText(getContext(), "No te has conectado a ningun robot :", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "No te has conectado a ningun robot :(", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -193,10 +179,9 @@ public class ConnectRobotFragment extends Fragment {
         }
     }
 
-    public static void PrintTxtLog(){
-            TxtLog.setText(TxtLog.getText() + "\n" + socketInitRobot.TxtLog);
+    public static void PrintTxtLog() {
+        TxtLog.setText(TxtLog.getText() + "\n" + socketInitRobot.TxtLog);
     }
-
 
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {

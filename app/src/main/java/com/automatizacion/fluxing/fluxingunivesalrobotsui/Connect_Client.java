@@ -1,17 +1,11 @@
 package com.automatizacion.fluxing.fluxingunivesalrobotsui;
 
-import android.util.Log;
-import android.widget.Toast;
-
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
-/*
- * @author Jorge Manzano
- */
 public class Connect_Client extends Thread {
 
     private Socket s;
@@ -31,7 +25,6 @@ public class Connect_Client extends Thread {
         Stop = false;
     }
 
-
     @Override
     public void run() {
         //Metodo en segundo plano
@@ -48,13 +41,7 @@ public class Connect_Client extends Thread {
                     ConnectRobotFragment.PrintTxtLog();
                 }
             } catch (Exception e) {
-                try{
-                    TxtLog = "Error : No se pudo conectar al robot"; // cuando da error
-                    ConnectRobotFragment.PrintTxtLog();
-                }catch (Exception x){
-                    x.printStackTrace();
-                }
-
+                e.printStackTrace();
             }
         }
 
@@ -64,7 +51,7 @@ public class Connect_Client extends Thread {
         try {
             this.salida = new DataOutputStream(s.getOutputStream());
             this.salida.writeBytes(msg + "\n");
-            TxtLog = "Cliente : " + msg ;//Cuando le envio un mensaje
+            TxtLog = "Cliente : " + msg;//Cuando le envio un mensaje
             ConnectRobotFragment.PrintTxtLog();
         } catch (IOException e) {
             TxtLog = "Error : " + e.getMessage(); // cuando da error
@@ -107,6 +94,4 @@ public class Connect_Client extends Thread {
             ConnectRobotFragment.PrintTxtLog();
         }
     }
-
-
 }

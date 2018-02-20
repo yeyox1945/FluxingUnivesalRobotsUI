@@ -1,6 +1,8 @@
 package com.automatizacion.fluxing.fluxingunivesalrobotsui;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -239,7 +241,7 @@ public class MoveRobotFragment extends Fragment {
 
         try {
 
-            socketInit.enviarMSG("load "+ ConnectRobotFragment.DirRobot + "/URClient.urp");
+            socketInit.enviarMSG("load " + ConnectRobotFragment.DirRobot + "/URClient.urp");
             socketInit.enviarMSG(getResources().getString(R.string.Power_on));
             socketInit.enviarMSG(getResources().getString(R.string.Brake_release));
 
@@ -250,7 +252,6 @@ public class MoveRobotFragment extends Fragment {
             System.out.println("Hubo un error : " + e.getMessage());
         }
 
-
         ///Cierra sockets si estan abiertos
         try {
             socketServer.desconectar();
@@ -260,7 +261,6 @@ public class MoveRobotFragment extends Fragment {
         }
 
         socketServer.conectarServidor();
-
         getJointPositions(socketServer.getServerResponse());
     }
 
